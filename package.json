@@ -1,6 +1,6 @@
 {
 	"name": "curt-format",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "The .curt single-file AI conversation format — spec and reference implementation",
 	"license": "BUSL-1.1",
 	"author": "Jordan Newell",
@@ -11,8 +11,18 @@
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./schema/curt-v1.schema.json": "./schema/curt-v1.schema.json"
+	},
+	"sideEffects": false,
 	"files": [
-		"dist"
+		"dist",
+		"schema",
+		"SPEC.md"
 	],
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
@@ -29,6 +39,7 @@
 		"interoperability"
 	],
 	"devDependencies": {
+		"ajv": "^8.20.0",
 		"typescript": "^5.6.0",
 		"vitest": "^2.1.0"
 	}

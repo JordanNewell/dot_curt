@@ -1,0 +1,65 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://raw.githubusercontent.com/JordanNewell/dot_curt/main/schema/curt-v1.schema.json",
+	"title": ".curt conversation file (version 1)",
+	"description": "Non-normative convenience schema for the .curt format. SPEC.md is normative; parseCurt in src/index.ts is the canonical validator. Unknown fields are intentionally unconstrained (see SPEC.md, \"Unknown fields\").",
+	"type": "object",
+	"required": ["curt", "version", "conversation"],
+	"properties": {
+		"curt": {
+			"const": "curtis-conversation"
+		},
+		"version": {
+			"const": 1
+		},
+		"generator": {
+			"type": "string",
+			"description": "Optional provenance. Validators must not depend on it."
+		},
+		"conversation": {
+			"type": "object",
+			"required": ["id", "title", "createdAt", "updatedAt", "messages"],
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "number",
+					"description": "Epoch milliseconds; writers should emit integers."
+				},
+				"updatedAt": {
+					"type": "number",
+					"description": "Epoch milliseconds; writers should emit integers."
+				},
+				"messages": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["id", "role", "content", "timestamp"],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"role": {
+								"enum": ["user", "assistant", "system", "tool"]
+							},
+							"content": {
+								"type": "string"
+							},
+							"timestamp": {
+								"type": "number",
+								"description": "Epoch milliseconds; writers should emit integers."
+							},
+							"model": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

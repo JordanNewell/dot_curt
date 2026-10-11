@@ -1,0 +1,11 @@
+{
+	"curt": "curtis-conversation",
+	"version": 1,
+	"conversation": {
+		"id": "conv_004",
+		"title": "Empty conversation",
+		"createdAt": 1760000000000,
+		"updatedAt": 1760000000000,
+		"messages": []
+	}
+}

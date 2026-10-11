@@ -8,11 +8,14 @@ half-imported.
 
 Reference implementation: [`src/index.ts`](src/index.ts) (TypeScript, zero
 dependencies, BUSL-1.1). Third-party writers are welcome; the `generator` field
-exists so your app can sign what it wrote.
+exists so your app can sign what it wrote. A non-normative
+[JSON Schema](schema/curt-v1.schema.json) is provided for tooling.
 
 ## File shape
 
-A `.curt` file is UTF-8 JSON (tab-indented by convention) with this shape:
+A `.curt` file is UTF-8 JSON (tab-indented by convention) with this shape.
+Readers must ignore at most one leading UTF-8 byte-order mark (`EF BB BF`) —
+it is not part of the JSON body, and writers must not emit it:
 
 ```json
 {
@@ -52,6 +55,10 @@ A `.curt` file is UTF-8 JSON (tab-indented by convention) with this shape:
 | `timestamp` | yes | Epoch milliseconds (number). |
 | `model` | no | Provider model id, typically on assistant messages. |
 
+Timestamps are epoch milliseconds. Writers should emit integers; version-1
+validators accept any JSON number and must not reject a file over fractional
+or negative values.
+
 ### Unknown fields
 
 Writers may attach extra fields to the top level, the conversation, and
@@ -62,21 +69,60 @@ round-trip where possible and must not fail on them.
 
 A reader accepts a file as `.curt` v1 when, and only when:
 
-1. The body parses as JSON.
-2. `curt` is exactly `"curtis-conversation"` and `version` is exactly `1`.
+1. The body parses as JSON (after ignoring at most one leading UTF-8 BOM).
+2. `curt` is exactly `"curtis-conversation"` and `version` is exactly the
+   number `1` — a string `"1"` is a rejection.
 3. `conversation` has `id`/`title` as strings, `createdAt`/`updatedAt` as
    numbers, and `messages` as an array in which **every** entry passes message
    validation.
 
 Anything else is a rejection (whole-file), not a best-effort parse. The
-reference `parseCurt` is the canonical behavior.
+reference `parseCurt` is the canonical behavior; `isCurtMessage` and
+`isCurtConversation` expose its component predicates for reuse.
+
+## Conformance
+
+A **conforming writer** emits files that pass the validation rules above,
+keeps `version` at `1`, signs `generator` as `"writer-name@version"`, and
+never writes a BOM.
+
+A **conforming reader** rejects whole-file on any validation failure,
+ignores `generator` entirely, and preserves unknown fields on round-trip
+where possible. Readers that re-serialize must produce a body their own
+parser accepts.
+
+## JSON Schema
+
+[`schema/curt-v1.schema.json`](schema/curt-v1.schema.json) is a non-normative
+draft-07 rendering of the validation rules, for editors, linters, and
+third-party tooling. The normative rules are this document; when in doubt,
+`parseCurt` decides.
 
 ## Bulk convention
 
 Multiple conversations travel as a zip of `.curt` files. There is no required
-naming scheme; the Curtis plugin's convention is
-`"<YYYY-MM-DD> <slug> <id-suffix>.curt"` for chronological, collision-safe
-ordering, but readers must not depend on file names.
+naming scheme; readers must not depend on file names. The Curtis convention is
+`"<YYYY-MM-DD> <slug> <suffix>.curt"` for chronological, collision-safe
+ordering, defined so the name depends only on immutable fields (`createdAt`,
+`id`) and therefore survives title edits and later updates:
+
+- `<date>` — `createdAt` as a UTC `YYYY-MM-DD`; `1970-01-01` when `createdAt`
+  is not a finite timestamp.
+- `<slug>` — `title` lowercased, each run of letters or digits joined with
+  `-`, capped at 50 characters with trailing hyphens trimmed; `untitled` when
+  nothing remains.
+- `<suffix>` — the part of `id` after the last `_`; if there is no `_`, or
+  nothing follows it, the last 8 characters of `id`.
+
+Example: `2025-10-09 fixture-conversation 001.curt`. The reference
+implementation exposes this as `curtFilename`.
+
+## Implementation notes
+
+Treat `.curt` files as untrusted input. Images ride inline as base64 inside
+`content`, so a small conversation can be a very large file — bound parsing
+by input size before validation. Unknown fields are data, never code: do not
+interpret, dereference, or execute anything found in them.
 
 ## Versioning
 
