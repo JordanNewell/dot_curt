@@ -5,6 +5,8 @@ one conversation, full fidelity (images and tool calls ride verbatim). Born in
 [Curtis AI Chat](https://github.com/JordanNewell/curtis-ai-chat), specified
 here so any app can read and write it.
 
+[**Spec site →**](https://jordannewell.github.io/dot_curt/)
+
 - [SPEC.md](SPEC.md) — the normative spec
 - [src/index.ts](src/index.ts) — reference implementation (TypeScript, zero dependencies, BUSL-1.1)
 - [schema/curt-v1.schema.json](schema/curt-v1.schema.json) — non-normative JSON Schema for tooling

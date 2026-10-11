@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="dark">
+	<title>.curt — the single-file AI conversation format</title>
+	<meta name="description" content=".curt is an open, single-file format for AI chat conversations: one file, one conversation, full fidelity. Zero-dependency reference implementation and JSON Schema.">
+	<meta property="og:title" content=".curt — one file, one conversation, full fidelity">
+	<meta property="og:description" content="The open single-file format for AI chat conversations. Born in Curtis AI Chat, specified for everyone.">
+	<meta property="og:type" content="website">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0A0A'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%2300FF41'/%3E%3C/svg%3E">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--primary: #00FF41;
+			--accent: #1AFF72;
+			--background: #0A0A0A;
+			--surface: #0F0F0F;
+			--text: #FFFFFF;
+			--muted: #A0A0A0;
+			--border: #1F1F1F;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body {
+			background: var(--background);
+			color: var(--text);
+			font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 15px;
+			line-height: 1.7;
+			-webkit-font-smoothing: antialiased;
+		}
+		a { color: inherit; }
+		.wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+		/* header */
+		header {
+			border-bottom: 1px solid var(--border);
+			position: sticky;
+			top: 0;
+			background: var(--background);
+			z-index: 10;
+		}
+		.bar { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+		.mark { font-size: 20px; font-weight: 700; text-decoration: none; letter-spacing: -0.02em; }
+		.mark .dot { color: var(--primary); }
+		nav { display: flex; gap: 32px; }
+		nav a {
+			font-size: 12px;
+			letter-spacing: 0.16em;
+			text-decoration: none;
+			color: var(--muted);
+			text-transform: uppercase;
+			transition: color 120ms;
+		}
+		nav a:hover { color: var(--primary); }
+
+		/* hero */
+		.hero { padding: 128px 0 96px; display: grid; grid-template-columns: 7fr 5fr; gap: 64px; align-items: start; }
+		.eyebrow {
+			font-size: 12px;
+			letter-spacing: 0.24em;
+			text-transform: uppercase;
+			color: var(--primary);
+			margin-bottom: 24px;
+		}
+		h1 {
+			font-size: clamp(32px, 5vw, 48px);
+			font-weight: 700;
+			line-height: 1.15;
+			text-transform: uppercase;
+			letter-spacing: -0.01em;
+			margin-bottom: 24px;
+		}
+		.lede { color: var(--muted); max-width: 52ch; margin-bottom: 48px; }
+		.lede a { color: var(--text); }
+		.cta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+		.btn {
+			display: inline-block;
+			font-size: 13px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			text-decoration: none;
+			padding: 12px 24px;
+			border-radius: 4px;
+			transition: opacity 120ms;
+		}
+		.btn:hover { opacity: 0.8; }
+		.btn-primary { background: var(--primary); color: var(--background); font-weight: 700; }
+		.btn-ghost { border: 1px solid var(--border); color: var(--text); }
+		.install {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 12px 16px;
+			width: fit-content;
+		}
+		.install .ps { color: var(--muted); }
+		.install code { font-size: 13px; }
+		.install button {
+			background: none;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			color: var(--muted);
+			font-family: inherit;
+			font-size: 11px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			padding: 4px 12px;
+			cursor: pointer;
+			transition: color 120ms, border-color 120ms;
+		}
+		.install button:hover { color: var(--primary); border-color: var(--primary); }
+
+		/* code */
+		pre {
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 24px;
+			overflow-x: auto;
+			font-size: 13px;
+			line-height: 1.7;
+			tab-size: 4;
+		}
+		code { font-family: inherit; }
+		.k { color: var(--muted); }
+		.s { color: var(--primary); }
+		.n { color: var(--accent); }
+		.c { color: var(--muted); }
+		.kw { color: var(--accent); }
+		.fn { color: var(--primary); }
+
+		/* sections */
+		section { padding: 96px 0; border-top: 1px solid var(--border); }
+		h2 {
+			font-size: 24px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: -0.01em;
+			margin-bottom: 16px;
+		}
+		.section-lede { color: var(--muted); max-width: 64ch; margin-bottom: 48px; }
+
+		/* cards — intentionally asymmetric */
+		.cards { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+		.cards .card:nth-child(3), .cards .card:nth-child(4) { grid-template-columns: inherit; }
+		.card {
+			background: var(--surface);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 32px;
+		}
+		.card .num { color: var(--primary); font-size: 12px; letter-spacing: 0.24em; margin-bottom: 16px; }
+		.card h3 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
+		.card p { color: var(--muted); font-size: 13px; }
+		.card code { color: var(--primary); font-size: 12px; }
+		.cards-wide { grid-template-columns: 2fr 3fr; }
+
+		/* filename anatomy */
+		.filename {
+			font-size: clamp(16px, 2.6vw, 24px);
+			font-weight: 500;
+			color: var(--primary);
+			margin-bottom: 32px;
+			overflow-wrap: anywhere;
+		}
+		.anatomy { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+		.anatomy div { border-left: 2px solid var(--primary); padding-left: 16px; }
+		.anatomy dt { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text); margin-bottom: 4px; }
+		.anatomy dd { color: var(--muted); font-size: 13px; }
+
+		footer { border-top: 1px solid var(--border); padding: 48px 0 64px; }
+		.foot { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+		.foot a { color: var(--muted); text-decoration: none; }
+		.foot a:hover { color: var(--primary); }
+		.foot .dot { color: var(--primary); }
+
+		@media (max-width: 860px) {
+			.hero { grid-template-columns: 1fr; gap: 48px; padding: 96px 0 64px; }
+			.cards, .cards-wide { grid-template-columns: 1fr; }
+			.anatomy { grid-template-columns: 1fr; }
+			nav { gap: 16px; }
+			section { padding: 64px 0; }
+		}
+	</style>
+</head>
+<body>
+
+<header>
+	<div class="wrap bar">
+		<a class="mark" href="#"><span class="dot">.</span>curt</a>
+		<nav>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">Spec</a>
+			<a href="https://www.npmjs.com/package/curt-format">npm</a>
+			<a href="https://github.com/JordanNewell/dot_curt">GitHub</a>
+		</nav>
+	</div>
+</header>
+
+<main>
+	<div class="wrap hero">
+		<div>
+			<p class="eyebrow">The open, single-file AI conversation format</p>
+			<h1>One file.<br>One conversation.<br>Full fidelity.</h1>
+			<p class="lede">
+				<code>.curt</code> is a single-file format for AI chat conversations — born in
+				<a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a> and
+				specified here so any app can read and write it. Images and tool calls ride
+				verbatim; a corrupted file is rejected whole, never half-imported.
+			</p>
+			<div class="cta">
+				<a class="btn btn-primary" href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">Read the spec</a>
+				<a class="btn btn-ghost" href="https://github.com/JordanNewell/dot_curt">GitHub</a>
+			</div>
+			<div class="install">
+				<span class="ps">$</span>
+				<code>npm install curt-format</code>
+				<button id="copy" type="button" aria-label="Copy install command">copy</button>
+			</div>
+		</div>
+		<pre aria-label="A minimal .curt file"><code>{
+	<span class="k">"curt"</span>: <span class="s">"curtis-conversation"</span>,
+	<span class="k">"version"</span>: <span class="n">1</span>,
+	<span class="k">"generator"</span>: <span class="s">"your-app@1.2.3"</span>,
+	<span class="k">"conversation"</span>: {
+		<span class="k">"id"</span>: <span class="s">"conv_001"</span>,
+		<span class="k">"title"</span>: <span class="s">"Thursday's thread"</span>,
+		<span class="k">"createdAt"</span>: <span class="n">1760000000000</span>,
+		<span class="k">"updatedAt"</span>: <span class="n">1760000600000</span>,
+		<span class="k">"messages"</span>: [
+			{ <span class="k">"id"</span>: <span class="s">"m1"</span>, <span class="k">"role"</span>: <span class="s">"user"</span>,
+			  <span class="k">"content"</span>: <span class="s">"hello"</span>,
+			  <span class="k">"timestamp"</span>: <span class="n">1760000000000</span> },
+			{ <span class="k">"id"</span>: <span class="s">"m2"</span>, <span class="k">"role"</span>: <span class="s">"assistant"</span>,
+			  <span class="k">"content"</span>: <span class="s">"hi back"</span>,
+			  <span class="k">"timestamp"</span>: <span class="n">1760000001000</span> }
+		]
+	}
+}</code></pre>
+	</div>
+
+	<section id="envelope">
+		<div class="wrap">
+			<p class="eyebrow">The envelope</p>
+			<h2>Four fields. That's the contract.</h2>
+			<p class="section-lede">
+				A <code>.curt</code> file is UTF-8 JSON, tab-indented by convention. The envelope
+				is fixed; the conversation is yours. Unknown fields are data, never code —
+				readers preserve them on round-trip and never fail on them.
+			</p>
+			<pre aria-label="Top-level fields of the .curt envelope"><code>{
+	<span class="k">"curt"</span>:         <span class="s">"curtis-conversation"</span>,   <span class="c">// magic — must match exactly</span>
+	<span class="k">"version"</span>:     <span class="n">1</span>,                        <span class="c">// format version</span>
+	<span class="k">"generator"</span>:   <span class="s">"writer-name@version"</span>,    <span class="c">// provenance — readers must ignore</span>
+	<span class="k">"conversation"</span>: { <span class="c">/* id, title, createdAt, updatedAt, messages */</span> }
+}</code></pre>
+		</div>
+	</section>
+
+	<section id="why">
+		<div class="wrap">
+			<p class="eyebrow">Why .curt</p>
+			<h2>Built to move conversations between apps.</h2>
+			<p class="section-lede">
+				Export should not be a downgrade. The format carries everything your app
+				knows about a conversation, and validates strictly enough that import can
+				trust what it reads.
+			</p>
+			<div class="cards">
+				<div class="card">
+					<p class="num">01</p>
+					<h3>Full fidelity</h3>
+					<p>Images ride inline as base64 inside <code>content</code>. Tool calls, token
+					counts, and app-specific data travel as unknown fields — preserved
+					verbatim, never mangled.</p>
+				</div>
+				<div class="card">
+					<p class="num">02</p>
+					<h3>Strict by design</h3>
+					<p>Validation is whole-file. <code>parseCurt</code> returns the conversation or
+					<code>null</code> — there is no half-imported state to recover from.</p>
+				</div>
+			</div>
+			<div class="cards cards-wide" style="margin-top: 16px;">
+				<div class="card">
+					<p class="num">03</p>
+					<h3>Zero dependencies</h3>
+					<p>The reference implementation is one TypeScript file with no platform
+					APIs. A draft-07 JSON Schema ships alongside for every other language.</p>
+				</div>
+				<div class="card">
+					<p class="num">04</p>
+					<h3>Stable names</h3>
+					<p>The naming convention derives from immutable fields only —
+					<code>2025-10-09 my-thread 001.curt</code> survives title edits and
+					re-exports.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="use">
+		<div class="wrap">
+			<p class="eyebrow">Quick start</p>
+			<h2>Two functions and a type guard.</h2>
+			<p class="section-lede">
+				<code>serializeCurt</code> and <code>parseCurt</code> are the whole loop.
+				<code>isCurtMessage</code> and <code>isCurtConversation</code> expose the validation
+				predicates; <code>curtFilename</code> builds the recommended file name;
+				<code>CURT_MAGIC</code> and <code>CURT_VERSION</code> carry the envelope constants.
+			</p>
+			<pre aria-label="TypeScript quick start"><code><span class="kw">import</span> { serializeCurt, parseCurt, curtFilename } <span class="kw">from</span> <span class="s">'curt-format'</span>;
+
+<span class="kw">const</span> body = <span class="fn">serializeCurt</span>(conversation, <span class="s">'my-app@1.0.0'</span>);
+<span class="kw">const</span> back = <span class="fn">parseCurt</span>(body);          <span class="c">// CurtConversation | null — null means invalid</span>
+<span class="kw">const</span> name = <span class="fn">curtFilename</span>(back!);       <span class="c">// "2025-10-09 my-thread 001.curt"</span></code></pre>
+		</div>
+	</section>
+
+	<section id="naming">
+		<div class="wrap">
+			<p class="eyebrow">Bulk convention</p>
+			<h2>File names you can sort.</h2>
+			<p class="section-lede">
+				Multiple conversations travel as a zip of <code>.curt</code> files. The Curtis
+				convention keeps them chronological and collision-safe:
+			</p>
+			<p class="filename">2025-10-09 fixture-conversation 001.curt</p>
+			<dl class="anatomy">
+				<div><dt>2025-10-09</dt><dd><code>createdAt</code> as a UTC date — <code>1970-01-01</code> if the timestamp isn't finite.</dd></div>
+				<div><dt>fixture-conversation</dt><dd>Title slug, lowercased, capped at 50 characters — <code>untitled</code> when nothing remains.</dd></div>
+				<div><dt>001.curt</dt><dd>The part of <code>id</code> after the last underscore — the last 8 characters of <code>id</code> when there is none.</dd></div>
+			</dl>
+		</div>
+	</section>
+</main>
+
+<footer>
+	<div class="wrap foot">
+		<span><span class="dot">.</span>curt — BUSL-1.1 licensed · format v1</span>
+		<span>
+			born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			 · <a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			 · <a href="https://www.npmjs.com/package/curt-format">npm</a>
+			 · <a href="https://github.com/JordanNewell/dot_curt">GitHub</a>
+		</span>
+	</div>
+</footer>
+
+<script>
+	document.getElementById('copy').addEventListener('click', async function () {
+		try {
+			await navigator.clipboard.writeText('npm install curt-format');
+			this.textContent = 'copied';
+			setTimeout(() => { this.textContent = 'copy'; }, 1200);
+		} catch {
+			this.textContent = 'ctrl+c';
+			setTimeout(() => { this.textContent = 'copy'; }, 1200);
+		}
+	});
+</script>
+
+</body>
+</html>
