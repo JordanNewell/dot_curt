@@ -1,0 +1,36 @@
+{
+	"curt": "curtis-conversation",
+	"version": 1,
+	"conversation": {
+		"id": "conv_003",
+		"title": "All roles",
+		"createdAt": 1760000000000,
+		"updatedAt": 1760000100000,
+		"messages": [
+			{
+				"id": "m1",
+				"role": "system",
+				"content": "s",
+				"timestamp": 1
+			},
+			{
+				"id": "m2",
+				"role": "user",
+				"content": "u",
+				"timestamp": 2
+			},
+			{
+				"id": "m3",
+				"role": "assistant",
+				"content": "a",
+				"timestamp": 3
+			},
+			{
+				"id": "m4",
+				"role": "tool",
+				"content": "t",
+				"timestamp": 4
+			}
+		]
+	}
+}

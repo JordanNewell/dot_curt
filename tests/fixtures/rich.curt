@@ -1,0 +1,67 @@
+{
+	"curt": "curtis-conversation",
+	"version": 1,
+	"conversation": {
+		"id": "conv_002",
+		"title": "Rich conversation — images, tools, unknown fields",
+		"createdAt": 1760000000000,
+		"updatedAt": 1760000100000,
+		"messages": [
+			{
+				"id": "m1",
+				"role": "system",
+				"content": "You are a fixture.",
+				"timestamp": 1760000000000
+			},
+			{
+				"id": "m2",
+				"role": "user",
+				"content": "Look at this",
+				"timestamp": 1760000001000
+			},
+			{
+				"id": "m3",
+				"role": "user",
+				"content": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==",
+				"timestamp": 1760000002000,
+				"kind": "image"
+			},
+			{
+				"id": "m4",
+				"role": "assistant",
+				"content": "",
+				"timestamp": 1760000006000,
+				"model": "gpt-test",
+				"toolCalls": [
+					{
+						"id": "t1",
+						"name": "read_note",
+						"args": {
+							"path": "a.md"
+						}
+					}
+				]
+			},
+			{
+				"id": "m5",
+				"role": "tool",
+				"content": "# Note contents",
+				"timestamp": 1760000006500,
+				"toolCallId": "t1"
+			},
+			{
+				"id": "m6",
+				"role": "assistant",
+				"content": "Done — see above.",
+				"timestamp": 1760000010000,
+				"model": "gpt-test"
+			}
+		],
+		"provider": "openai",
+		"model": "gpt-test",
+		"tokens": {
+			"input": 120,
+			"output": 45
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"curt": "curtis-conversation",
+	"version": 1,
+	"conversation": {
+		"id": "conv_001",
+		"title": "Basic conversation",
+		"createdAt": 1760000000000,
+		"updatedAt": 1760000100000,
+		"messages": [
+			{
+				"id": "m1",
+				"role": "user",
+				"content": "What is .curt?",
+				"timestamp": 1760000000000
+			},
+			{
+				"id": "m2",
+				"role": "assistant",
+				"content": "A single-file conversation format.",
+				"timestamp": 1760000005000,
+				"model": "gpt-test"
+			}
+		]
+	}
+}
