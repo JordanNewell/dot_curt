@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- License: Business Source License 1.1 (BUSL-1.1) — source-available;
+  converts automatically to Apache-2.0 on the Change Date, 2030-10-12.
+
 ## 1.1.0 — 2026-10-10
 
 Additive release; format version stays `1` and every v1 file remains valid.

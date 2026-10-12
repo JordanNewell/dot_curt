@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="color-scheme" content="light">
 	<title>The .curt format — one file, one conversation, full fidelity</title>
-	<meta name="description" content=".curt is an open, single-file conversation format for AI chats: byte-robust, strictly validatable, zero dependencies. Spec and reference implementation, BUSL-1.1.">
+	<meta name="description" content=".curt is an open, single-file conversation format for AI chats: byte-robust, strictly validatable, zero dependencies. Spec and reference implementation, BUSL-1.1 (source-available; Apache-2.0 after 2030-10-12).">
 	<meta name="theme-color" content="#F5F5F3">
 	<meta property="og:title" content="The .curt format — one file, one conversation, full fidelity">
 	<meta property="og:description" content="An open, single-file conversation format for AI chats. Your history is files, not hostages.">
@@ -497,7 +497,8 @@
 	<section class="section" id="use">
 		<h2>Read and write it<span class="stop">.</span></h2>
 		<p class="muted small">
-			The reference implementation is TypeScript, zero dependencies, BUSL-1.1.
+			The reference implementation is TypeScript, zero dependencies,
+			BUSL-1.1 — source-available, Apache-2.0 on 2030-10-12.
 			<code>parseCurt</code> returns the conversation or <code>null</code> — null means invalid:
 		</p>
 		<pre aria-label="TypeScript quick start"><code><span class="k">import</span> { serializeCurt, parseCurt, curtFilename } <span class="k">from</span> <span class="s">'curt-format'</span>;

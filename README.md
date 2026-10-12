@@ -46,3 +46,10 @@ curt-format/schema/curt-v1.schema.json
 
 PRs welcome for bindings in other languages; keep `src/index.ts` and SPEC.md
 in lockstep.
+
+## License
+
+Business Source License 1.1 — see [LICENSE](LICENSE). Source-available, not
+open source: you may copy, modify, and redistribute the work, but production
+use before the Change Date (2030-10-12) requires permission from the Licensor;
+on the Change Date the license automatically becomes Apache-2.0.
