@@ -92,7 +92,7 @@
 			},
 			"specVersion": 1,
 			"specRevisionImplemented": "pre-1.1.0 (write-only, so BOM/type-guard rules not applicable)",
-			"conformanceLevel": "writer-side only",
+			"conformanceLevel": null,
 			"conformanceNotes": "No reader exists; L1 untestable. Write-side conforms (verbatim envelope, generator stamped). L2 fail (title-only filenames).",
 			"extensions": {
 				"emits": ["usage-metadata", "images-inline"],
