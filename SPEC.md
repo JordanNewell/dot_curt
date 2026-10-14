@@ -10,6 +10,9 @@ Reference implementation: [`src/index.ts`](src/index.ts) (TypeScript, zero
 dependencies, MIT). Third-party writers are welcome; the `generator` field
 exists so your app can sign what it wrote. A non-normative
 [JSON Schema](schema/curt-v1.schema.json) is provided for tooling.
+Optional capabilities grow through the [extension registry](EXTENSIONS.md);
+implementations are graded against executable vectors in
+[`conformance/`](conformance/README.md).
 
 ## File shape
 
@@ -64,6 +67,32 @@ or negative values.
 Writers may attach extra fields to the top level, the conversation, and
 messages (tokens, images, tool-call linkage, …). Readers must preserve them on
 round-trip where possible and must not fail on them.
+
+## Extensions
+
+Writers may declare named extensions they use via an optional top-level
+`extensions` array:
+
+```json
+{
+	"curt": "curtis-conversation",
+	"version": 1,
+	"extensions": ["images-inline"],
+	"conversation": { "..." : "..." }
+}
+```
+
+1. When present, the array holds non-empty strings naming entries in
+   [`EXTENSIONS.md`](EXTENSIONS.md) — the registry.
+2. A reader that does not implement an extension ignores its name, and
+   ignores the `extensions` field entirely whatever its shape. It is an
+   unknown field like any other: never a validation input, never a reason
+   to reject.
+3. Extension behavior lives in the fields an extension reads and writes
+   inside `conversation` and its messages; the registry entry documents
+   those fields. An extension must not change how the core validates.
+4. The registry is additive: new entries never change how existing v1
+   files parse. Extensions cannot conflict with core field names.
 
 ## Validation rules (version 1)
 
@@ -126,6 +155,14 @@ interpret, dereference, or execute anything found in them.
 
 ## Versioning
 
-Format versions change rarely and only additively within a version. A future
-version 2 bumps `version` and keeps version-1 files readable forever. Breaking
-changes get a new version number, never a silent redefinition of 1.
+Format versions change rarely. Within a version:
+
+- **Additions** ship as new `EXTENSIONS.md` registry entries or as
+  clarifications. `version` stays the same and existing files remain valid.
+- **Breaking changes** — anything that would make a conforming v1 reader
+  reject or misparse a file it previously accepted — get a new version
+  number. A future version 2 bumps `version` and keeps version-1 files
+  readable forever. Breaking changes are never a silent redefinition of 1.
+
+The validation rules of a version are frozen at its release; the registry is
+the only forward-motion mechanism inside version 1.
