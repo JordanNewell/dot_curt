@@ -7,7 +7,7 @@ a reader can validate strictly: a corrupted file is rejected whole, never
 half-imported.
 
 Reference implementation: [`src/index.ts`](src/index.ts) (TypeScript, zero
-dependencies, BUSL-1.1). Third-party writers are welcome; the `generator` field
+dependencies, MIT). Third-party writers are welcome; the `generator` field
 exists so your app can sign what it wrote. A non-normative
 [JSON Schema](schema/curt-v1.schema.json) is provided for tooling.
 

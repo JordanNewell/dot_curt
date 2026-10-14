@@ -8,7 +8,7 @@ here so any app can read and write it.
 [**Spec site →**](https://jordannewell.github.io/dot_curt/)
 
 - [SPEC.md](SPEC.md) — the normative spec
-- [src/index.ts](src/index.ts) — reference implementation (TypeScript, zero dependencies, BUSL-1.1)
+- [src/index.ts](src/index.ts) — reference implementation (TypeScript, zero dependencies, MIT)
 - [schema/curt-v1.schema.json](schema/curt-v1.schema.json) — non-normative JSON Schema for tooling
 - [tests/fixtures/](tests/fixtures/) — round-trip test vectors
 
@@ -53,7 +53,7 @@ in lockstep.
 
 ## License
 
-Business Source License 1.1 — see [LICENSE](LICENSE). Source-available, not
-open source: you may copy, modify, and redistribute the work, but production
-use before the Change Date (2030-10-12) requires permission from the Licensor;
-on the Change Date the license automatically becomes Apache-2.0.
+MIT — see [LICENSE](LICENSE). The spec, reference implementation, schema, and
+fixtures are free to use, fork, and build on. The Curtis *applications*
+(plugin, Porter, web, cloud) are separate works under BUSL-1.1; this standard
+is not.
