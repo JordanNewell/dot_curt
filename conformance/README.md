@@ -9,7 +9,7 @@ accept and rejects what they reject, you match the level.
 |---|---|---|---|
 | L1 | CORE | Parse/serialize v1: magic + `version` exact-match; whole-file rejection; single leading UTF-8 BOM tolerated; unknown fields preserved on round-trip; any JSON-number timestamps accepted | MUST for "conforming" |
 | L2 | NAMED | `curtFilename` implements the `<date> <slug> <suffix>.curt` algorithm exactly | SHOULD |
-| L3 | BULK | Zip-of-`.curt` convention; entry names from `curtFilename`; readers never depend on names; corrupted entries skipped, valid ones imported | MAY |
+| L3 | BULK | Zip-of-`.curt` convention; entry names from `curtFilename`; readers never depend on names; corrupted entries reported (not silently dropped), valid ones imported | MAY |
 | L4+ | Extension | Each extension's vectors in `vectors/extensions.json` | MAY |
 
 ## Vectors

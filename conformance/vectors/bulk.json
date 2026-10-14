@@ -1,0 +1,14 @@
+{
+	"level": "L3",
+	"name": "BULK",
+	"rules": [
+		"A bulk export is a zip whose entries are .curt files; the zip contains no manifest requirement.",
+		"Entry names SHOULD come from curtFilename; readers MUST NOT depend on names for parsing or ordering.",
+		"A reader MUST import valid entries and report (not silently drop) corrupted ones.",
+		"Directory entries, if present, MUST be ignored."
+	],
+	"example": {
+		"conversation": { "id": "conv_001", "title": "Fixture conversation", "createdAt": 1760000000000, "updatedAt": 1760000100000, "messages": [] },
+		"entries": ["2025-10-09 fixture-conversation 001.curt"]
+	}
+}
