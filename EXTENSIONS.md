@@ -16,10 +16,12 @@ at least two independent implementations round-trip it.
 
 | Name | Status | Emitted by | Purpose |
 |---|---|---|---|
-| `images-inline` | stable | curtis plugin, curtis-web, porter | Image payloads ride inside `content` |
-| `usage-metadata` | stable | curtis-web | Per-message cost/token/provider fields |
-| `tool-linkage` | draft | porter | Tool-call requests and their results |
-| `agent-context` | draft | porter, curtis-cloud | Agent/swarm provenance on conversations and messages |
+| `images-inline` | stable | curtis plugin, porter, curtis-web, curtis-cloud, curtis-ai-tech | Image payloads ride inside `content` |
+| `usage-metadata` | stable | porter, curtis-web, curtis-ai-tech | Per-message cost/token/provider fields |
+| `tool-linkage` | draft | porter, curtis-ai-tech | Tool-call requests and their results |
+| `agent-context` | draft | curtis plugin, porter, curtis-cloud, curtis-ai-tech | Agent/swarm provenance on conversations and messages |
+
+Full per-consumer emit/accept data: [`capabilities.json`](capabilities.json).
 
 ---
 

@@ -752,7 +752,7 @@ Per consumer, add (values from the 2026-10-14 audit — honest, not aspirational
 "extensions": { "emits": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"], "accepts": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"] },
 
 // curtis-web:
-"conformanceLevel": "writer-side only",
+"conformanceLevel": null,
 "conformanceNotes": "No reader exists; L1 untestable. Write-side conforms (verbatim envelope, generator stamped). L2 fail (title-only filenames).",
 "extensions": { "emits": ["usage-metadata", "images-inline"], "accepts": [] },
 
