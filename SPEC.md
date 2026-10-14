@@ -130,7 +130,9 @@ third-party tooling. The normative rules are this document; when in doubt,
 ## Bulk convention
 
 Multiple conversations travel as a zip of `.curt` files. There is no required
-naming scheme; readers must not depend on file names. The Curtis convention is
+naming scheme; readers must not depend on file names. Readers import the valid
+entries and report (not silently drop) corrupted ones; directory entries, if
+present, are ignored. The Curtis convention is
 `"<YYYY-MM-DD> <slug> <suffix>.curt"` for chronological, collision-safe
 ordering, defined so the name depends only on immutable fields (`createdAt`,
 `id`) and therefore survives title edits and later updates:

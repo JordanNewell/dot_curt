@@ -26,9 +26,6 @@ export interface CurtConversation {
 	/** Epoch milliseconds. */
 	updatedAt: number;
 	messages: CurtMessage[];
-	/** Original provider/model as display metadata. */
-	provider?: string;
-	model?: string;
 	[key: string]: unknown;
 }
 
