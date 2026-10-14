@@ -16,6 +16,9 @@
 			"type": "string",
 			"description": "Optional provenance. Validators must not depend on it."
 		},
+		"extensions": {
+			"description": "Optional declaration of registry extensions the writer emits (see EXTENSIONS.md). Writers SHOULD emit an array of non-empty strings (normative in SPEC.md). Readers that do not implement extensions must ignore this field entirely, whatever its shape — it is an unknown field, never a validation input, so this schema deliberately does not constrain it."
+		},
 		"conversation": {
 			"type": "object",
 			"required": ["id", "title", "createdAt", "updatedAt", "messages"],

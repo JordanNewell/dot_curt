@@ -43,6 +43,24 @@ describe('JSON schema agrees with parseCurt', () => {
 		}
 	});
 
+	it('accepts the extensions declaration in every shape readers must tolerate', () => {
+		const good = [
+			['images-inline'],
+			['images-inline', 'usage-metadata'],
+			'images-inline', // malformed — parseCurt accepts it, so the schema must too
+			null, // malformed
+		];
+		for (const extensions of good) {
+			const body = {
+				curt: 'curtis-conversation',
+				version: 1,
+				extensions,
+				conversation: { ...base, messages: [msg] },
+			};
+			expect(validate(body), JSON.stringify(extensions)).toBe(true);
+		}
+	});
+
 	it('tolerates unknown fields at every level', () => {
 		const body = {
 			curt: 'curtis-conversation',
