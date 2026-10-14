@@ -28,16 +28,20 @@ curtis-ai-theme.
 
 ## Matrix
 
-| Consumer | Role | R/W | Dependency | Gen stamp | BOM (1.1.0) | Strict reject | Unknown fields RT | `curtFilename` | Schema |
-|---|---|---|---|---|---|---|---|---|---|
-| **dot_curt** (`curt-format@1.1.0`) | normative spec + reference impl | R/W | — | n/a | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **curtis** plugin (`curtis@1.0.0`) | import/export/backup | R/W | vendored copy | `curtis@v` | ❌ | ✅ (per file) | ⚠️ partial | ⚠️ divergent (`<id-6>`) | ❌ |
-| **curtis-ai-chat-porter** (`curtis-ai-porter@1.0.0`) | converter + verify oracle | R/W | vendored oracle (curtis-ai-chat v2.0.1) | `curtis-ai-porter@v` | ⚠️ incidental | ✅ (per file) | ✅ (top-level dropped) | ⚠️ divergent | ❌ (17-test suite) |
-| **curtis-web** (private, `curtis-web@0.1.0`) | export endpoint | W only | hand-rolled | `curtis-web@0.1.0` | n/a | n/a | ✅ on write | ❌ divergent (title-only) | ❌ |
-| **curtis-cloud** (`@curtisai/shared@0.1.2`) | shared lib (no in-repo callers) | R/W | vendored mirror | `curtis@v` | ❌ | ✅ (shallow) | ⚠️ partial | ❌ absent | ❌ |
-| **curtis-ai-tech** (`porter-app.html`) | embedded web app + docs | R/W | inline copy | `curtis-ai-chat-porter@v` | ⚠️ incidental | ✅ | ✅ | ⚠️ divergent | ❌ |
+| Consumer | Role | R/W | Dependency | Gen stamp | BOM (1.1.0) | Strict reject | Unknown fields RT | `curtFilename` | Schema | Conformance |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **dot_curt** (`curt-format@1.1.0`) | normative spec + reference impl | R/W | — | n/a | ✅ | ✅ | ✅ | ✅ | ✅ | ref=L1–L4 ✅ |
+| **curtis** plugin (`curtis@1.0.0`) | import/export/backup | R/W | vendored copy | `curtis@v` | ❌ | ✅ (per file) | ⚠️ partial | ⚠️ divergent (`<id-6>`) | ❌ | ❌ (see notes) |
+| **curtis-ai-chat-porter** (`curtis-ai-porter@1.0.0`) | converter + verify oracle | R/W | vendored oracle (curtis-ai-chat v2.0.1) | `curtis-ai-porter@v` | ⚠️ incidental | ✅ (per file) | ✅ (top-level dropped) | ⚠️ divergent | ❌ (17-test suite) | ❌ (see notes) |
+| **curtis-web** (private, `curtis-web@0.1.0`) | export endpoint | W only | hand-rolled | `curtis-web@0.1.0` | n/a | n/a | ✅ on write | ❌ divergent (title-only) | ❌ | writer-side only |
+| **curtis-cloud** (`@curtisai/shared@0.1.2`) | shared lib (no in-repo callers) | R/W | vendored mirror | `curtis@v` | ❌ | ✅ (shallow) | ⚠️ partial | ❌ absent | ❌ | ❌ (see notes) |
+| **curtis-ai-tech** (`porter-app.html`) | embedded web app + docs | R/W | inline copy | `curtis-ai-chat-porter@v` | ⚠️ incidental | ✅ | ✅ | ⚠️ divergent | ❌ | ❌ (see notes) |
 
 ## Findings (2026-10-14)
+
+Conformance claims live per consumer in `capabilities.json`
+(`conformanceLevel` / `extensions`); the bar they are measured against is
+[`conformance/README.md`](conformance/README.md).
 
 1. **Nobody depends on `curt-format`.** All five consumers vendored or
    hand-rolled the rules. The npm package is currently documentation, not

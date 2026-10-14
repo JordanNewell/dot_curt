@@ -9,6 +9,10 @@
   `capabilities.json` — per-consumer read/write, spec revision implemented,
   conformance gaps (first audit 2026-10-14: 5 consumers in, 8 repos out,
   zero consumers on the `curt-format` package).
+- Conformance: `conformance/` — levels L1 CORE / L2 NAMED / L3 BULK / L4
+  extensions, executable vectors (`conformance/vectors/`), claim process.
+  `capabilities.json` gains `conformanceLevel` / `extensions` per consumer
+  (first grading 2026-10-14: only the reference implementation passes L1).
 
 ## 1.1.0 — 2026-10-10
 
