@@ -1,0 +1,41 @@
+{
+	"level": "L2",
+	"name": "NAMED",
+	"vectors": [
+		{
+			"name": "basic",
+			"conversation": { "id": "conv_001", "title": "Fixture conversation", "createdAt": 1760000000000, "updatedAt": 1760000100000, "messages": [] },
+			"expect": "2025-10-09 fixture-conversation 001.curt"
+		},
+		{
+			"name": "suffix-after-last-underscore",
+			"conversation": { "id": "chat_abc123_xyz", "title": "T", "createdAt": 1760000000000, "updatedAt": 0, "messages": [] },
+			"expect": "2025-10-09 t xyz.curt"
+		},
+		{
+			"name": "no-underscore-uses-last-8",
+			"conversation": { "id": "abcdef123456", "title": "T", "createdAt": 1760000000000, "updatedAt": 0, "messages": [] },
+			"expect": "2025-10-09 t ef123456.curt"
+		},
+		{
+			"name": "short-id-uses-whole-id",
+			"conversation": { "id": "x", "title": "", "createdAt": 1760000000000, "updatedAt": 0, "messages": [] },
+			"expect": "2025-10-09 untitled x.curt"
+		},
+		{
+			"name": "non-finite-date-falls-back-to-1970",
+			"conversation": { "id": "x", "title": "T", "createdAt": "not-a-number", "updatedAt": 0, "messages": [] },
+			"expect": "1970-01-01 t x.curt"
+		},
+		{
+			"name": "unicode-slug-keeps-letters",
+			"conversation": { "id": "x", "title": "Héllo Wörld 你好", "createdAt": 1760000000000, "updatedAt": 0, "messages": [] },
+			"expect": "2025-10-09 héllo-wörld-你好 x.curt"
+		},
+		{
+			"name": "slug-capped-at-50-trailing-hyphens-trimmed",
+			"conversation": { "id": "x", "title": "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a", "createdAt": 1760000000000, "updatedAt": 0, "messages": [] },
+			"expect": "2025-10-09 a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a-a x.curt"
+		}
+	]
+}
