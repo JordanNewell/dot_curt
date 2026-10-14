@@ -44,6 +44,10 @@ curt-format/schema/curt-v1.schema.json
 
 - [Curtis AI Chat](https://github.com/JordanNewell/curtis-ai-chat) — origin, read + write
 
+See [CAPABILITIES.md](CAPABILITIES.md) for the full ecosystem tracker — who
+reads and writes `.curt`, which spec revision each implementation carries,
+and where conformance has drifted. Audited 2026-10-14.
+
 PRs welcome for bindings in other languages; keep `src/index.ts` and SPEC.md
 in lockstep.
 

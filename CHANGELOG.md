@@ -4,6 +4,10 @@
 
 - License: Business Source License 1.1 (BUSL-1.1) — source-available;
   converts automatically to Apache-2.0 on the Change Date, 2030-10-12.
+- Ecosystem capability tracker: `CAPABILITIES.md` + machine-readable
+  `capabilities.json` — per-consumer read/write, spec revision implemented,
+  conformance gaps (first audit 2026-10-14: 5 consumers in, 8 repos out,
+  zero consumers on the `curt-format` package).
 
 ## 1.1.0 — 2026-10-10
 
