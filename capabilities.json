@@ -1,0 +1,169 @@
+{
+	"tracker": "curt-capabilities",
+	"schemaVersion": 1,
+	"lastAudited": "2026-10-14",
+	"formatVersion": 1,
+	"specRevision": "curt-format@1.1.0",
+	"consumers": [
+		{
+			"id": "curtis",
+			"repo": "curtis",
+			"pkg": "curtis@1.0.0",
+			"role": "Obsidian plugin — import, export, full-backup zip",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "vendored",
+				"detail": "src/import/curt-format.ts local copy; types only from @curtisai/shared ^0.1.2 (whose runtime .curt code is never called)"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "pre-1.1.0 (no BOM rule, older naming)",
+			"generator": "curtis@<plugin-version>",
+			"capabilities": {
+				"bomTolerance": "no",
+				"strictWholeFileRejection": "yes (per file; zip entries: best-effort skip)",
+				"unknownFieldRoundTrip": "partial (conversation + messages yes; top-level envelope extras dropped, generator replaced on re-serialize)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "divergent (curtZipEntryName uses <date> <slug> <id-6>; spec says last-8 or post-underscore suffix)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"parseCurt has no BOM tolerance (spec 1.1.0 rule)",
+				"zero direct parseCurt unit tests — coverage only via backup-format.test.ts",
+				"naming suffix uses 6 id chars vs spec's 8",
+				"top-level unknown fields lost on re-serialize"
+			],
+			"evidence": ["src/import/curt-format.ts:8-9,43,69", "src/import/curt.ts", "src/backup/backup-format.ts:104,138-141"]
+		},
+		{
+			"id": "curtis-ai-chat-porter",
+			"repo": "curtis-ai-chat-porter",
+			"pkg": "curtis-ai-porter@1.0.0",
+			"role": "Converter (CLI + Obsidian plugin + web) — ChatGPT/Claude/Grok/Gemini/Curtis-md → .curt and back; verify/round-trip oracle",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "vendored",
+				"detail": "test/curtis-reference/parse-curt.ts pinned to curtis-ai-chat v2.0.1 (1c7a19f, 2026-10-11) used as contract oracle; src/core/curt.ts is its own implementation"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "pre-1.1.0 (BOM strip only incidental via TextDecoder)",
+			"generator": "curtis-ai-porter@<version> / verbatim via serializeCurtAs",
+			"capabilities": {
+				"bomTolerance": "incidental (TextDecoder default strips UTF-8 BOM on the detect path; parseCurt itself does not)",
+				"strictWholeFileRejection": "yes (per file; zip archive best-effort by design)",
+				"unknownFieldRoundTrip": "yes (conversation verbatim; top-level extras dropped on parse)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "divergent (own sanitizeFilename: 100-char cap + Windows reserved names; curtZipEntryName deliberately dropped)",
+				"jsonSchemaValidation": "no (17-test executable conformance suite instead)"
+			},
+			"gaps": [
+				"no test covers a UTF-8-BOM .curt file",
+				"oracle pinned to curtis-ai-chat v2.0.1 while the plugin repo now self-identifies as curtis@1.0.0 — version lineage broken by the rename"
+			],
+			"evidence": ["src/core/curt.ts:22-23,79-101", "test/curtis-reference/parse-curt.ts", "test/contract-assertions.ts", "docs/curt-format.md:9"]
+		},
+		{
+			"id": "curtis-web",
+			"repo": "curtis-web",
+			"pkg": "curtis-web (private monorepo), generator stamps curtis-web@0.1.0",
+			"role": "Next.js chat app — export single .curt + bulk zip (write-only)",
+			"read": false,
+			"write": true,
+			"dependency": {
+				"type": "hand-rolled",
+				"detail": "apps/web/src/server/export.ts reimplementation, parity kept by hand against the porter contract; no curt-format / @curtisai dep"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "pre-1.1.0 (write-only, so BOM/type-guard rules not applicable)",
+			"generator": "curtis-web@0.1.0 (hardcoded, not derived from package.json)",
+			"capabilities": {
+				"bomTolerance": "n/a (no parser)",
+				"strictWholeFileRejection": "n/a",
+				"unknownFieldRoundTrip": "yes on write (entire Conversation embedded verbatim, tested)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "divergent (sanitizeCurtFilename: title-only, 100-char cap, no date prefix, no id suffix)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"filename scheme diverges from the documented <date> <slug> <suffix>.curt convention",
+				"no import path — exported files are never read back by the app",
+				"generator version hardcoded"
+			],
+			"evidence": ["apps/web/src/server/export.ts:21-27,45-51", "apps/web/src/server/export.test.ts (14 .curt tests)", "apps/web/src/app/api/export/route.ts"]
+		},
+		{
+			"id": "curtis-cloud",
+			"repo": "curtis-cloud",
+			"pkg": "@curtisai/shared@0.1.2",
+			"role": "Ecosystem shared library (import/export serialization; sync worker is an E2EE blob store that never parses .curt)",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "vendored",
+				"detail": "packages/shared/src/curt.ts is a first-party mirror of the plugin's curt-format.ts; consumed by @curtisai/core, agents, llms via ^0.1.1"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "pre-1.1.0",
+			"generator": "curtis@<version> or verbatim via serializeCurtAs; omitted when none passed",
+			"capabilities": {
+				"bomTolerance": "no",
+				"strictWholeFileRejection": "yes (but shallow: payload fields like tool_calls/images not shape-checked)",
+				"unknownFieldRoundTrip": "partial (conversation verbatim; unknown top-level envelope fields dropped)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "no (sanitizeFilename sanitizes title only, no .curt append, no date/id scheme)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"no BOM tolerance (spec 1.1.0 rule)",
+				"no callers inside its own repo — library shipped ahead of consumers",
+				"naming convention unimplemented"
+			],
+			"evidence": ["packages/shared/src/curt.ts:24-27,81-103,110-118", "packages/shared/src/curt.test.ts (12 tests)", "cloud/src/routes/sync.ts:1-10"]
+		},
+		{
+			"id": "curtis-ai-tech",
+			"repo": "curtis-ai-tech",
+			"pkg": "static site (public/porter-app.html inline app)",
+			"role": "Docs/marketing + embedded Porter web app with inline .curt parser (real client-side read/write)",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "inline",
+				"detail": "public/porter-app.html lines ~1434-1464: CURT_MAGIC/CURT_VERSION/isMessage/serializeCurt/parseCurt inline — another independent copy"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "pre-1.1.0 (mirror of porter logic)",
+			"generator": "curtis-ai-chat-porter@<generatorVersion>",
+			"capabilities": {
+				"bomTolerance": "incidental (porter-derived path)",
+				"strictWholeFileRejection": "yes",
+				"unknownFieldRoundTrip": "yes (conversation verbatim)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "divergent (porter sanitizeFilename)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"fifth independent implementation copy, drift-prone; site claims ('byte-perfect backup', 'readable anywhere, forever') are not tied to any conformance test the site runs"
+			],
+			"evidence": ["public/porter-app.html:1434-1464,8160-8164,8343-8348", "src/pages/curt.astro", "src/pages/licenses.astro"]
+		}
+	],
+	"outOfEcosystem": [
+		{ "repo": "curtis-compliance", "note": "no .curt references" },
+		{ "repo": "curtis-console", "note": "no .curt references" },
+		{ "repo": "curtis-os", "note": "no .curt references (old pre-rename monorepo)" },
+		{ "repo": "curtis-ai-chat-zed", "note": "no .curt references" },
+		{ "repo": "curtis-ai-symphony", "note": "no .curt references" },
+		{ "repo": "curtis-ai-crm", "note": "no .curt references" },
+		{ "repo": "curtis-ai-browser", "note": "no .curt references" },
+		{ "repo": "curtis-ai-theme", "note": "no .curt references" }
+	],
+	"ecosystemFindings": [
+		"ZERO consumers depend on the npm curt-format package — all five implement or vendor their own copy of the rules.",
+		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
+		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
+		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
+		"Version lineage is broken: porter's oracle pins curtis-ai-chat v2.0.1 (1c7a19f) but that repo now self-identifies as curtis@1.0.0."
+	]
+}
