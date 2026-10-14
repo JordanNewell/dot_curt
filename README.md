@@ -51,6 +51,14 @@ and where conformance has drifted. Audited 2026-10-14.
 PRs welcome for bindings in other languages; keep `src/index.ts` and SPEC.md
 in lockstep.
 
+## Conformance
+
+Implementations are graded against executable vectors in
+[conformance/](conformance/) — L1 CORE (must), L2 NAMED, L3 BULK, L4
+per-extension. The registry of optional capabilities is
+[EXTENSIONS.md](EXTENSIONS.md). Ecosystem status:
+[capabilities.json](capabilities.json).
+
 ## License
 
 MIT — see [LICENSE](LICENSE). The spec, reference implementation, schema, and
