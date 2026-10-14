@@ -5,8 +5,6 @@
 - License: MIT. The spec, reference implementation, schema, and fixtures were
   BUSL-1.1 through 1.1.0; they are now permanently open. Applications remain
   BUSL-1.1 — see the design doc, docs/specs/2026-10-14-curt-standard-framework-design.md.
-- License: Business Source License 1.1 (BUSL-1.1) — source-available;
-  converts automatically to Apache-2.0 on the Change Date, 2030-10-12.
 - Ecosystem capability tracker: `CAPABILITIES.md` + machine-readable
   `capabilities.json` — per-consumer read/write, spec revision implemented,
   conformance gaps (first audit 2026-10-14: 5 consumers in, 8 repos out,
