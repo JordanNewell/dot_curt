@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-10-14
 
 - License: MIT. The spec, reference implementation, schema, and fixtures were
   BUSL-1.1 through 1.1.0; they are now permanently open. Applications remain
