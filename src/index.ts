@@ -44,6 +44,12 @@ interface CurtFile {
 	 * absence, or value never affects parsing.
 	 */
 	generator?: string;
+	/**
+	 * Optional declaration of registry extensions the writer emits
+	 * (EXTENSIONS.md). Readers must ignore it entirely, whatever its shape —
+	 * it is an unknown field, never a validation input.
+	 */
+	extensions?: string[];
 	conversation: CurtConversation;
 }
 
@@ -77,13 +83,18 @@ export function isCurtConversation(v: unknown): v is CurtConversation {
 }
 
 /** Serialize a conversation as a .curt file body (tab-indented JSON). */
-export function serializeCurt(conversation: CurtConversation, generator?: string): string {
+export function serializeCurt(
+	conversation: CurtConversation,
+	generator?: string,
+	extensions?: string[],
+): string {
 	const file: CurtFile = {
 		curt: CURT_MAGIC,
 		version: CURT_VERSION,
 		conversation,
 	};
 	if (generator) file.generator = generator;
+	if (extensions?.length) file.extensions = [...extensions];
 	return JSON.stringify(file, null, '\t');
 }
 
