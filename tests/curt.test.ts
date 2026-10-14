@@ -130,6 +130,39 @@ describe('serializeCurt / parseCurt', () => {
 	});
 });
 
+describe('extensions declaration', () => {
+	const conv = { ...base, messages: [] };
+
+	it('serializes a declared extensions array', () => {
+		const body = serializeCurt(conv, 'test@1.0.0', ['images-inline', 'usage-metadata']);
+		const f = JSON.parse(body);
+		expect(f.extensions).toEqual(['images-inline', 'usage-metadata']);
+	});
+
+	it('omits extensions when not passed or empty', () => {
+		expect('extensions' in JSON.parse(serializeCurt(conv))).toBe(false);
+		expect('extensions' in JSON.parse(serializeCurt(conv, 'test@1', []))).toBe(false);
+	});
+
+	it('parseCurt accepts extension-bearing files (readers ignore the field)', () => {
+		const body = JSON.stringify({
+			curt: CURT_MAGIC,
+			version: CURT_VERSION,
+			extensions: ['images-inline'],
+			conversation: conv,
+		});
+		expect(parseCurt(body)).not.toBeNull();
+	});
+
+	it('parseCurt accepts files with malformed extensions — it is an unknown field, never a validation input', () => {
+		const bad = (ext: unknown) =>
+			JSON.stringify({ curt: CURT_MAGIC, version: CURT_VERSION, extensions: ext, conversation: conv });
+		expect(parseCurt(bad('not-an-array'))).not.toBeNull();
+		expect(parseCurt(bad([42]))).not.toBeNull();
+		expect(parseCurt(bad(null))).not.toBeNull();
+	});
+});
+
 describe('BOM tolerance', () => {
 	it('parses a body with a single leading UTF-8 BOM', () => {
 		const conv = { ...base, messages: [{ id: 'm1', role: 'user', content: 'hi', timestamp: 1 }] };
