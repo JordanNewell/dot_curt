@@ -195,18 +195,18 @@
 		{
 			"id": "curtis-ai-tech",
 			"repo": "curtis-ai-tech",
-			"pkg": "static site (public/porter-app.html inline app)",
-			"role": "Docs/marketing + embedded Porter web app with inline .curt parser (real client-side read/write)",
+			"pkg": "static site (public/porter-app.html, ES-module app)",
+			"role": "Docs/marketing + embedded Porter web app (real client-side read/write)",
 			"read": true,
 			"write": true,
 			"dependency": {
-				"type": "inline",
-				"detail": "public/porter-app.html lines ~1434-1464: CURT_MAGIC/CURT_VERSION/isMessage/serializeCurt/parseCurt inline — another independent copy"
+				"type": "vendored",
+				"detail": "public/vendor/curt-format.esm.js — build artifact generated from curt-format@1.2.0 (do not edit; regenerate from dot_curt dist/index.js); porter-app.html imports parseCurt/serializeCurt as an ES module and keeps the curtis-ai-chat-porter@<version> stamp + sanitizeFilename as app-level call-site helpers"
 			},
 			"specVersion": 1,
-			"specRevisionImplemented": "pre-1.1.0 (mirror of porter logic)",
-			"conformanceLevel": null,
-			"conformanceNotes": "L1 pass-in-practice via porter-derived path; fails by the letter. L2 fail.",
+			"specRevisionImplemented": "1.2.0 (via curt-format, vendored)",
+			"conformanceLevel": "L1",
+			"conformanceNotes": "L1 by delegation to curt-format parse/serialize (BOM tolerated, whole-file rejection, round-trip). L2 fail (porter sanitizeFilename convention kept at the call site).",
 			"extensions": {
 				"emits": [
 					"images-inline",
@@ -223,18 +223,19 @@
 			},
 			"generator": "curtis-ai-chat-porter@<generatorVersion>",
 			"capabilities": {
-				"bomTolerance": "incidental (porter-derived path)",
-				"strictWholeFileRejection": "yes",
-				"unknownFieldRoundTrip": "yes (conversation verbatim)",
+				"bomTolerance": "yes (via curt-format)",
+				"strictWholeFileRejection": "yes (curt-format guard; zip entries: best-effort skip)",
+				"unknownFieldRoundTrip": "yes (conversation verbatim; top-level envelope extras dropped by curt-format parseCurt — reference behavior)",
 				"generatorStamped": "yes",
 				"curtFilenameConvention": "divergent (porter sanitizeFilename)",
 				"jsonSchemaValidation": "no"
 			},
 			"gaps": [
-				"fifth independent implementation copy, drift-prone; site claims ('byte-perfect backup', 'readable anywhere, forever') are not tied to any conformance test the site runs"
+				"curt-format conformance vectors not executed in-browser (L1 claimed by delegation to the reference implementation); site claims ('byte-perfect backup', 'readable anywhere, forever') are not tied to any conformance test the site runs"
 			],
 			"evidence": [
-				"public/porter-app.html:1434-1464,8160-8164,8343-8348",
+				"public/vendor/curt-format.esm.js (generated from curt-format@1.2.0)",
+				"public/porter-app.html:216 (import), 8136/8191 (parseCurt), 8315 (serializeCurt)",
 				"src/pages/curt.astro",
 				"src/pages/licenses.astro"
 			]
@@ -313,7 +314,7 @@
 		}
 	],
 	"ecosystemFindings": [
-		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. All four core consumers flipped to the npm curt-format package 2026-10-17 (curtis-cloud df1b13e, curtis-web ad7aa51, curtis 463963f, porter 6f061e4). Remaining independent copies: curtis-ai-tech inline parser.",
+		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. All five core consumers flipped 2026-10-17 (curtis-cloud df1b13e, curtis-web ad7aa51, curtis 463963f, porter 6f061e4; curtis-ai-tech vendored the curt-format@1.2.0 ESM build artifact).",
 		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
 		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
