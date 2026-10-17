@@ -20,6 +20,7 @@ at least two independent implementations round-trip it.
 | `usage-metadata` | stable | porter, curtis-web, curtis-ai-tech | Per-message cost/token/provider fields |
 | `tool-linkage` | draft | porter, curtis-ai-tech | Tool-call requests and their results |
 | `agent-context` | draft | curtis plugin, porter, curtis-cloud, curtis-ai-tech | Agent/swarm provenance on conversations and messages |
+| `consensus-receipt` | draft | tractum | Signed k-of-n consensus decision bound to the transcript evidence |
 
 Full per-consumer emit/accept data: [`capabilities.json`](capabilities.json).
 
@@ -60,3 +61,27 @@ Multi-agent provenance:
 - Conversation-level: `agentId` (string), `skillIds` (array of strings),
   `swarmRole` (string), `leaderId` (string).
 - Semantics are writer-defined; the extension guarantees only preservation.
+
+### `consensus-receipt` — draft
+
+A verifiable multi-agent consensus decision carried alongside the evidence it
+was drawn from. The conversation's `messages` ARE the evidence transcript;
+the decision rides in extension fields:
+
+- Conversation-level: `consensusReceipt` (object — the full signed receipt
+  envelope: `payload`, `algorithm`, `public_key`, `signature`,
+  `payload_hash`, `signed_at`, `metadata`) and `consensusTranscripts`
+  (array of `{ "id": string, "sha256": string }` — one entry per source
+  transcript, where `sha256` is the hex digest over that document's
+  canonical JSON serialization).
+- The receipt's signed payload embeds its own copy of the
+  `consensusTranscripts` refs. Verifiers recompute the hashes and compare —
+  the decision is bound to this exact evidence or the artifact is invalid.
+- Writers SHOULD declare `agent-context` alongside this extension (the
+  receipt's per-agent statements reference agents that `agent-context`
+  provenance describes).
+- The extension guarantees only preservation. Signature and quorum
+  verification semantics are writer-defined (tractum: Ed25519 or ML-DSA
+  over canonical JSON, k-of-n quorum in `payload.quorum`).
+- Status `draft`: single implementation (tractum). Stable when a second
+  independent implementation round-trips it.
