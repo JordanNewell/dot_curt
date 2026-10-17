@@ -156,13 +156,13 @@
 			"read": true,
 			"write": true,
 			"dependency": {
-				"type": "vendored",
-				"detail": "packages/shared/src/curt.ts is a first-party mirror of the plugin's curt-format.ts; consumed by @curtisai/core, agents, llms via ^0.1.1"
+				"type": "npm",
+				"detail": "curt-format 1.2.0 from npm; packages/shared/src/curt.ts is a thin adapter (serializeCurt's curtis@<version> stamp + sanitizeFilename kept as app-level helpers); consumed by @curtisai/core, agents, llms via ^0.1.1"
 			},
 			"specVersion": 1,
-			"specRevisionImplemented": "pre-1.1.0",
-			"conformanceLevel": null,
-			"conformanceNotes": "Fails L1: no BOM tolerance, drops top-level envelope extras.",
+			"specRevisionImplemented": "1.2.0 (via curt-format)",
+			"conformanceLevel": "L1",
+			"conformanceNotes": "L1 by delegation to curt-format parse/serialize (BOM tolerated, whole-file rejection, round-trip). L2 unclaimed: its own sanitizeFilename convention is kept for backward compat; curtFilename not exposed.",
 			"extensions": {
 				"emits": [
 					"agent-context",
@@ -177,21 +177,20 @@
 			},
 			"generator": "curtis@<version> or verbatim via serializeCurtAs; omitted when none passed",
 			"capabilities": {
-				"bomTolerance": "no",
-				"strictWholeFileRejection": "yes (but shallow: payload fields like tool_calls/images not shape-checked)",
-				"unknownFieldRoundTrip": "partial (conversation verbatim; unknown top-level envelope fields dropped)",
+				"bomTolerance": "yes (via curt-format)",
+				"strictWholeFileRejection": "yes (curt-format guard; payload fields like tool_calls/images not shape-checked — unchanged)",
+				"unknownFieldRoundTrip": "yes on conversation (curt-format); unknown top-level envelope fields dropped by curt-format parseCurt (reference behavior)",
 				"generatorStamped": "yes",
-				"curtFilenameConvention": "no (sanitizeFilename sanitizes title only, no .curt append, no date/id scheme)",
+				"curtFilenameConvention": "no (sanitizeFilename sanitizes title only, kept for compat; curtFilename not exposed by the adapter)",
 				"jsonSchemaValidation": "no"
 			},
 			"gaps": [
-				"no BOM tolerance (spec 1.1.0 rule)",
 				"no callers inside its own repo — library shipped ahead of consumers",
-				"naming convention unimplemented"
+				"naming convention unimplemented (L2 not claimed)"
 			],
 			"evidence": [
-				"packages/shared/src/curt.ts:24-27,81-103,110-118",
-				"packages/shared/src/curt.test.ts (12 tests)",
+				"packages/shared/src/curt.ts (adapter over curt-format)",
+				"packages/shared/src/curt.test.ts (12 tests, green post-swap 2026-10-17)",
 				"cloud/src/routes/sync.ts:1-10"
 			]
 		},
@@ -316,7 +315,7 @@
 		}
 	],
 	"ecosystemFindings": [
-		"ZERO consumers depend on the npm curt-format package — all five implement or vendor their own copy of the rules.",
+		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. First flip: curtis-cloud now consumes curt-format from npm (2026-10-17, curtis-cloud df1b13e).",
 		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
 		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
