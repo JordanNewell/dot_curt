@@ -1,7 +1,7 @@
 {
 	"tracker": "curt-capabilities",
 	"schemaVersion": 1,
-	"lastAudited": "2026-10-14",
+	"lastAudited": "2026-10-17",
 	"formatVersion": 1,
 	"specRevision": "curt-format@1.2.0",
 	"reference": {
@@ -25,8 +25,16 @@
 			"conformanceLevel": null,
 			"conformanceNotes": "Fails L1 by the letter: parseCurt has no BOM tolerance. Naming divergent (L2 fail).",
 			"extensions": {
-				"emits": ["images-inline", "agent-context"],
-				"accepts": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"]
+				"emits": [
+					"images-inline",
+					"agent-context"
+				],
+				"accepts": [
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage",
+					"agent-context"
+				]
 			},
 			"generator": "curtis@<plugin-version>",
 			"capabilities": {
@@ -43,7 +51,11 @@
 				"naming suffix uses 6 id chars vs spec's 8",
 				"top-level unknown fields lost on re-serialize"
 			],
-			"evidence": ["src/import/curt-format.ts:8-9,43,69", "src/import/curt.ts", "src/backup/backup-format.ts:104,138-141"]
+			"evidence": [
+				"src/import/curt-format.ts:8-9,43,69",
+				"src/import/curt.ts",
+				"src/backup/backup-format.ts:104,138-141"
+			]
 		},
 		{
 			"id": "curtis-ai-chat-porter",
@@ -61,8 +73,18 @@
 			"conformanceLevel": null,
 			"conformanceNotes": "L1 pass-in-practice but fails by the letter (BOM stripped incidentally by TextDecoder, not parseCurt). L2 fail (own sanitizer).",
 			"extensions": {
-				"emits": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"],
-				"accepts": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"]
+				"emits": [
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage",
+					"agent-context"
+				],
+				"accepts": [
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage",
+					"agent-context"
+				]
 			},
 			"generator": "curtis-ai-porter@<version> / verbatim via serializeCurtAs",
 			"capabilities": {
@@ -77,7 +99,12 @@
 				"no test covers a UTF-8-BOM .curt file",
 				"oracle pinned to curtis-ai-chat v2.0.1 while the plugin repo now self-identifies as curtis@1.0.0 — version lineage broken by the rename"
 			],
-			"evidence": ["src/core/curt.ts:22-23,79-101", "test/curtis-reference/parse-curt.ts", "test/contract-assertions.ts", "docs/curt-format.md:9"]
+			"evidence": [
+				"src/core/curt.ts:22-23,79-101",
+				"test/curtis-reference/parse-curt.ts",
+				"test/contract-assertions.ts",
+				"docs/curt-format.md:9"
+			]
 		},
 		{
 			"id": "curtis-web",
@@ -95,7 +122,10 @@
 			"conformanceLevel": null,
 			"conformanceNotes": "No reader exists; L1 untestable. Write-side conforms (verbatim envelope, generator stamped). L2 fail (title-only filenames).",
 			"extensions": {
-				"emits": ["usage-metadata", "images-inline"],
+				"emits": [
+					"usage-metadata",
+					"images-inline"
+				],
 				"accepts": []
 			},
 			"generator": "curtis-web@0.1.0 (hardcoded, not derived from package.json)",
@@ -112,7 +142,11 @@
 				"no import path — exported files are never read back by the app",
 				"generator version hardcoded"
 			],
-			"evidence": ["apps/web/src/server/export.ts:21-27,45-51", "apps/web/src/server/export.test.ts (14 .curt tests)", "apps/web/src/app/api/export/route.ts"]
+			"evidence": [
+				"apps/web/src/server/export.ts:21-27,45-51",
+				"apps/web/src/server/export.test.ts (14 .curt tests)",
+				"apps/web/src/app/api/export/route.ts"
+			]
 		},
 		{
 			"id": "curtis-cloud",
@@ -130,8 +164,16 @@
 			"conformanceLevel": null,
 			"conformanceNotes": "Fails L1: no BOM tolerance, drops top-level envelope extras.",
 			"extensions": {
-				"emits": ["agent-context", "images-inline"],
-				"accepts": ["agent-context", "images-inline", "usage-metadata", "tool-linkage"]
+				"emits": [
+					"agent-context",
+					"images-inline"
+				],
+				"accepts": [
+					"agent-context",
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage"
+				]
 			},
 			"generator": "curtis@<version> or verbatim via serializeCurtAs; omitted when none passed",
 			"capabilities": {
@@ -147,7 +189,11 @@
 				"no callers inside its own repo — library shipped ahead of consumers",
 				"naming convention unimplemented"
 			],
-			"evidence": ["packages/shared/src/curt.ts:24-27,81-103,110-118", "packages/shared/src/curt.test.ts (12 tests)", "cloud/src/routes/sync.ts:1-10"]
+			"evidence": [
+				"packages/shared/src/curt.ts:24-27,81-103,110-118",
+				"packages/shared/src/curt.test.ts (12 tests)",
+				"cloud/src/routes/sync.ts:1-10"
+			]
 		},
 		{
 			"id": "curtis-ai-tech",
@@ -165,8 +211,18 @@
 			"conformanceLevel": null,
 			"conformanceNotes": "L1 pass-in-practice via porter-derived path; fails by the letter. L2 fail.",
 			"extensions": {
-				"emits": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"],
-				"accepts": ["images-inline", "usage-metadata", "tool-linkage", "agent-context"]
+				"emits": [
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage",
+					"agent-context"
+				],
+				"accepts": [
+					"images-inline",
+					"usage-metadata",
+					"tool-linkage",
+					"agent-context"
+				]
 			},
 			"generator": "curtis-ai-chat-porter@<generatorVersion>",
 			"capabilities": {
@@ -180,18 +236,84 @@
 			"gaps": [
 				"fifth independent implementation copy, drift-prone; site claims ('byte-perfect backup', 'readable anywhere, forever') are not tied to any conformance test the site runs"
 			],
-			"evidence": ["public/porter-app.html:1434-1464,8160-8164,8343-8348", "src/pages/curt.astro", "src/pages/licenses.astro"]
+			"evidence": [
+				"public/porter-app.html:1434-1464,8160-8164,8343-8348",
+				"src/pages/curt.astro",
+				"src/pages/licenses.astro"
+			]
+		},
+		{
+			"id": "tractum",
+			"repo": "tractum",
+			"pkg": "tractum@0.5.0",
+			"role": "Python SDK + MCP server — emits signed consensus decisions as .curt artifacts (consensus-receipt extension)",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "native",
+				"detail": "tractum/curt_link.py implements .curt v1 validation + hashing directly (no JS package); validate_curt enforces the 1.1.0 envelope rules incl. BOM rejection"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.1.0 (BOM rule + naming enforced by validate_curt)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not yet run against conformance/ vectors (Python vs TS runner); validate_curt covers L1+L2 envelope+naming rules by construction. Audit pending.",
+			"extensions": {
+				"emits": [
+					"consensus-receipt"
+				],
+				"accepts": [
+					"agent-context",
+					"consensus-receipt"
+				]
+			},
+			"generator": "tractum@<version>",
+			"capabilities": {
+				"bomTolerance": "rejects BOM (spec-compliant)",
+				"strictWholeFileRejection": "yes (validate_curt collects all errors, non-empty = invalid)",
+				"unknownFieldRoundTrip": "yes (payload parsed as opaque dict; extension fields preserved verbatim)",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "n/a (SDK emits document dicts; no filename convention enforced)",
+				"jsonSchemaValidation": "no (structural validation in validate_curt; JSON Schema not invoked)"
+			},
+			"gaps": [
+				"conformance vectors not executed from Python yet",
+				"hash convention (sha256 over canonical JSON) documented in EXTENSIONS.md but not yet normative in SPEC.md"
+			]
 		}
 	],
 	"outOfEcosystem": [
-		{ "repo": "curtis-compliance", "note": "no .curt references" },
-		{ "repo": "curtis-console", "note": "no .curt references" },
-		{ "repo": "curtis-os", "note": "no .curt references (old pre-rename monorepo)" },
-		{ "repo": "curtis-ai-chat-zed", "note": "no .curt references" },
-		{ "repo": "curtis-ai-symphony", "note": "no .curt references" },
-		{ "repo": "curtis-ai-crm", "note": "no .curt references" },
-		{ "repo": "curtis-ai-browser", "note": "no .curt references" },
-		{ "repo": "curtis-ai-theme", "note": "no .curt references" }
+		{
+			"repo": "curtis-compliance",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-console",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-os",
+			"note": "no .curt references (old pre-rename monorepo)"
+		},
+		{
+			"repo": "curtis-ai-chat-zed",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-ai-symphony",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-ai-crm",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-ai-browser",
+			"note": "no .curt references"
+		},
+		{
+			"repo": "curtis-ai-theme",
+			"note": "no .curt references"
+		}
 	],
 	"ecosystemFindings": [
 		"ZERO consumers depend on the npm curt-format package — all five implement or vendor their own copy of the rules.",
