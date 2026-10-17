@@ -63,13 +63,13 @@
 			"read": true,
 			"write": true,
 			"dependency": {
-				"type": "vendored",
-				"detail": "test/curtis-reference/parse-curt.ts pinned to curtis-ai-chat v2.0.1 (1c7a19f, 2026-10-11) used as contract oracle; src/core/curt.ts is its own implementation"
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 from npm; src/core/curt.ts is a thin adapter (curtis-ai-porter@<version> stamp + sanitizeFilename kept as app-level helpers); pinned oracle test/curtis-reference/parse-curt.ts KEPT as post-flip regression check (ruling 2026-10-17)"
 			},
 			"specVersion": 1,
-			"specRevisionImplemented": "pre-1.1.0 (BOM strip only incidental via TextDecoder)",
-			"conformanceLevel": null,
-			"conformanceNotes": "L1 pass-in-practice but fails by the letter (BOM stripped incidentally by TextDecoder, not parseCurt). L2 fail (own sanitizer).",
+			"specRevisionImplemented": "1.2.0 (via curt-format)",
+			"conformanceLevel": "L1",
+			"conformanceNotes": "L1 by delegation to curt-format (BOM tolerated, whole-file rejection, round-trip preserved). Byte-identity verify contract held post-flip: 165/165 suite green 2026-10-17. L2 fail (own sanitizeFilename convention).",
 			"extensions": {
 				"emits": [
 					"images-inline",
@@ -86,22 +86,22 @@
 			},
 			"generator": "curtis-ai-porter@<version> / verbatim via serializeCurtAs",
 			"capabilities": {
-				"bomTolerance": "incidental (TextDecoder default strips UTF-8 BOM on the detect path; parseCurt itself does not)",
-				"strictWholeFileRejection": "yes (per file; zip archive best-effort by design)",
-				"unknownFieldRoundTrip": "yes (conversation verbatim; top-level extras dropped on parse)",
+				"bomTolerance": "yes (via curt-format)",
+				"strictWholeFileRejection": "yes (curt-format guard; zip archive best-effort by design)",
+				"unknownFieldRoundTrip": "yes (conversation verbatim; top-level envelope extras dropped by curt-format parseCurt — reference behavior)",
 				"generatorStamped": "yes",
 				"curtFilenameConvention": "divergent (own sanitizeFilename: 100-char cap + Windows reserved names; curtZipEntryName deliberately dropped)",
 				"jsonSchemaValidation": "no (17-test executable conformance suite instead)"
 			},
 			"gaps": [
-				"no test covers a UTF-8-BOM .curt file",
-				"oracle pinned to curtis-ai-chat v2.0.1 while the plugin repo now self-identifies as curtis@1.0.0 — version lineage broken by the rename"
+				"curt-format conformance vectors not pinned in-repo (L1 claimed by delegation to the reference implementation; the byte-identity verify suite is the regression guard)",
+				"oracle pinned to curtis-ai-chat v2.0.1 while the plugin repo now self-identifies as curtis@1.0.0 — version lineage broken by the rename (kept deliberately per ruling 2026-10-17)"
 			],
 			"evidence": [
-				"src/core/curt.ts:22-23,79-101",
-				"test/curtis-reference/parse-curt.ts",
+				"src/core/curt.ts (adapter over curt-format)",
+				"test/curtis-reference/parse-curt.ts (pinned oracle, untouched)",
 				"test/contract-assertions.ts",
-				"docs/curt-format.md:9"
+				"npm test: 165/165 post-flip 2026-10-17 (porter commit 6f061e4)"
 			]
 		},
 		{
@@ -313,7 +313,7 @@
 		}
 	],
 	"ecosystemFindings": [
-		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. First flips: curtis-cloud (npm dep, L1 via delegation) and curtis-web (npm dep, write-side) now consume curt-format from npm (2026-10-17; curtis-cloud df1b13e, curtis-web ad7aa51).",
+		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. All four core consumers flipped to the npm curt-format package 2026-10-17 (curtis-cloud df1b13e, curtis-web ad7aa51, curtis 463963f, porter 6f061e4). Remaining independent copies: curtis-ai-tech inline parser.",
 		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
 		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
