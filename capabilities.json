@@ -17,13 +17,13 @@
 			"read": true,
 			"write": true,
 			"dependency": {
-				"type": "vendored",
-				"detail": "src/import/curt-format.ts local copy; types only from @curtisai/shared ^0.1.2 (whose runtime .curt code is never called)"
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 from npm; src/import/curt-format.ts is a thin adapter (curtis@<version> stamp + curtZipEntryName kept as app-level helpers); conformance vectors pinned at src/import/conformance (core.json, extensions.json)"
 			},
 			"specVersion": 1,
-			"specRevisionImplemented": "pre-1.1.0 (no BOM rule, older naming)",
-			"conformanceLevel": null,
-			"conformanceNotes": "Fails L1 by the letter: parseCurt has no BOM tolerance. Naming divergent (L2 fail).",
+			"specRevisionImplemented": "1.2.0 (via curt-format)",
+			"conformanceLevel": "L1",
+			"conformanceNotes": "L1: core vectors executed in-repo (src/import/curt-format.test.ts; core + extension vectors green post-flip 2026-10-17). Extension all-accept vectors pass. L2 fail (curtZipEntryName uses 6 id chars vs spec's 8; own convention).",
 			"extensions": {
 				"emits": [
 					"images-inline",
@@ -38,23 +38,21 @@
 			},
 			"generator": "curtis@<plugin-version>",
 			"capabilities": {
-				"bomTolerance": "no",
-				"strictWholeFileRejection": "yes (per file; zip entries: best-effort skip)",
-				"unknownFieldRoundTrip": "partial (conversation + messages yes; top-level envelope extras dropped, generator replaced on re-serialize)",
+				"bomTolerance": "yes (via curt-format)",
+				"strictWholeFileRejection": "yes (curt-format guard; zip entries: best-effort skip)",
+				"unknownFieldRoundTrip": "yes (conversation verbatim; top-level envelope extras dropped by curt-format parseCurt — reference behavior)",
 				"generatorStamped": "yes",
 				"curtFilenameConvention": "divergent (curtZipEntryName uses <date> <slug> <id-6>; spec says last-8 or post-underscore suffix)",
 				"jsonSchemaValidation": "no"
 			},
 			"gaps": [
-				"parseCurt has no BOM tolerance (spec 1.1.0 rule)",
-				"zero direct parseCurt unit tests — coverage only via backup-format.test.ts",
 				"naming suffix uses 6 id chars vs spec's 8",
-				"top-level unknown fields lost on re-serialize"
+				"L3 zip-level rules not executed in-repo (bulk vectors not pinned)"
 			],
 			"evidence": [
-				"src/import/curt-format.ts:8-9,43,69",
-				"src/import/curt.ts",
-				"src/backup/backup-format.ts:104,138-141"
+				"src/import/curt-format.ts (adapter over curt-format)",
+				"src/import/curt-format.test.ts (19 conformance vectors, green post-flip 2026-10-17)",
+				"src/backup/backup-format.ts:17"
 			]
 		},
 		{
