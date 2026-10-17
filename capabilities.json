@@ -114,13 +114,13 @@
 			"read": false,
 			"write": true,
 			"dependency": {
-				"type": "hand-rolled",
-				"detail": "apps/web/src/server/export.ts reimplementation, parity kept by hand against the porter contract; no curt-format / @curtisai dep"
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 from npm; apps/web/src/server/export.ts stamps curtis-web provenance over curt-format serializeCurt and keeps download helpers (filename sanitize, Content-Disposition, zip entry names) local"
 			},
 			"specVersion": 1,
-			"specRevisionImplemented": "pre-1.1.0 (write-only, so BOM/type-guard rules not applicable)",
+			"specRevisionImplemented": "1.2.0 (write-side via curt-format)",
 			"conformanceLevel": null,
-			"conformanceNotes": "No reader exists; L1 untestable. Write-side conforms (verbatim envelope, generator stamped). L2 fail (title-only filenames).",
+			"conformanceNotes": "No reader exists; L1 untestable. Write-side now canonical via curt-format serializeCurt (generator stamped). L2 fail (title-only filenames).",
 			"extensions": {
 				"emits": [
 					"usage-metadata",
@@ -143,7 +143,7 @@
 				"generator version hardcoded"
 			],
 			"evidence": [
-				"apps/web/src/server/export.ts:21-27,45-51",
+				"apps/web/src/server/export.ts (serializeCurtAs adapter over curt-format; helpers local)",
 				"apps/web/src/server/export.test.ts (14 .curt tests)",
 				"apps/web/src/app/api/export/route.ts"
 			]
@@ -315,7 +315,7 @@
 		}
 	],
 	"ecosystemFindings": [
-		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. First flip: curtis-cloud now consumes curt-format from npm (2026-10-17, curtis-cloud df1b13e).",
+		"ZERO consumers depended on the npm curt-format package at audit time — all five implemented or vendored their own copy of the rules. First flips: curtis-cloud (npm dep, L1 via delegation) and curtis-web (npm dep, write-side) now consume curt-format from npm (2026-10-17; curtis-cloud df1b13e, curtis-web ad7aa51).",
 		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
 		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
