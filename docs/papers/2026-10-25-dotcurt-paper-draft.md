@@ -188,6 +188,12 @@ We presented .curt, a single-file, conversations-first, LLM-native conversation 
 
 ---
 
+## Preparation disclosure
+
+Literature discovery, citation verification, and first-draft prose for this paper were produced with AI assistance under the author's direction. Every source cited was retrieved and verified against the original; the verification method is documented in a public evidence report accompanying the artifact ([docs/papers/2026-10-25-literature-sweep-evidence-report.md](2026-10-25-literature-sweep-evidence-report.md)); and all claims, decisions, and accountability rest with the author.
+
+---
+
 ## References
 
 [1] P. De Hert, S. Gutwirth, A. Moscibroda, et al., "The right to data portability in the GDPR," *Computer Law & Security Review*, 2018. https://www.sciencedirect.com/science/article/pii/S0267364917303333
