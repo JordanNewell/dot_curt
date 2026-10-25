@@ -1,32 +1,80 @@
-# dotcurt.org is served by the dotcurt-site Worker (static assets in site/).
-# Merges to main that touch the site deploy via wrangler. Requires the
-# CLOUDFLARE_API_TOKEN repo secret (Cloudflare token, Workers Scripts:Edit) —
-# same value as curtis-ai-tech / tractum-site / jordannewell-com; Actions
-# secrets are per-repo on a personal account, so each repo carries its own.
+# dotcurt.org — same deploy shape as jordannewell.com: Cloudflare Pages,
+# branch-per-preview. main -> dotcurt-site.pages.dev (production alias);
+# any other branch -> <branch>.dotcurt-site.pages.dev (design playground,
+# behind Cloudflare Access). Requires the CLOUDFLARE_API_TOKEN repo secret
+# (same token as curtis-ai-tech / tractum-site / jordannewell-com; needs
+# Pages: Edit + Workers Scripts: Edit during the Worker cutover).
+#
+# The dotcurt-site WORKER still serves the dotcurt.org custom domain until
+# the cutover (attach Pages custom domain, detach worker domain, retire
+# worker + wrangler.jsonc). Until then this workflow only stands up the
+# pages.dev aliases.
 name: Deploy site
 
 on:
   push:
-    branches: [main]
-    paths: ['site/**', 'wrangler.jsonc', '.github/workflows/deploy-site.yml']
+    branches: ["**"]
+    paths: ['site/**', '.github/workflows/deploy-site.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# One deploy at a time per branch; a newer push supersedes the in-flight deploy.
 concurrency:
-  group: deploy-site
+  group: deploy-site-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 554619f8c7d3a4010cb161df3037269d
+
+      - name: Ensure Pages project exists
+        if: env.HAS_CF_TOKEN == 'true'
+        run: |
+          npx wrangler pages project list | grep -q "dotcurt-site" \
+            || npx wrangler pages project create dotcurt-site --production-branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 554619f8c7d3a4010cb161df3037269d
+
+      - name: Deploy to Cloudflare Pages
+        if: env.HAS_CF_TOKEN == 'true'
+        run: npx wrangler pages deploy site --project-name=dotcurt-site --branch="${{ github.ref_name }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 554619f8c7d3a4010cb161df3037269d
+
+      - name: Smoke-check the deployment
+        if: env.HAS_CF_TOKEN == 'true'
+        # main serves the production alias; any other branch gets
+        # <branch>.dotcurt-site.pages.dev behind Cloudflare Access — a 302 to
+        # the login means the deployment is serving. Only 200 proves content
+        # on the ungated production alias.
+        run: |
+          sleep 20
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            base="https://dotcurt-site.pages.dev"
+            ok_codes="200"
+          else
+            base="https://${{ github.ref_name }}.dotcurt-site.pages.dev"
+            ok_codes="200 302"
+          fi
+          for path in / /style.css /adopt/ /posts/2026-10-25-one-file/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "${base}${path}")
+            echo "${path} -> ${code}"
+            echo "$ok_codes" | grep -qw "$code" || { echo "FAIL: ${path} not in [$ok_codes]"; exit 1; }
+          done
+
+      - name: No token yet — skip deploy
+        if: env.HAS_CF_TOKEN != 'true'
+        run: |
+          echo "::warning::CLOUDFLARE_API_TOKEN secret is not set — site present, deploy skipped."
