@@ -36,9 +36,9 @@ jobs:
             | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['result'][0]['id'] if d.get('result') else '')")
           echo "worker domain id: ${DOMAIN_ID:-none}"
           if [ -n "$DOMAIN_ID" ]; then
-            curl -s -X DELETE -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/domains/$DOMAIN_ID" \
-              | python3 -c "import sys,json;d=json.load(sys.stdin);print('detach ok:',d['success'],d.get('errors'))"
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/domains/$DOMAIN_ID")
+            echo "detach http: $CODE (200 = detached; empty body is expected)"
           fi
 
       - name: Attach $HOST to the Pages project
