@@ -4,41 +4,76 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="color-scheme" content="light">
-	<title>The .curt format — one file, one conversation, full fidelity</title>
-	<meta name="description" content=".curt is an open, single-file conversation format for AI chats: byte-robust, strictly validatable, zero dependencies. Spec and reference implementation, BUSL-1.1 (source-available; Apache-2.0 after 2030-10-12).">
-	<meta name="theme-color" content="#F5F5F3">
-	<meta property="og:title" content="The .curt format — one file, one conversation, full fidelity">
-	<meta property="og:description" content="An open, single-file conversation format for AI chats. Your history is files, not hostages.">
+	<title>.curt — one file, one conversation, full fidelity</title>
+	<meta name="description" content=".curt is an open, MIT-licensed format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity, strict whole-file validation. Spec, reference implementation, JSON Schema, and executable conformance vectors.">
+	<meta name="theme-color" content="#FAF6E9">
+	<link rel="canonical" href="https://dotcurt.org/">
+	<meta property="og:title" content=".curt — one file, one conversation, full fidelity">
+	<meta property="og:description" content="An open format for AI conversations. Your history is files, not hostages.">
 	<meta property="og:type" content="website">
-	<meta property="og:site_name" content="Curtis.">
-	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F5F5F3'/%3E%3Ccircle cx='32' cy='38' r='11' fill='%230E7A45'/%3E%3C/svg%3E">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+	<meta property="og:url" content="https://dotcurt.org/">
+	<meta property="og:site_name" content=".curt">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
+
 	<style>
 		/*
-		  Curtis Records Office — paper theme, ported from curtisai.tech.
+		  The Filing Room — dotcurt.org.
+		  Kin to the Curtis Records Office (curtisai.tech): warm paper, ruled
+		  hairlines, mono labels, one stamp, no shadows, no gradients.
+		  This room is manila and ochre, and its punctuation is the leading dot.
 		  No hex outside this token block.
 		*/
 		:root {
-			--paper: #F5F5F3;
-			--paper-surface: #FFFFFF;
-			--ruling: #DDE0D8;
-			--text: #1A1A18;
-			--muted: #6B6B66;
-			--green-bar: #F0F2EC;
-			--green-700: #0E7A45;
-			--green-900: #0A4A2C;
-			--green-500: #23A45F;
-			--ink: #0A0A0A;
-			--stamp-red: #BE3A2B;
-			--font-display: 'Fraunces Variable', Fraunces, Georgia, serif;
-			--font-body: 'IBM Plex Sans', system-ui, sans-serif;
-			--font-records: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+			--paper: #FAF6E9;
+			--surface: #FFFDF2;
+			--folder: #F3ECD3;
+			--folder-deep: #EBE1BE;
+			--ruling: #E0D6B4;
+			--text: #221F12;
+			--muted: #6F6A52;
+			--bar: #F4EED8;
+			--ochre-700: #8A6A00;
+			--ochre-900: #63500A;
+			--ochre-500: #A58414;
+			--stamp: #B4532A;
+			--ink-canvas: #1C1910;
+			--ink-border: #39351D;
+			--ink-text: #F3EDD8;
+			--ink-muted: #A29B7D;
+			--ink-dim: #7E7860;
+			--gold: #D9AE3A;
+			--font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+			--font-records: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
 			--radius-s: 4px;
 			--radius-m: 8px;
 			--radius-pill: 9999px;
 			--measure: 66ch;
+		}
+
+		/* Self-hosted, latin subsets, variable weights. No third-party requests. */
+		@font-face {
+			font-family: 'Newsreader';
+			font-style: normal;
+			font-weight: 400 700;
+			font-display: swap;
+			src: url('fonts/newsreader-roman.woff2') format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+		@font-face {
+			font-family: 'Newsreader';
+			font-style: italic;
+			font-weight: 400 700;
+			font-display: swap;
+			src: url('fonts/newsreader-italic.woff2') format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+		@font-face {
+			font-family: 'Spline Sans Mono';
+			font-style: normal;
+			font-weight: 400 600;
+			font-display: swap;
+			src: url('fonts/spline-mono.woff2') format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 		}
 
 		* { box-sizing: border-box; }
@@ -49,63 +84,91 @@
 			margin: 0;
 			background: var(--paper);
 			color: var(--text);
-			font-family: var(--font-body);
+			font-family: var(--font-display);
 			font-size: 1.0625rem;
 			line-height: 1.6;
 			font-optical-sizing: auto;
 		}
 
-		a { color: var(--green-700); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-		a:hover { color: var(--green-900); }
+		a { color: var(--ochre-700); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+		a:hover { color: var(--ochre-900); }
+
+		::selection { background: var(--folder); color: var(--ochre-900); }
+
+		:focus-visible { outline: 2px solid var(--ochre-700); outline-offset: 2px; }
+
+		::-webkit-scrollbar { width: 12px; height: 12px; }
+		::-webkit-scrollbar-track { background: var(--paper); border-left: 1px solid var(--ruling); }
+		::-webkit-scrollbar-thumb { background: var(--text); border: 3px solid var(--paper); border-radius: var(--radius-pill); }
+		::-webkit-scrollbar-thumb:hover { background: var(--ochre-700); }
 
 		.wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; }
 
 		main { padding: 3rem 0 4rem; }
 
-		.section { margin-top: 4rem; }
+		.section { margin-top: 4.5rem; }
 
 		h1, h2, h3 {
 			font-family: var(--font-display);
 			font-weight: 600;
 			line-height: 1.12;
-			letter-spacing: -0.015em;
+			letter-spacing: -0.01em;
 			margin: 0 0 1rem;
 			text-wrap: balance;
 		}
-		h1 { font-size: clamp(2.4rem, 6vw, 3.75rem); }
+		h1 { font-size: clamp(2.5rem, 6vw, 3.9rem); }
 		h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
 
 		p { max-width: var(--measure); margin: 0 0 1.25rem; }
 
-		.lede { font-size: 1.3rem; max-width: 52ch; }
+		.lede { font-size: 1.3rem; max-width: 30em; line-height: 1.5; }
 		.lede em { font-style: italic; }
 
 		.muted { color: var(--muted); }
 		.small { font-size: 0.875rem; }
 
-		/* the green full stop — one per line, always deliberate */
-		.stop { color: var(--green-700); }
+		/* the leading dot — the format's own punctuation, one per line */
+		.dot { color: var(--ochre-700); }
 
-		code { font-family: var(--font-records); font-size: 0.9375em; }
+		code { font-family: var(--font-records); font-size: 0.9em; }
+
+		.label {
+			font-family: var(--font-records);
+			font-size: 0.8125rem;
+			color: var(--muted);
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			margin: 0 0 1.25rem;
+		}
 
 		pre {
 			font-family: var(--font-records);
 			font-size: 0.9375rem;
-			line-height: 1.6;
-			background: var(--paper-surface);
+			line-height: 1.65;
+			background: var(--surface);
 			border: 1px solid var(--ruling);
 			border-radius: var(--radius-s);
 			padding: 1.25rem 1.5rem;
-			max-width: 42rem;
+			max-width: 44rem;
 			overflow-x: auto;
 			tab-size: 4;
 		}
 		pre code { font-size: inherit; }
 
 		.k { color: var(--muted); }
-		.s { color: var(--green-700); }
-		.n { color: var(--green-500); }
-		.c { color: var(--muted); }
+		.s { color: var(--ochre-700); }
+		.n { color: var(--ochre-500); }
+		.c { color: var(--muted); font-style: italic; }
+
+		pre.dark {
+			background: var(--ink-canvas);
+			border-color: var(--ink-border);
+			color: var(--ink-text);
+		}
+		pre.dark .k { color: var(--ink-muted); }
+		pre.dark .s { color: var(--gold); }
+		pre.dark .n { color: var(--gold); }
+		pre.dark .c { color: var(--ink-dim); }
 
 		/* ---- header / footer ---- */
 
@@ -118,22 +181,21 @@
 		}
 
 		.wordmark {
-			font-family: var(--font-display);
+			font-family: var(--font-records);
 			font-weight: 600;
+			font-size: 1.25rem;
 			letter-spacing: -0.02em;
-			font-size: 1.375rem;
 			color: var(--text);
 			text-decoration: none;
 		}
 		.wordmark:hover { color: var(--text); }
-		.wordmark .stop { color: var(--green-700); }
+		.wordmark .dot { color: var(--ochre-700); }
 
-		.site-nav { font-size: 0.9375rem; }
-		.site-nav a { color: var(--text); text-decoration: none; margin-left: 1.25rem; }
-		.site-nav a:hover { color: var(--green-700); }
-		.site-nav a[aria-current="page"] { color: var(--green-700); }
+		.site-nav { font-family: var(--font-records); font-size: 0.875rem; }
+		.site-nav a { color: var(--text); text-decoration: none; margin-left: 1.125rem; }
+		.site-nav a:hover { color: var(--ochre-700); }
 
-		.site-foot { border-top: 1px solid var(--ruling); margin-top: 0.75rem; padding: 2rem 0 3rem; color: var(--muted); font-size: 0.875rem; }
+		.site-foot { border-top: 1px solid var(--ruling); padding: 2rem 0 3rem; color: var(--muted); font-size: 0.875rem; }
 		.site-foot .wrap {
 			display: flex;
 			justify-content: space-between;
@@ -146,8 +208,13 @@
 
 		/* ---- hero ---- */
 
-		.hero { padding: 3rem 0 1rem; }
-		.hero h1 { margin-bottom: 1.5rem; }
+		.hero {
+			display: grid;
+			grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+			gap: 3rem;
+			align-items: start;
+			padding-top: 2rem;
+		}
 
 		.kicker {
 			font-family: var(--font-records);
@@ -157,26 +224,32 @@
 			text-transform: uppercase;
 			margin: 0 0 1.5rem;
 		}
+		.kicker b { color: var(--ochre-700); font-weight: 500; }
 
-		.cta-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 2rem 0; }
+		.hero h1 { margin-bottom: 1.5rem; }
+
+		.cta-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 2rem 0 1.25rem; }
 
 		.cta {
 			display: inline-block;
-			background: var(--green-700);
-			color: var(--paper);
-			font-family: var(--font-body);
+			background: var(--ochre-700);
+			color: var(--surface);
+			font-family: var(--font-records);
 			font-weight: 500;
-			font-size: 1rem;
+			font-size: 0.9375rem;
+			letter-spacing: 0.02em;
 			text-decoration: none;
 			padding: 0.75rem 1.5rem;
 			border-radius: var(--radius-pill);
 		}
-		.cta:hover { background: var(--green-900); color: var(--paper); }
+		.cta:hover { background: var(--ochre-900); color: var(--surface); }
 
 		.cta-quiet {
 			display: inline-block;
 			border: 1px solid var(--ruling);
 			color: var(--text);
+			font-family: var(--font-records);
+			font-size: 0.9375rem;
 			text-decoration: none;
 			padding: 0.75rem 1.5rem;
 			border-radius: var(--radius-pill);
@@ -187,7 +260,7 @@
 			display: inline-flex;
 			align-items: center;
 			gap: 1rem;
-			background: var(--paper-surface);
+			background: var(--surface);
 			border: 1px solid var(--ruling);
 			border-radius: var(--radius-s);
 			padding: 0.625rem 0.75rem 0.625rem 1.25rem;
@@ -207,30 +280,63 @@
 			padding: 0.25rem 0.75rem;
 			cursor: pointer;
 		}
-		.install button:hover { color: var(--green-700); border-color: var(--green-700); }
+		.install button:hover { color: var(--ochre-700); border-color: var(--ochre-700); }
 
-		/* ---- the receipt: signature container ---- */
+		/* ---- the folder: this site's signature container ---- */
 
-		.receipt {
-			background: var(--paper-surface);
+		.folder { position: relative; max-width: 34rem; margin-top: 1.5rem; }
+
+		.folder-tab {
+			display: inline-block;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			background: var(--folder-deep);
 			border: 1px solid var(--ruling);
-			border-top: 2px dashed var(--text);
-			border-bottom: 2px dashed var(--text);
-			border-radius: var(--radius-s);
+			border-bottom: none;
+			border-radius: 6px 6px 0 0;
+			padding: 0.5rem 1rem 0.375rem;
+			font-family: var(--font-records);
+			font-size: 0.8125rem;
+			color: var(--text);
+		}
+
+		.folder-body {
+			background: var(--folder);
+			border: 1px solid var(--ruling);
+			border-radius: 0 var(--radius-s) var(--radius-s) var(--radius-s);
 			font-family: var(--font-records);
 			font-size: 0.9375rem;
 			line-height: 1.7;
 			padding: 1.5rem 2rem;
-			max-width: 34rem;
 		}
-		.receipt .r-head { letter-spacing: 0.08em; margin-bottom: 0.25rem; }
-		.receipt .r-sub { color: var(--muted); font-size: 0.8125rem; margin-bottom: 1rem; }
-		.receipt .r-row { display: flex; gap: 1rem; }
-		.receipt .r-row .k { color: var(--muted); min-width: 7.5rem; }
-		.receipt .r-row .v { color: var(--text); }
-		.receipt .r-ok { color: var(--green-700); }
 
-		/* ---- records table ---- */
+		.folder-body .f-head { letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+		.folder-body .f-sub { color: var(--muted); font-size: 0.75rem; letter-spacing: 0.08em; margin-bottom: 1rem; }
+		.folder-body .f-row { display: flex; gap: 1rem; }
+		.folder-body .f-row .k { color: var(--muted); min-width: 6rem; }
+		.folder-body .f-row .v { color: var(--text); overflow-wrap: anywhere; }
+		.folder-body .f-ok { color: var(--ochre-700); }
+
+		/* the stamp: one per view, proof moments only */
+		.stamp {
+			position: absolute;
+			top: -3.1rem;
+			right: 0;
+			transform: rotate(4deg);
+			color: var(--stamp);
+			border: 3px solid var(--stamp);
+			border-radius: var(--radius-s);
+			font-family: var(--font-records);
+			font-weight: 500;
+			font-size: 0.9375rem;
+			letter-spacing: 0.35em;
+			padding: 0.375rem 0.5rem 0.375rem 0.9rem;
+			background: var(--paper);
+		}
+
+		/* ---- records tables ---- */
 
 		.table-wrap { overflow-x: auto; }
 		.records {
@@ -238,9 +344,9 @@
 			font-family: var(--font-records);
 			font-size: 0.9375rem;
 			width: 100%;
-			max-width: 42rem;
+			max-width: 46rem;
 			border: 1px solid var(--ruling);
-			background: var(--paper-surface);
+			background: var(--surface);
 		}
 		.records th {
 			text-align: left;
@@ -248,82 +354,74 @@
 			color: var(--muted);
 			padding: 0.625rem 1rem;
 			border-bottom: 1px solid var(--ruling);
+			letter-spacing: 0.02em;
 		}
-		.records td { padding: 0.625rem 1rem; }
-		.records tr:nth-child(even) td { background: var(--green-bar); }
+		.records td { padding: 0.625rem 1rem; vertical-align: top; }
+		.records tr:nth-child(even) td { background: var(--bar); }
 		.records td:first-child { white-space: nowrap; }
-		.records .req { color: var(--green-700); }
+		.records .req { color: var(--ochre-700); }
+		.records .small-cell { font-size: 0.8125rem; color: var(--muted); }
 
-		/* ---- stamp: one per view, proof moments only ---- */
+		/* ---- status pills ---- */
 
-		.stamp {
+		.status {
 			display: inline-block;
-			color: var(--stamp-red);
-			border: 3px solid var(--stamp-red);
-			border-radius: var(--radius-s);
 			font-family: var(--font-records);
-			font-weight: 500;
-			font-size: 1.125rem;
-			letter-spacing: 0.35em;
-			padding: 0.375rem 0.75rem 0.375rem 1.1rem;
-			transform: rotate(-4deg);
+			font-size: 0.6875rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			padding: 0.1875rem 0.625rem;
+			border-radius: var(--radius-pill);
+			border: 1px solid var(--muted);
+			color: var(--muted);
+			white-space: nowrap;
 		}
+		.status-stable { border-color: var(--ochre-700); color: var(--ochre-700); }
+		.status-must { border-color: var(--ochre-700); background: var(--ochre-700); color: var(--surface); }
 
-		.rules { list-style: none; margin: 0; padding: 0; max-width: 42rem; }
+		/* ---- ruled lists ---- */
+
+		.rules { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
 		.rules li {
 			display: flex;
 			gap: 1.25rem;
 			padding: 1rem 0;
 			border-bottom: 1px solid var(--ruling);
+			align-items: baseline;
 		}
 		.rules .r-num {
 			font-family: var(--font-records);
 			font-size: 0.8125rem;
-			color: var(--green-700);
-			padding-top: 0.3rem;
+			color: var(--ochre-700);
 			min-width: 2rem;
 		}
+		.rules .r-body { max-width: var(--measure); }
 
-		/* ---- manifest: the filing convention ---- */
-
-		.manifest {
-			background: var(--paper-surface);
-			border: 1px solid var(--ruling);
-			border-top: 2px dashed var(--text);
-			border-bottom: 2px dashed var(--text);
-			border-radius: var(--radius-s);
+		.claims { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
+		.claims li {
+			display: flex;
+			gap: 1.25rem;
+			padding: 1rem 0;
+			border-bottom: 1px solid var(--ruling);
+			align-items: baseline;
+			flex-wrap: wrap;
+		}
+		.claims .lvl {
 			font-family: var(--font-records);
-			font-size: 0.9375rem;
-			line-height: 1.7;
-			padding: 1.5rem 2rem;
-			max-width: 42rem;
-		}
-		.manifest .m-head { letter-spacing: 0.08em; margin-bottom: 0.25rem; }
-		.manifest .m-sub { color: var(--muted); font-size: 0.8125rem; margin-bottom: 1rem; }
-		.manifest .m-file {
-			color: var(--green-700);
-			font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-			overflow-wrap: anywhere;
-			margin-bottom: 1rem;
-		}
-		.manifest .m-row { display: flex; gap: 1rem; }
-		.manifest .m-row .k { color: var(--muted); min-width: 12rem; white-space: nowrap; }
-		.manifest .m-foot {
-			margin-top: 1rem;
-			padding-top: 0.75rem;
-			border-top: 1px solid var(--ruling);
-			color: var(--muted);
 			font-size: 0.8125rem;
+			color: var(--ochre-700);
+			min-width: 10.5rem;
 		}
+		.claims .r-body { flex: 1; min-width: 16rem; max-width: var(--measure); }
 
 		/* ---- "Not yet" box: the honesty device ---- */
 
 		.not-yet {
 			border: 1px solid var(--ruling);
-			background: var(--paper-surface);
+			background: var(--surface);
 			border-radius: var(--radius-m);
 			padding: 1.5rem 2rem;
-			max-width: 42rem;
+			max-width: 46rem;
 		}
 		.not-yet .ny-label {
 			font-family: var(--font-records);
@@ -331,7 +429,7 @@
 			color: var(--muted);
 			letter-spacing: 0.08em;
 			display: block;
-			margin-bottom: 0.5rem;
+			margin-bottom: 0.75rem;
 		}
 		.not-yet p { margin-bottom: 0.75rem; font-size: 1rem; }
 		.not-yet p:last-child { margin-bottom: 0; }
@@ -348,24 +446,35 @@
 			text-transform: uppercase;
 			overflow: hidden;
 		}
-		.ticker-track { display: flex; width: max-content; animation: ticker-roll 48s linear infinite; }
+		.ticker-track { display: flex; width: max-content; animation: ticker-roll 55s linear infinite; }
 		.ticker:hover .ticker-track { animation-play-state: paused; }
 		.ticker-run { display: flex; list-style: none; margin: 0; padding: 0; }
 		.ticker-run li { white-space: nowrap; padding: 0.937rem 0; }
-		.ticker-run li::after { content: '·'; color: var(--green-700); margin: 0 1.75rem; }
+		.ticker-run li::after { content: '·'; color: var(--ochre-700); margin: 0 1.75rem; }
 
 		@keyframes ticker-roll {
 			from { transform: translateX(0); }
 			to { transform: translateX(-33.3333%); }
 		}
 
+		@media (prefers-reduced-motion: reduce) {
+			.ticker-track { animation: none; }
+		}
+
 		/* The marquee runs slow, linear, overflow-hidden and non-interactive,
-		   per the Records Office house rule. */
+		   per the house rule it inherits. */
+
+		@media (max-width: 56rem) {
+			.hero { grid-template-columns: 1fr; }
+			.folder { margin-top: 0.5rem; }
+		}
 
 		@media (max-width: 40rem) {
-			.receipt .r-row, .manifest .m-row { flex-direction: column; gap: 0; }
-			.receipt .r-row .k, .manifest .m-row .k { min-width: 0; }
-			.site-nav a { margin-left: 0.75rem; }
+			.folder-body .f-row { flex-direction: column; gap: 0; }
+			.folder-body .f-row .k { min-width: 0; }
+			.stamp { right: 0; font-size: 0.8125rem; top: -2.75rem; }
+			.site-nav a { margin-left: 0.625rem; }
+			.site-nav { font-size: 0.8125rem; }
 		}
 	</style>
 </head>
@@ -373,62 +482,70 @@
 
 <header class="site-head">
 	<div class="wrap">
-		<a class="wordmark" href="#"><span class="stop">.</span>curt</a>
+		<a class="wordmark" href="#top"><span class="dot">.</span>curt</a>
 		<nav class="site-nav" aria-label="the format">
-			<a href="#guarantee">guarantee</a>
 			<a href="#shape">shape</a>
-			<a href="#validation">validation</a>
-			<a href="#use">use</a>
-			<a href="https://github.com/JordanNewell/dot_curt">GitHub</a>
+			<a href="#extensions">extensions</a>
+			<a href="#conformance">conformance</a>
+			<a href="#ecosystem">ecosystem</a>
+			<a href="#research">research</a>
+			<a href="https://github.com/JordanNewell/dot_curt">github</a>
 		</nav>
 	</div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="top">
 
 	<div class="hero">
-		<p class="kicker">An open format for AI conversations — spec v1, kept by Curtis</p>
-		<h1>The .curt format<span class="stop">.</span></h1>
-		<p class="lede">
-			<code>.curt</code> is an open, single-file format for AI chat conversations:
-			one file, one conversation, full fidelity — images and tool calls ride
-			verbatim. Born in Curtis AI Chat, specified openly so <em>any</em> app can
-			read and write it. Your history is files, not hostages.
-		</p>
-		<div class="cta-row">
-			<a class="cta" href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">Read the spec</a>
-			<a class="cta-quiet" href="https://github.com/JordanNewell/dot_curt">dot_curt on GitHub</a>
+		<div>
+			<p class="kicker">An open format for AI conversations — <b>spec v1 · curt-format@1.2.0 · MIT</b></p>
+			<h1>One file, one conversation, kept whole.</h1>
+			<p class="lede">
+				A <code>.curt</code> file is UTF-8 JSON — the whole thread in one
+				file. Images and tool calls ride verbatim, unknown fields survive
+				foreign readers, and a corrupted file is rejected whole, never
+				half-imported. Born in Curtis AI Chat, owned by no one.
+			</p>
+			<div class="cta-row">
+				<a class="cta" href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">Read the spec</a>
+				<a class="cta-quiet" href="https://www.npmjs.com/package/curt-format">curt-format on npm</a>
+			</div>
+			<div class="install">
+				<span class="ps">$</span>
+				<code>npm install curt-format</code>
+				<button id="copy" type="button" aria-label="Copy install command">copy</button>
+			</div>
 		</div>
-		<div class="install">
-			<span class="ps">$</span>
-			<code>npm install curt-format</code>
-			<button id="copy" type="button" aria-label="Copy install command">copy</button>
+
+		<div class="folder">
+			<span class="folder-tab">2026-10-14 design-review 001<span class="dot">.curt</span></span>
+			<div class="folder-body">
+				<div class="f-head">.CURT — THE FILE, OPENED</div>
+				<div class="f-sub">WHAT EVERY CONFORMING READER OWES YOU</div>
+				<div class="f-row"><span class="k">magic</span><span class="v">"curtis-conversation" — exact</span></div>
+				<div class="f-row"><span class="k">version</span><span class="v">1, the number — a string "1" is a rejection</span></div>
+				<div class="f-row"><span class="k">fidelity</span><span class="v">base64 images and tool calls ride in content, verbatim</span></div>
+				<div class="f-row"><span class="k">tolerance</span><span class="v">one leading UTF-8 BOM ignored; writers never emit it</span></div>
+				<div class="f-row"><span class="k">round-trip</span><span class="v f-ok">unknown fields preserved on re-save ✓</span></div>
+				<div class="f-row"><span class="k">license</span><span class="v">MIT — spec, reference code, schema, fixtures</span></div>
+			</div>
+			<span class="stamp" aria-hidden="true">OPEN · MIT</span>
 		</div>
 	</div>
 
-	<section class="section" id="guarantee">
-		<div class="receipt">
-			<div class="r-head">.CURT — THE GUARANTEE</div>
-			<div class="r-sub">WHY THE FORMAT CAN BE TRUSTED</div>
-			<div class="r-row"><span class="k">shape</span><span class="v">one file, one conversation, UTF-8 JSON</span></div>
-			<div class="r-row"><span class="k">fidelity</span><span class="v">base64 images and tool calls survive verbatim</span></div>
-			<div class="r-row"><span class="k">validation</span><span class="v">strict — a corrupted file is rejected whole, never half-imported</span></div>
-			<div class="r-row"><span class="k">round-trip</span><span class="v r-ok">unknown fields preserved ✓ — your data survives foreign readers</span></div>
-			<div class="r-row"><span class="k">license</span><span class="v">BUSL-1.1 — zero dependencies in the reference reader</span></div>
-		</div>
-	</section>
-
 	<section class="section" id="shape">
-		<h2>File shape<span class="stop">.</span></h2>
+		<h2>The envelope, and what rides inside.</h2>
 		<p class="muted small">
-			A <code>.curt</code> file is UTF-8 JSON (tab-indented by convention). The
-			<code>generator</code> field lets your app sign what it wrote — readers
-			must ignore it.
+			A <code>.curt</code> file is UTF-8 JSON, tab-indented by convention.
+			The <code>generator</code> field lets a writer sign its work —
+			readers must ignore it: presence, absence, or value never affects
+			parsing. Declared capabilities ride in <code>extensions</code>.
 		</p>
-		<pre aria-label="The .curt envelope"><code>{
+		<pre class="dark" aria-label="The .curt envelope"><code>{
 	<span class="k">"curt"</span>: <span class="s">"curtis-conversation"</span>,
 	<span class="k">"version"</span>: <span class="n">1</span>,
 	<span class="k">"generator"</span>: <span class="s">"your-app@1.2.3"</span>,
+	<span class="k">"extensions"</span>: [<span class="s">"images-inline"</span>, <span class="s">"usage-metadata"</span>],
 	<span class="k">"conversation"</span>: {
 		<span class="k">"id"</span>: <span class="s">"conv_001"</span>,
 		<span class="k">"title"</span>: <span class="s">"Thursday's thread"</span>,
@@ -438,7 +555,8 @@
 			{ <span class="k">"id"</span>: <span class="s">"m1"</span>, <span class="k">"role"</span>: <span class="s">"user"</span>,
 			  <span class="k">"content"</span>: <span class="s">"hello"</span>, <span class="k">"timestamp"</span>: <span class="n">1760000000000</span> },
 			{ <span class="k">"id"</span>: <span class="s">"m2"</span>, <span class="k">"role"</span>: <span class="s">"assistant"</span>,
-			  <span class="k">"content"</span>: <span class="s">"hi back"</span>, <span class="k">"timestamp"</span>: <span class="n">1760000001000</span> }
+			  <span class="k">"content"</span>: <span class="s">"hi back"</span>, <span class="k">"model"</span>: <span class="s">"…"</span>,
+			  <span class="k">"timestamp"</span>: <span class="n">1760000001000</span> }
 		]
 	}
 }</code></pre>
@@ -452,6 +570,7 @@
 					<tr><td>curt</td><td class="req">yes</td><td>magic — must be exactly "curtis-conversation"</td></tr>
 					<tr><td>version</td><td class="req">yes</td><td>format version; this spec is 1</td></tr>
 					<tr><td>generator</td><td>no</td><td>provenance, "writer-name@version" — readers must ignore</td></tr>
+					<tr><td>extensions</td><td>no</td><td>names from the <a href="#extensions">registry</a> — never a validation input</td></tr>
 					<tr><td>conversation</td><td class="req">yes</td><td>id, title, createdAt, updatedAt, messages</td></tr>
 					<tr><td>role</td><td class="req">yes</td><td>user · assistant · system · tool</td></tr>
 					<tr><td>model</td><td>no</td><td>provider model id, typically on assistant messages</td></tr>
@@ -460,79 +579,179 @@
 		</div>
 		<p>
 			Writers may attach extra fields anywhere — tokens, images, tool-call
-			linkage — and readers must preserve them on round-trip and never fail on
-			them. The full field tables live in
-			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">the spec</a>.
-		</p>
-	</section>
-
-	<section class="section" id="validation">
-		<h2>Validation, version 1<span class="stop">.</span></h2>
-		<p style="min-height: 4.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
-			<span class="muted small">A reader accepts a file when, and only when:</span>
-			<span class="stamp" aria-hidden="true">NO HALF IMPORTS</span>
-		</p>
-		<ol class="rules">
-			<li>
-				<span class="r-num">01</span>
-				<div>The body parses as JSON — after ignoring at most one leading UTF-8 BOM, because Windows editors prepend one anyway.</div>
-			</li>
-			<li>
-				<span class="r-num">02</span>
-				<div><code>curt</code> is exactly <code>"curtis-conversation"</code> and <code>version</code> is exactly the number <code>1</code> — a string <code>"1"</code> is a rejection.</div>
-			</li>
-			<li>
-				<span class="r-num">03</span>
-				<div>The conversation carries <code>id</code> and <code>title</code> as strings, timestamps as numbers, and a <code>messages</code> array in which <em>every</em> entry passes message validation.</div>
-			</li>
-		</ol>
-		<p class="muted small" style="margin-top: 1.25rem;">
-			Anything else is a rejection — whole-file, not a best-effort parse.
-			Multiple conversations travel as a zip of <code>.curt</code> files.
-			Versions change rarely and only additively within a version; version-1
-			files stay readable forever.
-		</p>
-	</section>
-
-	<section class="section" id="use">
-		<h2>Read and write it<span class="stop">.</span></h2>
-		<p class="muted small">
-			The reference implementation is TypeScript, zero dependencies,
-			BUSL-1.1 — source-available, Apache-2.0 on 2030-10-12.
-			<code>parseCurt</code> returns the conversation or <code>null</code> — null means invalid:
+			linkage — and readers must preserve them on round-trip where
+			possible and never fail on them. Full field tables live in
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">the spec</a>;
+			a non-normative
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/schema/curt-v1.schema.json">JSON Schema</a>
+			ships for tooling. The reference implementation is TypeScript, zero
+			dependencies:
 		</p>
 		<pre aria-label="TypeScript quick start"><code><span class="k">import</span> { serializeCurt, parseCurt, curtFilename } <span class="k">from</span> <span class="s">'curt-format'</span>;
 
 <span class="k">const</span> body = serializeCurt(conversation, <span class="s">'my-app@1.0.0'</span>);
-<span class="k">const</span> back = parseCurt(body); <span class="c">// CurtConversation | null</span>
-<span class="k">const</span> name = curtFilename(back!); <span class="c">// 2025-10-09 my-thread 001.curt</span></code></pre>
-		<p>
-			<a href="https://www.npmjs.com/package/curt-format">curt-format on npm</a>
-			· <a href="https://github.com/JordanNewell/dot_curt">dot_curt repository</a>
-			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">SPEC.md</a>
-			· <a href="https://github.com/JordanNewell/dot_curt/tree/main/tests/fixtures">round-trip fixtures</a>
+<span class="k">const</span> back = parseCurt(body);      <span class="c">// CurtConversation | null — null means invalid</span>
+<span class="k">const</span> name = curtFilename(back!);  <span class="c">// 2025-10-09 my-thread 001.curt</span></code></pre>
+	</section>
+
+	<section class="section" id="validation">
+		<h2>Strict by design.</h2>
+		<p class="label">A READER ACCEPTS A FILE WHEN, AND ONLY WHEN</p>
+		<ol class="rules">
+			<li>
+				<span class="r-num">01</span>
+				<div class="r-body">The body parses as JSON — after ignoring at most one leading UTF-8 BOM, because Windows editors prepend one anyway.</div>
+			</li>
+			<li>
+				<span class="r-num">02</span>
+				<div class="r-body"><code>curt</code> is exactly <code>"curtis-conversation"</code> and <code>version</code> is exactly the number <code>1</code>.</div>
+			</li>
+			<li>
+				<span class="r-num">03</span>
+				<div class="r-body">The conversation carries <code>id</code> and <code>title</code> as strings, timestamps as numbers, and a <code>messages</code> array in which <em>every</em> entry passes message validation.</div>
+			</li>
+		</ol>
+		<p class="muted small" style="margin-top: 1.25rem;">
+			Anything else is a rejection — whole-file, not a best-effort parse.
+			Many conversations travel as a zip of <code>.curt</code> files.
+			Version 1 never changes meaning; later revisions only clarify, so
+			version-1 files stay readable forever.
 		</p>
 	</section>
 
-	<section class="section" id="naming">
-		<div class="manifest">
-			<div class="m-head">THE FILING CONVENTION</div>
-			<div class="m-sub">SORTABLE, COLLISION-SAFE, DERIVED FROM IMMUTABLE FIELDS ONLY</div>
-			<div class="m-file">2025-10-09 fixture-conversation 001.curt</div>
-			<div class="m-row"><span class="k">2025-10-09</span><span>createdAt as a UTC date — 1970-01-01 when the timestamp isn't finite.</span></div>
-			<div class="m-row"><span class="k">fixture-conversation</span><span>title slug, lowercased, capped at 50 characters — untitled when nothing remains.</span></div>
-			<div class="m-row"><span class="k">001.curt</span><span>the part of id after the last underscore; the last 8 characters of id when there is none.</span></div>
-			<div class="m-foot">Exposed as curtFilename() — the name survives title edits and later updates.</div>
+	<section class="section" id="extensions">
+		<h2>Grows by extension, not by version.</h2>
+		<p class="muted small">
+			Writers declare named capabilities in a top-level
+			<code>extensions</code> array. A reader that doesn't know one
+			ignores it and never rejects over it. An entry moves
+			<code>draft</code> → <code>stable</code> when two independent
+			implementations round-trip it. The registry is additive by rule:
+			new entries never change how existing v1 files parse.
+		</p>
+		<div class="table-wrap">
+			<table class="records">
+				<thead>
+					<tr><th>name</th><th>status</th><th>purpose</th><th>emitted by</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>images-inline</td><td><span class="status status-stable">stable</span></td><td>image payloads ride inside content</td><td class="small-cell">plugin · porter · web · cloud · ai-tech</td></tr>
+					<tr><td>usage-metadata</td><td><span class="status status-stable">stable</span></td><td>per-message tokens, cost, provider</td><td class="small-cell">porter · web · ai-tech</td></tr>
+					<tr><td>tool-linkage</td><td><span class="status">draft</span></td><td>tool calls linked to their results</td><td class="small-cell">porter · ai-tech</td></tr>
+					<tr><td>agent-context</td><td><span class="status">draft</span></td><td>agent and swarm provenance</td><td class="small-cell">plugin · porter · cloud · ai-tech</td></tr>
+					<tr><td>consensus-receipt</td><td><span class="status">draft</span></td><td>signed k-of-n consensus bound to the transcript evidence</td><td class="small-cell">tractum</td></tr>
+				</tbody>
+			</table>
 		</div>
+		<p class="muted small">
+			Full field definitions per entry:
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>.
+		</p>
+	</section>
+
+	<section class="section" id="conformance">
+		<h2>Graded, not claimed.</h2>
+		<p class="muted small">
+			Implementations run executable vectors from
+			<a href="https://github.com/JordanNewell/dot_curt/tree/main/conformance">conformance/</a>
+			and claim the levels they pass — self-reported, but reproducible
+			from the vectors. The reference implementation runs them in CI and
+			passes L1–L4.
+		</p>
+		<ul class="claims">
+			<li>
+				<span class="lvl">L1 · CORE</span>
+				<span class="status status-must">must</span>
+				<span class="r-body">Magic and version exact-match, whole-file rejection, one leading BOM tolerated, unknown fields preserved on round-trip, any JSON-number timestamp accepted.</span>
+			</li>
+			<li>
+				<span class="lvl">L2 · NAMED</span>
+				<span class="status">should</span>
+				<span class="r-body"><code>curtFilename</code> implements the <code>&lt;date&gt; &lt;slug&gt; &lt;suffix&gt;.curt</code> algorithm exactly.</span>
+			</li>
+			<li>
+				<span class="lvl">L3 · BULK</span>
+				<span class="status">may</span>
+				<span class="r-body">The zip-of-<code>.curt</code> convention: entry names from <code>curtFilename</code>, readers never depend on names, corrupted entries reported rather than silently dropped.</span>
+			</li>
+			<li>
+				<span class="lvl">L4+ · EXTENSION</span>
+				<span class="status">may</span>
+				<span class="r-body">Per-extension vectors — an extension's presence or malformation never causes rejection.</span>
+			</li>
+		</ul>
+		<p class="muted small" style="margin-top: 1.25rem;">
+			Ecosystem status — who is in, who passes what, where conformance
+			has drifted — is tracked in
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">CAPABILITIES.md</a>,
+			audited 2026-10-14.
+		</p>
+	</section>
+
+	<section class="section" id="ecosystem">
+		<h2>Who reads and writes it today.</h2>
+		<div class="table-wrap">
+			<table class="records">
+				<thead>
+					<tr><th>consumer</th><th>role</th><th>r · w</th><th>carries</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>curtis plugin</td><td>import · export · backup</td><td class="req">R + W</td><td class="small-cell">vendored copy</td></tr>
+					<tr><td>porter</td><td>converter + verify oracle</td><td class="req">R + W</td><td class="small-cell">vendored oracle</td></tr>
+					<tr><td>curtis-web</td><td>export endpoint</td><td>W</td><td class="small-cell">hand-rolled</td></tr>
+					<tr><td>curtis-cloud</td><td>shared library</td><td class="req">R + W</td><td class="small-cell">vendored mirror</td></tr>
+					<tr><td>curtis-ai-tech</td><td>embedded converter + docs</td><td class="req">R + W</td><td class="small-cell">inline copy</td></tr>
+					<tr><td>tractum</td><td>consensus emitter</td><td>W</td><td class="small-cell">consensus-receipt draft</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p class="muted small">
+			None depend on the <code>curt-format</code> package yet — every one
+			vendored or hand-rolled the rules. The ladder from five copies to
+			one dependency is written down in the audit.
+		</p>
+	</section>
+
+	<section class="section" id="research">
+		<h2>Argued at length, and on the record.</h2>
+		<p class="muted small">
+			Why a conversation format needs to exist at all — the export trap,
+			the portability right that fails without interoperable formats,
+			the landscape of vendor exports, training formats, transport
+			protocols, and containers — is written up as a preprint.
+		</p>
+		<p>
+			<em>A Conversations-First, LLM-Native File Format with Executable
+			Conformance for AI Chat Portability.</em>
+			Jordan Newell, 2026.
+			<span class="status">preprint — draft</span>
+		</p>
+		<p class="muted small">
+			Full text lives in
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/docs/papers/2026-10-25-dotcurt-paper-draft.md">docs/papers</a>.
+			arXiv (cs.CY) first, for citability; the DOI lands here when it
+			exists. The claim, cross-checked against the 2025–26 literature:
+			scholarship reached generative AI — model internals, generated
+			data, agentic portability — but never the conversation archive,
+			and the one open export spec stops at a generic transcript. The
+			slot is open. The paper is the argument; this format, with its
+			executable conformance vectors, is the answer.
+		</p>
 	</section>
 
 	<section class="section">
 		<div class="not-yet">
-			<span class="ny-label">NOT YET</span>
-			<p>Bindings beyond TypeScript. The validation predicates are small and
-			the spec is BUSL-1.1 — Rust, Python, Go, Swift: pick one and keep it in
-			lockstep with SPEC.md.</p>
-			<p>PRs to <a href="https://github.com/JordanNewell/dot_curt">dot_curt</a> are welcome.</p>
+			<span class="ny-label">NOT YET — STATED PLAINLY</span>
+			<p>The npm package is documentation, not infrastructure. Every
+			consumer today vendors or hand-rolls the rules, so a spec revision
+			still lands in five places by hand.</p>
+			<p>The 1.1.0 BOM tolerance is unimplemented outside the reference
+			reader, and three filename conventions compete with the spec's
+			<code>curtFilename</code>.</p>
+			<p>Bindings beyond TypeScript. The predicates are small — Rust,
+			Python, Go, Swift: pick one and keep it in lockstep with SPEC.md.
+			PRs to <a href="https://github.com/JordanNewell/dot_curt">dot_curt</a>
+			are welcome.</p>
 		</div>
 	</section>
 
@@ -542,30 +761,32 @@
 	<div class="ticker-track">
 		<ul class="ticker-run">
 			<li>one file</li><li>one conversation</li><li>full fidelity</li><li>utf-8 json</li>
-			<li>strict validation</li><li>zero dependencies</li><li>busl-1.1</li><li>spec v1</li>
-			<li>readable forever</li>
+			<li>strict validation</li><li>unknown fields survive</li><li>zero dependencies</li>
+			<li>mit</li><li>spec v1</li><li>readable forever</li><li>audited 2026-10-14</li>
 		</ul>
 		<ul class="ticker-run">
 			<li>one file</li><li>one conversation</li><li>full fidelity</li><li>utf-8 json</li>
-			<li>strict validation</li><li>zero dependencies</li><li>busl-1.1</li><li>spec v1</li>
-			<li>readable forever</li>
+			<li>strict validation</li><li>unknown fields survive</li><li>zero dependencies</li>
+			<li>mit</li><li>spec v1</li><li>readable forever</li><li>audited 2026-10-14</li>
 		</ul>
 		<ul class="ticker-run">
 			<li>one file</li><li>one conversation</li><li>full fidelity</li><li>utf-8 json</li>
-			<li>strict validation</li><li>zero dependencies</li><li>busl-1.1</li><li>spec v1</li>
-			<li>readable forever</li>
+			<li>strict validation</li><li>unknown fields survive</li><li>zero dependencies</li>
+			<li>mit</li><li>spec v1</li><li>readable forever</li><li>audited 2026-10-14</li>
 		</ul>
 	</div>
 </div>
 
 <footer class="site-foot">
 	<div class="wrap">
-		<span><code>.curt</code> — the conversation format · BUSL-1.1 · v1</span>
+		<span><span class="dot" style="font-family: var(--font-records);">.</span>curt — the conversation format · MIT · v1</span>
 		<span>
-			born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
-			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">registry</a>
 			· <a href="https://www.npmjs.com/package/curt-format">npm</a>
-			· <a href="https://github.com/JordanNewell/dot_curt">GitHub</a>
+			· <a href="https://github.com/JordanNewell/dot_curt">github</a>
+			· born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
 		</span>
 	</div>
 </footer>
