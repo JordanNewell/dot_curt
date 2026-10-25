@@ -89,17 +89,17 @@ stronger than absence. Now paper §3.6 + §6 note + abstract/intro updates.
   (Wei 2024, security — adjacent, useful color for untrusted-input notes, not
   cited) and memory *summarization* work. **Zero academic proposals of a
   conversation-export format.** A "Portable Agent Memory protocol" arXiv paper
-  (Ravindran, 2026) surfaced — **not cited in the paper: ID unverified. Verify
-  before adding if wanted.**
+  (Ravindran, 2026) surfaced — since verified (see Follow-ups) and cited as
+  paper ref [19].
 
 ## Claim 4 — use case, strengthened
 
 Market evidence gathered (now paper refs [17][18]):
 
-- ChatGPT export = ZIP of raw HTML + JSON, documented "difficult to work with"
-  (dev.to walkthrough; Baruch College libguide documents both ChatGPT ZIP and
-  Claude single-JSON exports — an institutional archive guide is strong
-  third-party evidence).
+- ChatGPT export = a ZIP of raw HTML + JSON (documented in community
+  walkthroughs); Baruch College's library guide documents both ChatGPT's and
+  Claude's export shapes [17] — an institutional archive guide is strong
+  third-party evidence.
 - No vendor imports another's export. The quotable failure: "You can save
   ChatGPT conversation as PDF all day. But you can't load that PDF into Claude
   and have it understand your history."
