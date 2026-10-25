@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light">
+	<title>One file, one conversation, kept whole — the .curt launch</title>
+	<meta name="description" content="The .curt launch post: an open, MIT-licensed single-file format for AI conversations. Spec v1 frozen, curt-format@1.2.0 on npm, 27 conformance vectors in CI.">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
+	<link rel="stylesheet" href="../../style.css">
+	<style>
+		.post-body { max-width: 62ch; }
+		.post-body p { line-height: 1.65; }
+		.post-meta { letter-spacing: 0.08em; text-transform: uppercase; }
+	</style>
+</head>
+<body>
+
+<header class="site-head">
+	<div class="wrap">
+		<a class="wordmark" href="../../"><span class="dot">.</span>curt</a>
+		<nav class="site-nav" aria-label="the format">
+			<a href="../../">the format</a>
+			<a href="../../adopt/">adopt</a>
+			<a href="../../#conformance">conformance</a>
+			<a href="https://github.com/JordanNewell/dot_curt">github</a>
+		</nav>
+	</div>
+</header>
+
+<main class="wrap" id="top">
+	<div class="hero">
+		<p class="kicker post-meta">The launch post · 2026-10-25 · spec v1 · MIT</p>
+		<h1>One file, one conversation, kept whole.</h1>
+	</div>
+
+	<section class="section post-body">
+		<p>Every chat you've had with an AI lives in someone else's database, in a format you'll never see, behind an export button that flattens it. That never sat right with me. So I built the thing I wanted to exist: <strong>.curt</strong> — one UTF-8 file, one conversation, everything intact. Images, tool calls, the weird stuff — verbatim.</p>
+
+		<p>Spec v1 is frozen. <code>curt-format@1.2.0</code> is on npm, MIT. Twenty-seven conformance vectors run in CI so &ldquo;compatible&rdquo; means something.</p>
+
+		<p>Full disclosure: I built this in a vacuum. No consumers yet — that's not a humblebrag, it's the current score. If you build software where conversations matter, the format is free and the door's open.</p>
+
+		<h2>What a .curt file is</h2>
+		<p>A UTF-8 JSON envelope. Magic string, version, who wrote it, which extensions it uses, and the conversation: id, title, timestamps, messages — each with a role, content, and a time. Anything an app adds that the spec doesn't know about rides along untouched on re-save. That last part is a promise, not a courtesy.</p>
+
+		<pre class="dark" aria-label="A minimal .curt envelope"><code>{
+  <span class="k">"curt"</span>: <span class="s">"curtis-conversation"</span>,
+  <span class="k">"version"</span>: <span class="n">1</span>,
+  <span class="k">"generator"</span>: <span class="s">"your-app@1.2.3"</span>,
+  <span class="k">"extensions"</span>: [<span class="s">"images-inline"</span>],
+  <span class="k">"conversation"</span>: { <span class="k">"id"</span>: <span class="s">"conv_001"</span>, <span class="k">"messages"</span>: [ … ] }
+}</code></pre>
+
+		<h2>What shipped</h2>
+		<ul class="rules">
+			<li>The spec — frozen core, v1. New capability never means editing it; it means a registry entry.</li>
+			<li><code>curt-format@1.2.0</code> — reference implementation on npm. MIT: spec, code, schema, fixtures.</li>
+			<li>Twenty-seven conformance vectors — L1 CORE through L4 per-extension — executed in CI. Claiming support is testable.</li>
+			<li>Five extensions: <code>images-inline</code> and <code>usage-metadata</code> stable; <code>tool-linkage</code>, <code>agent-context</code>, <code>consensus-receipt</code> draft.</li>
+		</ul>
+
+		<h2>The rules</h2>
+		<p>The core doesn't move. If something's missing, it becomes a named extension — versioned, optional, and rejected cleanly by readers that don't know it. An extension goes draft → stable only when two independent implementations round-trip it. One author stamping their own work &ldquo;stable&rdquo; is how formats rot; I'm not doing that.</p>
+
+		<h2>Where you come in</h2>
+		<p>If you write software where conversations matter — a chat app, an agent runtime, an archive tool — make it speak .curt. It's an afternoon, the library handles the envelope, and the conformance vectors tell you when you're done. <a href="../../adopt/">The path is on the adopt page.</a> When you ship, you go in the registry — <code>capabilities.json</code>, public, checkable.</p>
+
+		<p class="lede">The format is free. The file is yours.</p>
+	</section>
+</main>
+
+<footer class="site-foot">
+	<div class="wrap">
+		<span><span class="dot" style="font-family: var(--font-records);">.</span>curt — the conversation format · MIT · v1</span>
+		<span>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">registry</a>
+			· <a href="https://www.npmjs.com/package/curt-format">npm</a>
+			· <a href="https://github.com/JordanNewell/dot_curt">github</a>
+			· born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
+		</span>
+	</div>
+</footer>
+
+</body>
+</html>
