@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light">
+	<title>Adopt .curt — make your app speak the format</title>
+	<meta name="description" content="The four-step path to implementing .curt in your app: install curt-format, round-trip files, pass the conformance vectors, get listed in capabilities.json.">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
+	<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<header class="site-head">
+	<div class="wrap">
+		<a class="wordmark" href="../../"><span class="dot">.</span>curt</a>
+		<nav class="site-nav" aria-label="the format">
+			<a href="../../">the format</a>
+			<a href="../../posts/2026-10-25-one-file/">post</a>
+			<a href="../../#conformance">conformance</a>
+			<a href="https://github.com/JordanNewell/dot_curt">github</a>
+		</nav>
+	</div>
+</header>
+
+<main class="wrap" id="top">
+	<div class="hero">
+		<p class="kicker">Adopt the format — <b>curt-format@1.2.0 · MIT · 27 vectors in CI</b></p>
+		<h1>Make your app speak .curt.</h1>
+		<p class="lede">
+			The format is free — the move is yours. One afternoon of work buys your
+			users a conversation file that never loses anything and never goes stale.
+		</p>
+	</div>
+
+	<section class="section" id="why">
+		<h2>Why implement it</h2>
+		<ul class="rules">
+			<li>Full fidelity — base64 images and tool calls ride in content, verbatim. No flattening, no &ldquo;best effort&rdquo;.</li>
+			<li>Unknown fields survive a re-save. Your app's extras aren't a liability.</li>
+			<li>One diffable UTF-8 file per conversation. Archives, version control, and grep all just work.</li>
+			<li>MIT across the board — spec, reference code, schema, fixtures. (Curtis applications themselves are BUSL; the format never is.)</li>
+		</ul>
+	</section>
+
+	<section class="section" id="path">
+		<h2>The path</h2>
+		<p class="muted small">Four steps. Conformance is testable at every one.</p>
+		<ol class="rules">
+			<li><b>Install.</b> <code>npm i curt-format</code> — <code>serializeCurt</code>, <code>parseCurt</code>, <code>curtFilename</code>.</li>
+			<li><b>Round-trip.</b> Serialize a conversation, parse it back, confirm unknown fields survive. That's the L1 bar.</li>
+			<li><b>Prove it.</b> Run the conformance vectors — L1 CORE, L2 NAMED, L3 BULK, L4 per-extension. 27 vectors, plain fixtures, CI-runnable.</li>
+			<li><b>Get listed.</b> PR against <code>capabilities.json</code> + <code>CAPABILITIES.md</code>: who you are, what you read/write, which extensions, conformance level. Public and checkable.</li>
+		</ol>
+		<div class="cta-row">
+			<a class="cta" href="https://github.com/JordanNewell/dot_curt/tree/main/conformance">Conformance vectors</a>
+			<a class="cta-quiet" href="https://www.npmjs.com/package/curt-format">curt-format on npm</a>
+		</div>
+	</section>
+
+	<section class="section" id="registry">
+		<h2>Registry status</h2>
+		<p class="muted small">Consumers, from capabilities.json (lastAudited 2026-10-17):</p>
+		<div class="table-wrap">
+			<table class="records">
+				<tr><th>id</th><th>role</th><th>read</th><th>write</th><th>conformance</th></tr>
+				<tr><td>curtis</td><td>Obsidian plugin — import, export, full-backup zip</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+				<tr><td>curtis-ai-chat-porter</td><td>Converter (CLI + Obsidian plugin + web)</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+				<tr><td>curtis-web</td><td>Chat app — export single .curt + bulk zip</td><td>no</td><td>yes</td><td class="req">none</td></tr>
+				<tr><td>curtis-cloud</td><td>Shared library — import/export serialization</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+				<tr><td>curtis-ai-tech</td><td>Docs/marketing + Porter web app with inline preview</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+				<tr><td>tractum</td><td>Python SDK + MCP server — signed consensus decisions</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+			</table>
+		</div>
+		<p class="muted small">Six entries, one author. That's the honest score — the <a href="../posts/2026-10-25-one-file/">launch post</a> doesn't pretend otherwise. First outside consumer sets the tone.</p>
+
+		<p class="muted small">Extensions:</p>
+		<div class="table-wrap">
+			<table class="records">
+				<tr><th>extension</th><th>status</th><th>what it carries</th></tr>
+				<tr><td>images-inline</td><td>stable</td><td>base64 images in content, verbatim</td></tr>
+				<tr><td>usage-metadata</td><td>stable</td><td>tokens / usage per message</td></tr>
+				<tr><td>tool-linkage</td><td class="req">draft</td><td>tool calls linked to their results</td></tr>
+				<tr><td>agent-context</td><td class="req">draft</td><td>agent/system context alongside the thread</td></tr>
+				<tr><td>consensus-receipt</td><td class="req">draft</td><td>signed consensus decisions (tractum, sole impl)</td></tr>
+			</table>
+		</div>
+		<p class="muted small">Draft → stable requires two independent implementations. consensus-receipt needs one more.</p>
+	</section>
+
+	<section class="section" id="faq">
+		<h2>Questions, answered</h2>
+		<ul class="rules">
+			<li><b>Will the spec change under me?</b> No. Core is frozen at v1. Evolution is registry-only.</li>
+			<li><b>Who decides?</b> One maintainer, BDFL. Deliberately — a format with six committees has no direction.</li>
+			<li><b>What does draft mean for me?</b> Emit it if you want; readers must reject unknown extensions cleanly, so nothing breaks.</li>
+			<li><b>License?</b> MIT — spec, implementation, schema, fixtures. Build a business on it if you like.</li>
+		</ul>
+	</section>
+</main>
+
+<footer class="site-foot">
+	<div class="wrap">
+		<span><span class="dot" style="font-family: var(--font-records);">.</span>curt — the conversation format · MIT · v1</span>
+		<span>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">registry</a>
+			· <a href="https://www.npmjs.com/package/curt-format">npm</a>
+			· <a href="https://github.com/JordanNewell/dot_curt">github</a>
+			· born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
+		</span>
+	</div>
+</footer>
+
+</body>
+</html>
