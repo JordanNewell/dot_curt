@@ -1,0 +1,30 @@
+name: Deploy site
+
+# dotcurt.org is served by the dotcurt-site Worker (static assets in site/).
+# Merges to main that touch the site deploy via wrangler. Requires the
+# CLOUDFLARE_API_TOKEN repo secret (Cloudflare token, Workers Scripts:Edit).
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'wrangler.jsonc', '.github/workflows/deploy-site.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 554619f8c7d3a4010cb161df3037269d
