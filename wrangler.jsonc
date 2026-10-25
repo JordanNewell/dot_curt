@@ -1,0 +1,10 @@
+// dotcurt.org — served as a Workers static-assets site on Cloudflare.
+// Deploy: wrangler deploy   (custom domains are attached via the
+// workers/domains API, which auto-creates the proxied DNS records.)
+{
+	"name": "dotcurt-site",
+	"compatibility_date": "2026-10-01",
+	"assets": {
+		"directory": "./site"
+	}
+}
