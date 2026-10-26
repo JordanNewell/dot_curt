@@ -76,7 +76,7 @@ The Agent-to-Agent protocol (A2A) and the Model Context Protocol (MCP) standardi
 
 \subsection{Memory-first efforts}
 
-\textbf{PAM} (Portable AI Memory, v1.0) is the most serious peer effort [5]. Credit where due, and specifically: PAM has a named maintainer (Daniel Gines), published governance and semver policy pages, and real technical substance --- Ed25519 signatures, W3C Decentralized Identifiers, RFC 8785 JSON canonicalization, and shipped importers for OpenAI, Anthropic, and xAI exports. Its gap relative to conversation archiving is orientation: PAM is memory-first. Conversations appear as an index plus companion files in service of a memory graph, not as first-class, self-sufficient single-file archives; and PAM defines no conformance levels, so implementation claims are not testable against vectors. The two projects are, at present, answers to different questions. The memory lane is, moreover, academically active: Ravindran's Portable Agent Memory protocol [19] presents cryptographically verified memory transfer across heterogeneous AI agents, with injection-resistant framing. That sharpened contrast is itself evidence for the gap this paper fills --- the adjacent problem has scholarly work and open protocols; the conversation archive has neither.
+\textbf{PAM} (Portable AI Memory, v1.0) is the most serious peer effort [5]. Credit where due, and specifically: PAM has a named maintainer (Daniel Gines), published governance and semver policy pages, and real technical substance --- Ed25519 signatures, W3C Decentralized Identifiers, RFC 8785 JSON canonicalization, and shipped importers for OpenAI, Anthropic, and xAI exports. Its gap relative to conversation archiving is orientation: PAM is memory-first. Conversations appear as an index plus companion files in service of a memory graph, not as first-class, self-sufficient single-file archives; and PAM defines no conformance levels, so implementation claims are not testable against vectors. The two projects are, at present, answers to different questions. The memory lane is, moreover, academically active: Ravindran's Portable Agent Memory protocol [19] presents cryptographically verified memory transfer across heterogeneous AI agents, with injection-resistant framing; and Brcic's analysis of AI memory as an infrastructure-layer lock-in problem argues that portability regulation must reach memory graphs [20] --- the conversation archive this paper addresses sits directly downstream of that lock-in. That sharpened contrast is itself evidence for the gap this paper fills --- the adjacent problem has scholarly work and open protocols; the conversation archive has neither.
 
 The \textbf{W3C AI Agent Memory Interoperability Community Group}, chartered in June 2026, confirms institutional interest in the space but has produced no file format [6]. The field is open.
 
@@ -198,7 +198,7 @@ We presented .curt, a single-file, conversations-first, LLM-native conversation 
 
 Literature discovery, citation verification, and first-draft prose for this paper were produced with AI assistance under the author's direction. Every source cited was retrieved and verified against the original; the verification method is documented in a public evidence report accompanying the artifact; and all claims, decisions, and accountability rest with the author.
 
-\begin{thebibliography}{19}
+\begin{thebibliography}{20}
 
 \bibitem{r1} P. De Hert et al., ``The right to data portability in the GDPR: towards user-centric interoperability of online services,'' \emph{Computer Law \& Security Review} 34(2), 2018. \url{https://www.sciencedirect.com/science/article/pii/S0267364917303333}
 
@@ -237,6 +237,8 @@ Literature discovery, citation verification, and first-draft prose for this pape
 \bibitem{r18} Bridge-tool ecosystem, market evidence: AI Exporter (Chrome extension, 16+ AI sites), \url{https://chromewebstore.google.com/detail/kagjkiiecagemklhmhkabbalfpbianbe} \textperiodcentered{} ai-chat-md-export (offline CLI), \url{https://github.com/sugurutakahashi-1234/ai-chat-md-export} \textperiodcentered{} ``5 ways to export AI conversations,'' \url{https://backrun.co/blog/5-ways-to-export-ai-conversations-to-pdf-word-or-markdown}
 
 \bibitem{r19} S. K. Ravindran, ``Portable Agent Memory: A Protocol for Cryptographically-Verified Memory Transfer Across Heterogeneous AI Agents,'' arXiv:2605.11032, 2026. \url{https://arxiv.org/abs/2605.11032} \textperiodcentered{} DOI 10.48550/arXiv.2605.11032
+
+\bibitem{r20} M. Brcic, ``The Memory Wars: AI Memory, Network Effects, and the Geopolitics of Cognitive Sovereignty,'' arXiv:2508.05867, 2025. \url{https://arxiv.org/abs/2508.05867}
 
 \noindent\emph{Legal texts:} GDPR Article 20 and Recital 68, \url{https://gdpr-info.eu}.
 
