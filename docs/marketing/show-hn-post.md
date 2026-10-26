@@ -18,7 +18,7 @@ The differences from "just use JSON":
 - Unknown fields survive. Readers must not fail on fields they do not know, and preserve them where possible on round-trip.
 - 27 executable conformance vectors — L1 CORE (must) through L4 per-extension — run in CI. "Supports .curt" is a testable claim, not prose.
 - MIT throughout: spec, reference implementation, schema, fixtures. curt-format@1.2.0 on npm, zero dependencies.
-- Five applications already read or write it (curtis plugin, porter, curtis-web, curtis-cloud, curtis-ai-tech), and a first outside consumer, tractum, has shipped a consensus-receipt extension through the registry.
+- Five applications already read or write it (curtis plugin, porter, curtis-web, curtis-cloud, curtis-ai-tech), and the registry has since gained a fifth entry, consensus-receipt, submitted through the extension process by tractum — my own project, to be plain: the mechanism works; independent adoption is the open item.
 
 The core is frozen. New capability means a named extension in the registry, never a spec edit.
 
