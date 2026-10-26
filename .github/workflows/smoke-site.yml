@@ -1,0 +1,39 @@
+name: Smoke site
+
+# Runs after every successful Deploy site: checks the LIVE dotcurt.org for
+# horizontal overflow (1440/390) and broken same-origin links. The two
+# regression classes the 2026-10-26 site comb caught, now machine-checked.
+on:
+  workflow_run:
+    workflows: [Deploy site]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke-site
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install
+        working-directory: site-smoke
+        run: npm ci
+      - name: Install chromium
+        working-directory: site-smoke
+        run: npx playwright install --with-deps chromium
+      - name: Smoke the live site
+        working-directory: site-smoke
+        run: node smoke.mjs
+        env:
+          BASE_URL: https://dotcurt.org
