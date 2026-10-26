@@ -13,20 +13,20 @@
 	
 	<meta name="description" content="The .curt adoption hub: install curt-format, claim conformance against the executable vectors, meet the five apps that already speak the format, and build on the JSON Schema, fixtures, and extension registry.">
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
-	<link rel="stylesheet" href="../../style.css">
+	<link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site-head">
 	<div class="wrap">
-		<a class="wordmark" href="../../"><span class="dot">.</span>curt</a>
+		<a class="wordmark" href="../"><span class="dot">.</span>curt</a>
 		<nav class="site-nav" aria-label="the format">
-			<a href="../../">the format</a>
-			<a href="../../posts/2026-10-25-one-file/">post</a>
-			<a href="../../listen/">listen</a>
-			<a href="../../try/">try</a>
-			<a href="../../paper/">paper</a>
-			<a href="../../#conformance">conformance</a>
+			<a href="../">the format</a>
+			<a href="../posts/2026-10-25-one-file/">post</a>
+			<a href="../listen/">listen</a>
+			<a href="../try/">try</a>
+			<a href="../paper/">paper</a>
+			<a href="../#conformance">conformance</a>
 			<a href="https://github.com/JordanNewell/dot_curt">github</a>
 		</nav>
 	</div>
@@ -71,10 +71,10 @@
 	<section class="section" id="why">
 		<h2>Why implement it.</h2>
 		<ul class="rules">
-			<li>Full fidelity — base64 images and tool calls ride in content, verbatim. No flattening, no &ldquo;best effort&rdquo;.</li>
-			<li>Unknown fields survive a re-save. Your app's extras aren't a liability.</li>
-			<li>One diffable UTF-8 file per conversation. Archives, version control, and grep all just work.</li>
-			<li>MIT across the board — spec, reference code, schema, fixtures. (Curtis applications themselves are BUSL; the format never is.)</li>
+			<li><span class="r-num">01</span><div class="r-body">Full fidelity — base64 images and tool calls ride in content, verbatim. No flattening, no &ldquo;best effort&rdquo;.</div></li>
+			<li><span class="r-num">02</span><div class="r-body">Unknown fields survive a re-save. Your app's extras aren't a liability.</div></li>
+			<li><span class="r-num">03</span><div class="r-body">One diffable UTF-8 file per conversation. Archives, version control, and grep all just work.</div></li>
+			<li><span class="r-num">04</span><div class="r-body">MIT across the board — spec, reference code, schema, fixtures. (Curtis applications themselves are BUSL; the format never is.)</div></li>
 		</ul>
 	</section>
 
@@ -149,7 +149,8 @@
 		<p class="label">For end users</p>
 		<h2>Five apps already speak it.</h2>
 		<p class="muted small">
-			In production across five apps, audited 2026-10-14. If you use any of
+			In production across five apps, audited 2026-10-14 — all five the
+			author's own Curtis applications, stated plainly. If you use any of
 			them, your conversations are already files — one per thread, portable
 			between them all.
 		</p>
@@ -181,9 +182,9 @@
 		<p class="label">For tool builders</p>
 		<h2>Schema, fixtures, registry.</h2>
 		<ul class="rules">
-			<li><b>JSON Schema.</b> Non-normative, for tooling — ships inside the npm package at <code>curt-format/schema/curt-v1.schema.json</code>. Editors, linters, and validators in any language.</li>
-			<li><b>Round-trip fixtures.</b> <a href="https://github.com/JordanNewell/dot_curt/tree/main/tests/fixtures">tests/fixtures/</a> — basic.curt, empty.curt, rich.curt, roles.curt — the same files the reference tests run against. Seed your own suite with them.</li>
-			<li><b>Extension registry.</b> New capability is a PR to <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>: name, status, the exact fields, any vectors. An entry moves draft → stable when two independent implementations round-trip it.</li>
+			<li><span class="r-num">01</span><div class="r-body"><b>JSON Schema.</b> Non-normative, for tooling — ships inside the npm package at <code>curt-format/schema/curt-v1.schema.json</code>. Editors, linters, and validators in any language.</div></li>
+			<li><span class="r-num">02</span><div class="r-body"><b>Round-trip fixtures.</b> <a href="https://github.com/JordanNewell/dot_curt/tree/main/tests/fixtures">tests/fixtures/</a> — basic.curt, empty.curt, rich.curt, roles.curt — the same files the reference tests run against. Seed your own suite with them.</div></li>
+			<li><span class="r-num">03</span><div class="r-body"><b>Extension registry.</b> New capability is a PR to <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>: name, status, the exact fields, any vectors. An entry moves draft → stable when two independent implementations round-trip it.</div></li>
 		</ul>
 		<p class="muted small">The registry today:</p>
 		<div class="table-wrap">
@@ -206,10 +207,10 @@
 	<section class="section" id="faq">
 		<h2>Questions, answered.</h2>
 		<ul class="rules">
-			<li><b>Will the spec change under me?</b> No. Core is frozen at v1; evolution is registry-only, and registry entries never change how existing files parse.</li>
-			<li><b>Who decides?</b> One maintainer, BDFL — deliberately. A format with six committees has no direction.</li>
-			<li><b>What does draft mean for me?</b> Emit it if you want. Readers must ignore unknown extensions and never reject over them, so nothing breaks.</li>
-			<li><b>License?</b> MIT — spec, reference code, schema, fixtures. Build a business on it if you like.</li>
+			<li><span class="r-num">01</span><div class="r-body"><b>Will the spec change under me?</b> No. Core is frozen at v1; evolution is registry-only, and registry entries never change how existing files parse.</div></li>
+			<li><span class="r-num">02</span><div class="r-body"><b>Who decides?</b> One maintainer, BDFL — deliberately. A format with six committees has no direction.</div></li>
+			<li><span class="r-num">03</span><div class="r-body"><b>What does draft mean for me?</b> Emit it if you want. Readers must ignore unknown extensions and never reject over them, so nothing breaks.</div></li>
+			<li><span class="r-num">04</span><div class="r-body"><b>License?</b> MIT — spec, reference code, schema, fixtures. Build a business on it if you like.</div></li>
 		</ul>
 	</section>
 
