@@ -1,0 +1,12 @@
+{
+	"name": "dotcurt-site-smoke",
+	"private": true,
+	"type": "module",
+	"description": "Post-deploy smoke checks for dotcurt.org — overflow + same-origin links. Kept separate from the library so npm consumers never touch playwright.",
+	"devDependencies": {
+		"playwright": "^1.50.0"
+	},
+	"scripts": {
+		"smoke": "node smoke.mjs"
+	}
+}
