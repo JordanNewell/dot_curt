@@ -11,7 +11,7 @@
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:image" content="https://dotcurt.org/og.png">
 
-	<meta name="description" content="A fully client-side counter for the dot curt format: drop a ChatGPT or Claude export, preview each conversation, and download conforming .curt files as a zip. Nothing is uploaded.">
+	<meta name="description" content="A fully client-side converter for the dot curt format: drop a ChatGPT or Claude export, preview each conversation, and download conforming .curt files as a zip. Nothing is uploaded.">
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="../style.css">
 	<style>
@@ -141,9 +141,9 @@
 <main class="wrap">
 
 	<section class="section" style="margin-top: 3rem;">
-		<p class="kicker">The trial counter — <b>nothing leaves this tab</b></p>
+		<p class="kicker">Convert in the browser — <b>nothing leaves this tab</b></p>
 		<h1>Try the format.</h1>
-		<p class="lede">Drag a ChatGPT or Claude export onto the counter and this page files every conversation as a dot curt file — converted, named, previewed, and zipped entirely in your browser. There is no server to upload to; the whole porter is this page.</p>
+		<p class="lede">Drag a ChatGPT or Claude export onto this page and it files every conversation as a dot curt file — converted, named, previewed, and zipped entirely in your browser. There is no server to upload to; the whole porter is this page.</p>
 
 		<div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Drop export files here, or press Enter to choose files">
 			<p class="d-big">Drop an export here, or click to choose</p>
@@ -288,7 +288,7 @@ function parseChatGpt(raw) {
 	if (messages.length === 0) return null;
 	const toMs = (s) => (Number.isFinite(s) ? Math.round(s * 1000) : undefined);
 	return {
-		id: typeof raw.id === "string" && raw.id ? raw.id : "",
+		id: [raw.id, raw.conversation_id].find(v => typeof v === "string" && v) || "",
 		title: typeof raw.title === "string" && raw.title.trim() ? raw.title.trim() : "Imported ChatGPT chat",
 		messages,
 		createdAt: toMs(raw.create_time),
@@ -369,7 +369,7 @@ function finalizeConversation(chat) {
 		return out;
 	});
 	const conv = {
-		id: typeof chat.id === "string" && chat.id ? chat.id : `conv_${now}_${rand(9)}`,
+		id: [chat.id, chat.conversation_id].find(v => typeof v === "string" && v) || `conv_${now}_${rand(9)}`,
 		title: chat.title,
 		createdAt: Math.min(createdAt, updatedAt),
 		updatedAt: Math.max(createdAt, updatedAt),
