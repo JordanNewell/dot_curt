@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>.curt — Open Graph share card source (1200×630)</title>
+	<!--
+	  Editable source for site/og.png — The Filing Room, dotcurt.org.
+	  Render: open this file in Chrome at exactly 1200×630 (viewport, DPR 1)
+	  and screenshot the viewport to site/og.png.
+	  Palette and type tokens mirror site/style.css. No hex outside that set.
+	  No gradients, no shadows: flat fills and 1px hairlines only.
+	-->
+	<style>
+		@font-face {
+			font-family: 'Newsreader';
+			font-style: normal;
+			font-weight: 400 700;
+			src: url('../fonts/newsreader-roman.woff2') format('woff2');
+		}
+		@font-face {
+			font-family: 'Newsreader';
+			font-style: italic;
+			font-weight: 400 700;
+			src: url('../fonts/newsreader-italic.woff2') format('woff2');
+		}
+		@font-face {
+			font-family: 'Spline Sans Mono';
+			font-style: normal;
+			font-weight: 400 600;
+			src: url('../fonts/spline-mono.woff2') format('woff2');
+		}
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+
+		html, body {
+			width: 1200px;
+			height: 630px;
+			overflow: hidden;
+			background: #FAF6E9;
+			color: #221F12;
+			font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		.page { position: relative; width: 1200px; height: 630px; background: #FAF6E9; }
+
+		/* the kicker */
+		.kicker {
+			position: absolute; left: 72px; top: 82px;
+			font-family: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+			font-size: 19px; font-weight: 500;
+			letter-spacing: 0.08em;
+			color: #6F6A52;
+			white-space: nowrap;
+		}
+		.kicker b { color: #8A6A00; font-weight: 500; }
+
+		/* the wordmark — the leading dot in ochre is the signature */
+		.wordmark {
+			position: absolute; left: 62px; top: 148px;
+			font-weight: 600;
+			font-size: 205px;
+			line-height: 1;
+			letter-spacing: -0.02em;
+			color: #221F12;
+			white-space: nowrap;
+		}
+		.wordmark .dot { color: #8A6A00; }
+
+		/* the folder — this site's signature container */
+		.folder {
+			position: absolute; left: 640px; top: 152px; width: 470px;
+			transform: rotate(1.5deg);
+		}
+		.folder-tab {
+			display: inline-block;
+			margin-left: 26px;
+			background: #EBE1BE;
+			border: 1px solid #E0D6B4;
+			border-bottom: none;
+			border-radius: 6px 6px 0 0;
+			padding: 12px 18px 10px;
+			font-family: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+			font-size: 15px;
+			color: #221F12;
+			white-space: nowrap;
+		}
+		.folder-tab .dot { color: #8A6A00; }
+		.folder-body {
+			background: #F3ECD3;
+			border: 1px solid #E0D6B4;
+			border-radius: 0 4px 4px 4px;
+			font-family: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+			font-size: 16px;
+			line-height: 1.5;
+			padding: 28px 32px 30px;
+		}
+		.f-head { letter-spacing: 0.08em; font-size: 16px; font-weight: 500; }
+		.f-sub {
+			color: #6F6A52; font-size: 12.5px; letter-spacing: 0.08em;
+			margin: 4px 0 16px;
+		}
+		.f-row { display: flex; gap: 14px; padding: 10px 0; }
+		.f-row + .f-row { border-top: 1px solid #E0D6B4; }
+		.f-row .k { color: #6F6A52; min-width: 118px; }
+		.f-row .v { color: #221F12; }
+		.f-row .s { color: #8A6A00; }
+		.f-row .n { color: #A58414; }
+
+		/* the stamp — one per view */
+		.stamp {
+			position: absolute; left: 918px; top: 106px; z-index: 2;
+			transform: rotate(-4deg);
+			color: #B4532A;
+			border: 3px solid #B4532A;
+			border-radius: 4px;
+			background: #FAF6E9;
+			font-family: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+			font-weight: 500;
+			font-size: 19px;
+			letter-spacing: 0.32em;
+			padding: 12px 10px 12px 25px;
+			white-space: nowrap;
+		}
+
+		/* ruled footer */
+		.foot {
+			position: absolute; left: 72px; right: 72px; bottom: 0; height: 62px;
+			border-top: 1px solid #E0D6B4;
+			display: flex; justify-content: space-between; align-items: center;
+			font-family: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
+		}
+		.foot .site { font-size: 17px; letter-spacing: 0.04em; color: #221F12; }
+		.foot .meta {
+			font-size: 14px; letter-spacing: 0.08em;
+			text-transform: uppercase; color: #6F6A52;
+		}
+		.foot .meta b { color: #8A6A00; font-weight: 400; }
+	</style>
+</head>
+<body>
+	<div class="page">
+
+		<div class="kicker">ONE FILE <b>&middot;</b> ONE CONVERSATION <b>&middot;</b> KEPT WHOLE</div>
+
+		<div class="wordmark"><span class="dot">.</span>curt</div>
+
+		<div class="folder">
+			<span class="folder-tab">2026-10-14 design-review 001<span class="dot">.curt</span></span>
+			<div class="folder-body">
+				<div class="f-head">.CURT — THE FILE, OPENED</div>
+				<div class="f-sub">WHAT EVERY READER OWES YOU</div>
+				<div class="f-row"><span class="k">magic</span><span class="v"><span class="s">"curtis-conversation"</span></span></div>
+				<div class="f-row"><span class="k">version</span><span class="v"><span class="n">1</span> — the number, not "1"</span></div>
+				<div class="f-row"><span class="k">fidelity</span><span class="v">kept whole</span></div>
+				<div class="f-row"><span class="k">validation</span><span class="v">whole-file</span></div>
+			</div>
+		</div>
+
+		<div class="stamp">OPEN &middot; MIT</div>
+
+		<div class="foot">
+			<span class="site">dotcurt.org</span>
+			<span class="meta">SPEC V1 <b>&middot;</b> MIT <b>&middot;</b> UTF-8 JSON</span>
+		</div>
+
+	</div>
+</body>
+</html>

@@ -458,3 +458,13 @@
 			.site-nav a { margin-left: 0.625rem; }
 			.site-nav { font-size: 0.8125rem; }
 		}
+
+/* vitals strip — the checkable claims (paper page defines its own identical copy) */
+.vitals { list-style: none; display: flex; flex-wrap: wrap; gap: 0.375rem 1.75rem; margin: 0; padding: 0.875rem 0; border-top: 1px solid var(--ruling); border-bottom: 1px solid var(--ruling); font-family: var(--font-records); font-size: 0.8125rem; letter-spacing: 0.02em; }
+.vitals li { white-space: nowrap; }
+.vitals .k { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+.vitals a { color: var(--ochre-700); }
+
+/* anatomy figure — inline SVG sizing */
+.anatomy-fig { margin: 2.5rem 0; }
+.anatomy-fig svg { width: 100%; height: auto; display: block; }
