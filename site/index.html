@@ -13,6 +13,12 @@
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="https://dotcurt.org/">
 	<meta property="og:site_name" content=".curt">
+	<meta property="og:image" content="https://dotcurt.org/og.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://dotcurt.org/og.png">
+	
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 
 	<link rel="stylesheet" href="style.css">
@@ -76,6 +82,12 @@
 		</div>
 	</div>
 
+	<ul class="vitals" aria-label="The checkable claims">
+		<li><span class="k">conformance</span><a href="https://github.com/JordanNewell/dot_curt/actions/workflows/ci.yml">27 vectors · passing in CI</a></li>
+		<li><span class="k">audit</span><a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">2026-10-14 · public</a></li>
+		<li><span class="k">in production</span>5 apps</li>
+	</ul>
+
 	<section class="section" id="shape">
 		<h2>The envelope, and what rides inside.</h2>
 		<p class="muted small">
@@ -84,6 +96,101 @@
 			readers must ignore it: presence, absence, or value never affects
 			parsing. Declared capabilities ride in <code>extensions</code>.
 		</p>
+		
+		<figure class="anatomy-fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 760" role="img" aria-label=".curt — the envelope, opened: an annotated anatomy of the JSON envelope">
+			<title>.curt — the envelope, opened</title>
+			<!-- The Filing Room — dotcurt.org. Flat fills, 1px hairlines, no shadows.
+			     Fonts resolve from the embedding page; generic fallbacks standalone. -->
+		
+			<!-- paper field -->
+			<rect x="0" y="0" fill="#FAF6E9"/>
+		
+			<!-- title strip -->
+			<text x="48" y="66" font-family="Newsreader, Georgia, 'Times New Roman', serif" font-size="30" font-weight="600" letter-spacing="-0.01em" fill="#221F12"><tspan fill="#8A6A00">.</tspan>curt — the envelope, opened</text>
+			<text x="1112" y="65" text-anchor="end" font-family="'Spline Sans Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="12.5" letter-spacing="0.08em" fill="#6F6A52">DOTCURT.ORG · SPEC V1 · MIT</text>
+			<line x1="48" y1="90" x2="1112" y2="90" stroke="#E0D6B4" stroke-width="1"/>
+		
+			<!-- folder tab on the document card -->
+			<path d="M54,112 H342 V146 H48 V118 Q48,112 54,112 Z" fill="#EBE1BE" stroke="#E0D6B4" stroke-width="1"/>
+			<text x="64" y="134" font-family="'Spline Sans Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="12.5" fill="#221F12">2026-10-14 design-review 001<tspan fill="#8A6A00">.curt</tspan></text>
+		
+			<!-- the document card: surface, ruling border -->
+			<rect x="48" y="146" width="520" height="576" rx="4" fill="#FFFDF2" stroke="#E0D6B4" stroke-width="1"/>
+		
+			<!-- row highlights for annotated lines -->
+			<g fill="#F4EED8">
+				<rect x="54" y="206" width="508" height="26"/>
+				<rect x="54" y="232" width="508" height="26"/>
+				<rect x="54" y="258" width="508" height="26"/>
+				<rect x="54" y="362" width="508" height="26"/>
+				<rect x="54" y="414" width="508" height="26"/>
+				<rect x="54" y="492" width="508" height="26"/>
+				<rect x="54" y="518" width="508" height="26"/>
+			</g>
+		
+			<!-- the envelope, line by line -->
+			<g font-family="'Spline Sans Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="15" fill="#221F12">
+				<text x="80" y="198">{</text>
+				<text x="98" y="224"><tspan fill="#6F6A52">"curt":</tspan> <tspan fill="#8A6A00">"curtis-conversation"</tspan>,</text>
+				<text x="98" y="250"><tspan fill="#6F6A52">"version":</tspan> <tspan fill="#A58414">1</tspan>,</text>
+				<text x="98" y="276"><tspan fill="#6F6A52">"generator":</tspan> <tspan fill="#8A6A00">"your-app@1.2.3"</tspan>,</text>
+				<text x="98" y="302"><tspan fill="#6F6A52">"conversation":</tspan> {</text>
+				<text x="116" y="328"><tspan fill="#6F6A52">"id":</tspan> <tspan fill="#8A6A00">"conv_001"</tspan>,</text>
+				<text x="116" y="354"><tspan fill="#6F6A52">"title":</tspan> <tspan fill="#8A6A00">"Thursday's thread"</tspan>,</text>
+				<text x="116" y="380"><tspan fill="#6F6A52">"createdAt":</tspan> <tspan fill="#A58414">1760000000000</tspan>,</text>
+				<text x="116" y="406"><tspan fill="#6F6A52">"updatedAt":</tspan> <tspan fill="#A58414">1760000600000</tspan>,</text>
+				<text x="116" y="432"><tspan fill="#6F6A52">"messages":</tspan> [</text>
+				<text x="134" y="458">{</text>
+				<text x="152" y="484"><tspan fill="#6F6A52">"id":</tspan> <tspan fill="#8A6A00">"m2"</tspan>,</text>
+				<text x="152" y="510"><tspan fill="#6F6A52">"role":</tspan> <tspan fill="#8A6A00">"user"</tspan>,</text>
+				<text x="152" y="536"><tspan fill="#6F6A52">"content":</tspan> <tspan fill="#8A6A00">"hello"</tspan>,</text>
+				<text x="152" y="562"><tspan fill="#6F6A52">"model":</tspan> <tspan fill="#8A6A00">"provider/model-id"</tspan>,</text>
+				<text x="152" y="588"><tspan fill="#6F6A52">"timestamp":</tspan> <tspan fill="#A58414">1760000000000</tspan></text>
+				<text x="134" y="614">}</text>
+				<text x="116" y="640">]</text>
+				<text x="98" y="666">}</text>
+				<text x="80" y="692">}</text>
+			</g>
+		
+			<!-- leader anchors: the ochre dot marks an annotated field -->
+			<g fill="#8A6A00">
+				<circle cx="584" cy="219" r="3"/>
+				<circle cx="584" cy="245" r="3"/>
+				<circle cx="584" cy="271" r="3"/>
+				<circle cx="584" cy="375" r="3"/>
+				<circle cx="584" cy="427" r="3"/>
+				<circle cx="584" cy="505" r="3"/>
+				<circle cx="584" cy="531" r="3"/>
+			</g>
+		
+			<!-- hairline leaders -->
+			<g fill="none" stroke="#E0D6B4" stroke-width="1">
+				<path d="M588,219 H886 V207 H898"/>
+				<path d="M588,245 H886 V267 H898"/>
+				<path d="M588,271 H886 V327 H898"/>
+				<path d="M588,375 H886 V397 H898"/>
+				<path d="M588,427 H886 V465 H898"/>
+				<path d="M588,505 H894 V535 H898"/>
+				<path d="M588,531 H878 V611 H898"/>
+			</g>
+		
+			<!-- annotations -->
+			<g font-family="'Spline Sans Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace" font-size="13.5" fill="#221F12">
+				<text x="906" y="178" font-size="12" letter-spacing="0.08em" fill="#6F6A52">WHAT THE FIELDS PROMISE</text>
+				<text x="906" y="212">magic — exact match</text>
+				<text x="906" y="272">the number 1,<tspan x="906" dy="19">never the string</tspan></text>
+				<text x="906" y="332">provenance — readers<tspan x="906" dy="19">must ignore</tspan></text>
+				<text x="906" y="402">epoch milliseconds</text>
+				<text x="906" y="470">unknown fields survive<tspan x="906" dy="19">round-trip</tspan></text>
+				<text x="906" y="540">role — user · assistant ·<tspan x="906" dy="19">system · tool</tspan></text>
+				<text x="906" y="616">full fidelity: base64<tspan x="906" dy="19">rides verbatim</tspan></text>
+			</g>
+		</svg>
+		
+			<figcaption class="label" style="margin-top: 0.75rem;">Fig. 1 — the envelope, annotated</figcaption>
+		</figure>
+
 		<pre class="dark" aria-label="The .curt envelope"><code>{
 	<span class="k">"curt"</span>: <span class="s">"curtis-conversation"</span>,
 	<span class="k">"version"</span>: <span class="n">1</span>,

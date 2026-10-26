@@ -5,6 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="color-scheme" content="light">
 	<title>.curt: A Conversations-First, LLM-Native File Format with Executable Conformance for AI Chat Portability — the preprint</title>
+	<meta property="og:image" content="https://dotcurt.org/og.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://dotcurt.org/og.png">
+	
 	<meta name="description" content="The .curt preprint in full, readable in the browser: the portability argument, the landscape survey, the frozen-core design, the tiered executable conformance ladder, and the governance accounting, with all twenty references linked.">
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="../style.css">
@@ -62,6 +68,11 @@
 		.refs li:target .ref-n { color: var(--ochre-900); font-weight: 600; }
 
 		.legal-note { max-width: 46rem; }
+
+		.vitals { list-style: none; display: flex; flex-wrap: wrap; gap: 0.375rem 1.75rem; margin: 1.375rem 0 0; padding: 0.875rem 0; border-top: 1px solid var(--ruling); border-bottom: 1px solid var(--ruling); font-family: var(--font-records); font-size: 0.8125rem; letter-spacing: 0.02em; }
+		.vitals li { white-space: nowrap; }
+		.vitals .k { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+		.vitals a { color: var(--ochre-700); }
 	</style>
 </head>
 <body>
@@ -83,10 +94,18 @@
 	<article class="paper">
 
 		<header class="paper-head">
-			<p class="kicker">Preprint · October 26, 2026 · cs.CY (submitted)</p>
+			<p class="kicker">Preprint · October 26, 2026 · cs.CY · headed to arXiv</p>
 			<h1><span class="dot">.</span>curt: A Conversations-First, LLM-Native File Format with Executable Conformance for AI Chat Portability</h1>
 			<p class="byline">Jordan Newell</p>
 			<p class="artifact-line"><span class="k">Artifact</span> <a href="https://dotcurt.org/">https://dotcurt.org/</a> · <a href="https://www.npmjs.com/package/curt-format"><code>npm install curt-format</code></a> · <a href="https://github.com/JordanNewell/dot_curt/blob/main/LICENSE">MIT</a></p>
+
+			<ul class="vitals" aria-label="The checkable claims">
+				<li><span class="k">conformance</span><a href="https://github.com/JordanNewell/dot_curt/actions/workflows/ci.yml">27 vectors · passing in CI</a></li>
+				<li><span class="k">spec</span>frozen · v1</li>
+				<li><span class="k">license</span>MIT · permanent</li>
+				<li><span class="k">audit</span><a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">2026-10-14 · public</a></li>
+				<li><span class="k">in production</span>5 apps</li>
+			</ul>
 		</header>
 
 		<section class="abstract-band" id="abstract" aria-label="Abstract">
