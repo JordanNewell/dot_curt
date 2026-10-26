@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="color-scheme" content="light">
 	<title>Adopt .curt — make your app speak the format</title>
-	<meta name="description" content="The four-step path to implementing .curt in your app: install curt-format, round-trip files, pass the conformance vectors, get listed in capabilities.json.">
+	<meta name="description" content="The .curt adoption hub: install curt-format, claim conformance against the executable vectors, meet the five apps that already speak the format, and build on the JSON Schema, fixtures, and extension registry.">
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="../../style.css">
 </head>
@@ -17,6 +17,7 @@
 		<nav class="site-nav" aria-label="the format">
 			<a href="../../">the format</a>
 			<a href="../../posts/2026-10-25-one-file/">post</a>
+			<a href="../../listen/">listen</a>
 			<a href="../../#conformance">conformance</a>
 			<a href="https://github.com/JordanNewell/dot_curt">github</a>
 		</nav>
@@ -24,17 +25,43 @@
 </header>
 
 <main class="wrap" id="top">
+
 	<div class="hero">
-		<p class="kicker">Adopt the format — <b>curt-format@1.2.0 · MIT · 27 vectors in CI</b></p>
-		<h1>Make your app speak .curt.</h1>
-		<p class="lede">
-			The format is free — the move is yours. One afternoon of work buys your
-			users a conversation file that never loses anything and never goes stale.
-		</p>
+		<div>
+			<p class="kicker">Adopt the format — <b>curt-format@1.2.0 · MIT · 27 vectors in CI</b></p>
+			<h1>Make your app speak .curt.</h1>
+			<p class="lede">
+				The format is free — the move is yours. One afternoon of work buys your
+				users a conversation file that never loses anything and never goes stale.
+			</p>
+			<div class="cta-row">
+				<a class="cta" href="https://github.com/JordanNewell/dot_curt/tree/main/conformance">Conformance vectors</a>
+				<a class="cta-quiet" href="https://www.npmjs.com/package/curt-format">curt-format on npm</a>
+			</div>
+			<div class="install">
+				<span class="ps">$</span>
+				<code>npm install curt-format</code>
+				<button id="copy" type="button" aria-label="Copy install command">copy</button>
+			</div>
+		</div>
+
+		<div class="folder">
+			<span class="folder-tab">curt-format@1.2.0 — package manifest</span>
+			<div class="folder-body">
+				<div class="f-head">WHAT SHIPS IN THE BOX</div>
+				<div class="f-sub">ZERO DEPENDENCIES · TYPESCRIPT · MIT</div>
+				<div class="f-row"><span class="k">serializeCurt</span><span class="v">conversation + your generator id → file body</span></div>
+				<div class="f-row"><span class="k">parseCurt</span><span class="v">body → conversation, or null — whole-file, never half</span></div>
+				<div class="f-row"><span class="k">curtFilename</span><span class="v">&lt;date&gt; &lt;slug&gt; &lt;suffix&gt;.curt, from immutable fields</span></div>
+				<div class="f-row"><span class="k">guards</span><span class="v">isCurtMessage · isCurtConversation, the spec's predicates</span></div>
+				<div class="f-row"><span class="k">schema</span><span class="v f-ok">curt-v1.schema.json rides along ✓</span></div>
+			</div>
+			<span class="stamp" aria-hidden="true">MIT · V1</span>
+		</div>
 	</div>
 
 	<section class="section" id="why">
-		<h2>Why implement it</h2>
+		<h2>Why implement it.</h2>
 		<ul class="rules">
 			<li>Full fidelity — base64 images and tool calls ride in content, verbatim. No flattening, no &ldquo;best effort&rdquo;.</li>
 			<li>Unknown fields survive a re-save. Your app's extras aren't a liability.</li>
@@ -43,60 +70,153 @@
 		</ul>
 	</section>
 
-	<section class="section" id="path">
-		<h2>The path</h2>
-		<p class="muted small">Four steps. Conformance is testable at every one.</p>
+	<section class="section" id="developers">
+		<p class="label">For app developers</p>
+		<h2>Install, round-trip, claim.</h2>
+		<p class="muted small">
+			The library handles the envelope, the BOM, and the unknown fields.
+			What's left is your integration — and the proof that it holds.
+		</p>
+		<pre aria-label="TypeScript quick start"><code><span class="k">import</span> { serializeCurt, parseCurt, curtFilename } <span class="k">from</span> <span class="s">'curt-format'</span>;
+
+<span class="k">const</span> body = serializeCurt(conversation, <span class="s">'my-app@1.0.0'</span>);
+<span class="k">const</span> back = parseCurt(body);      <span class="c">// CurtConversation | null — null means invalid</span>
+<span class="k">const</span> file = curtFilename(back!);  <span class="c">// 2026-10-14 design-review 001.curt</span></code></pre>
+		<p class="muted small">
+			Also in the box: <code>isCurtMessage</code> and <code>isCurtConversation</code> —
+			the spec's validation predicates as type guards — plus the envelope
+			constants <code>CURT_MAGIC</code> and <code>CURT_VERSION</code>.
+			Round-trip a real conversation and confirm unknown fields survive;
+			that is the whole L1 bar.
+		</p>
+
+		<p class="label">How to claim conformance</p>
 		<ol class="rules">
-			<li><b>Install.</b> <code>npm i curt-format</code> — <code>serializeCurt</code>, <code>parseCurt</code>, <code>curtFilename</code>.</li>
-			<li><b>Round-trip.</b> Serialize a conversation, parse it back, confirm unknown fields survive. That's the L1 bar.</li>
-			<li><b>Prove it.</b> Run the conformance vectors — L1 CORE, L2 NAMED, L3 BULK, L4 per-extension. 27 vectors, plain fixtures, CI-runnable.</li>
-			<li><b>Get listed.</b> PR against <code>capabilities.json</code> + <code>CAPABILITIES.md</code>: who you are, what you read/write, which extensions, conformance level. Public and checkable.</li>
+			<li>
+				<span class="r-num">01</span>
+				<div class="r-body"><b>Run the executable vectors.</b> Everything is plain JSON in
+				<a href="https://github.com/JordanNewell/dot_curt/tree/main/conformance/vectors">conformance/vectors/</a>:
+				<code>core.json</code> (L1, 13 cases), <code>named.json</code> (L2, 7),
+				<code>bulk.json</code> (L3, rules and a canonical example),
+				<code>extensions.json</code> (L4, 6). Twenty-seven checks in all —
+				if your parser accepts what they accept and rejects what they reject,
+				you match the level.</div>
+			</li>
+			<li>
+				<span class="r-num">02</span>
+				<div class="r-body"><b>Update your row in <a href="https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json">capabilities.json</a>.</b>
+				Set <code>conformanceLevel</code> (e.g. <code>"L1"</code>, <code>"L1+L2"</code>),
+				the <code>extensions</code> you emit and accept, and <code>lastAudited</code>.
+				Open a PR — <a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">CAPABILITIES.md</a>
+				carries the human-readable audit.</div>
+			</li>
+			<li>
+				<span class="r-num">03</span>
+				<div class="r-body"><b>Link a reproducible run.</b> A CI job or script in your repo
+				that executes the vectors. Claims are self-reported — and reproducible
+				by anyone from the same files.</div>
+			</li>
 		</ol>
-		<div class="cta-row">
-			<a class="cta" href="https://github.com/JordanNewell/dot_curt/tree/main/conformance">Conformance vectors</a>
-			<a class="cta-quiet" href="https://www.npmjs.com/package/curt-format">curt-format on npm</a>
+		<div class="table-wrap">
+			<table class="records">
+				<thead>
+					<tr><th>level</th><th>obligation</th><th>the bar</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>L1 · core</td><td><span class="status status-must">must</span></td><td>magic and version exact-match, one leading BOM tolerated, whole-file rejection, unknown fields preserved on round-trip</td></tr>
+					<tr><td>L2 · named</td><td><span class="status status-stable">should</span></td><td><code>curtFilename</code> implements &lt;date&gt; &lt;slug&gt; &lt;suffix&gt;.curt exactly</td></tr>
+					<tr><td>L3 · bulk</td><td><span class="status">may</span></td><td>zip of .curt files; corrupted entries reported, never silently dropped</td></tr>
+					<tr><td>L4+ · extension</td><td><span class="status">may</span></td><td>per-extension vectors; presence or malformation never causes rejection</td></tr>
+				</tbody>
+			</table>
 		</div>
+		<p class="muted small">
+			Level definitions and vector formats:
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/conformance/README.md">conformance/README.md</a>.
+			The reference implementation runs all twenty-seven in CI and passes L1–L4.
+		</p>
 	</section>
 
-	<section class="section" id="registry">
-		<h2>Registry status</h2>
-		<p class="muted small">Consumers, from capabilities.json (lastAudited 2026-10-17):</p>
+	<section class="section" id="users">
+		<p class="label">For end users</p>
+		<h2>Five apps already speak it.</h2>
+		<p class="muted small">
+			In production across five apps, audited 2026-10-14. If you use any of
+			them, your conversations are already files — one per thread, portable
+			between them all.
+		</p>
 		<div class="table-wrap">
 			<table class="records">
-				<tr><th>id</th><th>role</th><th>read</th><th>write</th><th>conformance</th></tr>
-				<tr><td>curtis</td><td>Obsidian plugin — import, export, full-backup zip</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
-				<tr><td>curtis-ai-chat-porter</td><td>Converter (CLI + Obsidian plugin + web)</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
-				<tr><td>curtis-web</td><td>Chat app — export single .curt + bulk zip</td><td>no</td><td>yes</td><td class="req">none</td></tr>
-				<tr><td>curtis-cloud</td><td>Shared library — import/export serialization</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
-				<tr><td>curtis-ai-tech</td><td>Docs/marketing + Porter web app with inline preview</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
-				<tr><td>tractum</td><td>Python SDK + MCP server — signed consensus decisions</td><td>yes</td><td>yes</td><td class="req">none</td></tr>
+				<thead>
+					<tr><th>app</th><th>what it does with .curt</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>curtis plugin</td><td>Obsidian — import, export, full-backup zip</td></tr>
+					<tr><td>porter</td><td>converter (ChatGPT, Claude, Grok, Gemini → .curt and back) + verify oracle</td></tr>
+					<tr><td>curtis-web</td><td>chat app — export single .curt and bulk zip</td></tr>
+					<tr><td>curtis-cloud</td><td>shared library — import/export serialization</td></tr>
+					<tr><td>curtis-ai-tech</td><td>docs + embedded converter with inline preview</td></tr>
+				</tbody>
 			</table>
 		</div>
-		<p class="muted small">Six entries, one author. That's the honest score — the <a href="../posts/2026-10-25-one-file/">launch post</a> doesn't pretend otherwise. First outside consumer sets the tone.</p>
+		<p class="muted small">
+			The tracker carries a sixth entry — tractum, a Python SDK that emits
+			signed consensus receipts. The honest score: six entries, one author,
+			and none depend on the <code>curt-format</code> package yet — every
+			copy vendored or hand-rolled. First outside consumer sets the tone;
+			<a href="../posts/2026-10-25-one-file/">the launch post</a> doesn't
+			pretend otherwise.
+		</p>
+	</section>
 
-		<p class="muted small">Extensions:</p>
+	<section class="section" id="tools">
+		<p class="label">For tool builders</p>
+		<h2>Schema, fixtures, registry.</h2>
+		<ul class="rules">
+			<li><b>JSON Schema.</b> Non-normative, for tooling — ships inside the npm package at <code>curt-format/schema/curt-v1.schema.json</code>. Editors, linters, and validators in any language.</li>
+			<li><b>Round-trip fixtures.</b> <a href="https://github.com/JordanNewell/dot_curt/tree/main/tests/fixtures">tests/fixtures/</a> — basic.curt, empty.curt, rich.curt, roles.curt — the same files the reference tests run against. Seed your own suite with them.</li>
+			<li><b>Extension registry.</b> New capability is a PR to <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>: name, status, the exact fields, any vectors. An entry moves draft → stable when two independent implementations round-trip it.</li>
+		</ul>
+		<p class="muted small">The registry today:</p>
 		<div class="table-wrap">
 			<table class="records">
-				<tr><th>extension</th><th>status</th><th>what it carries</th></tr>
-				<tr><td>images-inline</td><td>stable</td><td>base64 images in content, verbatim</td></tr>
-				<tr><td>usage-metadata</td><td>stable</td><td>tokens / usage per message</td></tr>
-				<tr><td>tool-linkage</td><td class="req">draft</td><td>tool calls linked to their results</td></tr>
-				<tr><td>agent-context</td><td class="req">draft</td><td>agent/system context alongside the thread</td></tr>
-				<tr><td>consensus-receipt</td><td class="req">draft</td><td>signed consensus decisions (tractum, sole impl)</td></tr>
+				<thead>
+					<tr><th>extension</th><th>status</th><th>what it carries</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>images-inline</td><td><span class="status status-stable">stable</span></td><td>base64 images in content, verbatim</td></tr>
+					<tr><td>usage-metadata</td><td><span class="status status-stable">stable</span></td><td>tokens / cost / provider per message</td></tr>
+					<tr><td>tool-linkage</td><td><span class="status">draft</span></td><td>tool calls linked to their results</td></tr>
+					<tr><td>agent-context</td><td><span class="status">draft</span></td><td>agent/system context alongside the thread</td></tr>
+					<tr><td>consensus-receipt</td><td><span class="status">draft</span></td><td>signed consensus decisions (tractum, sole impl)</td></tr>
+				</tbody>
 			</table>
 		</div>
-		<p class="muted small">Draft → stable requires two independent implementations. consensus-receipt needs one more.</p>
+		<p class="muted small">Draft → stable requires two independent implementations round-tripping it. consensus-receipt needs one more.</p>
 	</section>
 
 	<section class="section" id="faq">
-		<h2>Questions, answered</h2>
+		<h2>Questions, answered.</h2>
 		<ul class="rules">
-			<li><b>Will the spec change under me?</b> No. Core is frozen at v1. Evolution is registry-only.</li>
-			<li><b>Who decides?</b> One maintainer, BDFL. Deliberately — a format with six committees has no direction.</li>
-			<li><b>What does draft mean for me?</b> Emit it if you want; readers must reject unknown extensions cleanly, so nothing breaks.</li>
-			<li><b>License?</b> MIT — spec, implementation, schema, fixtures. Build a business on it if you like.</li>
+			<li><b>Will the spec change under me?</b> No. Core is frozen at v1; evolution is registry-only, and registry entries never change how existing files parse.</li>
+			<li><b>Who decides?</b> One maintainer, BDFL — deliberately. A format with six committees has no direction.</li>
+			<li><b>What does draft mean for me?</b> Emit it if you want. Readers must ignore unknown extensions and never reject over them, so nothing breaks.</li>
+			<li><b>License?</b> MIT — spec, reference code, schema, fixtures. Build a business on it if you like.</li>
 		</ul>
 	</section>
+
+	<section class="section">
+		<div class="not-yet">
+			<span class="ny-label">NOT YET — STATED PLAINLY</span>
+			<p>Bindings beyond TypeScript. The predicates are small — Rust, Python,
+			Go, Swift: pick one and keep it in lockstep with SPEC.md. PRs to
+			<a href="https://github.com/JordanNewell/dot_curt">dot_curt</a> are welcome.</p>
+			<p>No consumer depends on <code>curt-format</code> yet — five vendored
+			copies and one hand-rolled. Yours can be the first real dependency;
+			the tracker has a row waiting.</p>
+		</div>
+	</section>
+
 </main>
 
 <footer class="site-foot">
@@ -112,6 +232,19 @@
 		</span>
 	</div>
 </footer>
+
+<script>
+	document.getElementById('copy').addEventListener('click', async function () {
+		try {
+			await navigator.clipboard.writeText('npm install curt-format');
+			this.textContent = 'copied';
+			setTimeout(() => { this.textContent = 'copy'; }, 1200);
+		} catch {
+			this.textContent = 'ctrl+c';
+			setTimeout(() => { this.textContent = 'copy'; }, 1200);
+		}
+	});
+</script>
 
 </body>
 </html>
