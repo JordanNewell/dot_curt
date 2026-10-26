@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light">
+	<title>Try .curt — convert an export in the browser</title>
+	<meta property="og:image" content="https://dotcurt.org/og.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://dotcurt.org/og.png">
+
+	<meta name="description" content="A fully client-side counter for the dot curt format: drop a ChatGPT or Claude export, preview each conversation, and download conforming .curt files as a zip. Nothing is uploaded.">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
+	<link rel="stylesheet" href="../style.css">
+	<style>
+		/* Page-local rules. No new hex values: existing tokens only. */
+		.dropzone {
+			border: 1px dashed var(--ruling);
+			background: var(--surface);
+			border-radius: var(--radius-m);
+			padding: 2.75rem 1.5rem;
+			text-align: center;
+			font-family: var(--font-records);
+			max-width: 34rem;
+			cursor: pointer;
+		}
+		.dropzone:hover { border-color: var(--muted); }
+		.dropzone.drag { border-color: var(--ochre-700); background: var(--folder); }
+		.dropzone .d-big { font-size: 1.0625rem; margin: 0 0 0.5rem; color: var(--text); }
+		.dropzone .d-sub {
+			font-size: 0.8125rem;
+			color: var(--muted);
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			margin: 0;
+		}
+		.linklike {
+			background: none;
+			border: none;
+			padding: 0;
+			font: inherit;
+			color: var(--ochre-700);
+			text-decoration: underline;
+			text-underline-offset: 3px;
+			cursor: pointer;
+			text-align: left;
+			overflow-wrap: anywhere;
+		}
+		.linklike:hover { color: var(--ochre-900); }
+		.records-list {
+			border: 1px solid var(--ruling);
+			background: var(--surface);
+			max-width: 46rem;
+			font-family: var(--font-records);
+			font-size: 0.9375rem;
+		}
+		.record-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: baseline;
+			gap: 0.75rem;
+			flex-wrap: wrap;
+			padding: 0.75rem 1rem;
+			border-bottom: 1px solid var(--ruling);
+		}
+		.record-row:nth-child(4n+3) { background: var(--bar); }
+		.record-row .r-meta {
+			color: var(--muted);
+			font-size: 0.8125rem;
+			margin-top: 0.25rem;
+			overflow-wrap: anywhere;
+		}
+		.record-row .r-dl { white-space: nowrap; }
+		.record-preview { border-bottom: 1px solid var(--ruling); padding: 1rem 1rem 1.25rem; }
+		.paste-box {
+			width: 100%;
+			min-height: 9rem;
+			font-family: var(--font-records);
+			font-size: 0.875rem;
+			line-height: 1.6;
+			color: var(--text);
+			background: var(--surface);
+			border: 1px solid var(--ruling);
+			border-radius: var(--radius-s);
+			padding: 0.875rem 1rem;
+			resize: vertical;
+		}
+		.paste-box:focus-visible { outline: 2px solid var(--ochre-700); outline-offset: 2px; }
+		.record-preview[hidden] { border-bottom: none; }
+		.p-role {
+			font-family: var(--font-records);
+			font-size: 0.6875rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+			display: block;
+			margin-bottom: 0.25rem;
+		}
+		.p-text {
+			font-family: var(--font-display);
+			font-size: 0.9375rem;
+			margin: 0 0 0.75rem;
+			max-width: 46rem;
+			white-space: pre-wrap;
+			overflow-wrap: anywhere;
+		}
+		.p-text:last-child { margin-bottom: 0; }
+		.skip-row {
+			font-family: var(--font-records);
+			font-size: 0.875rem;
+			line-height: 1.7;
+			padding: 0.5rem 0;
+			border-bottom: 1px solid var(--ruling);
+			max-width: 46rem;
+		}
+		.skip-row .s-why { color: var(--stamp); }
+		.results-folder { margin-top: 3.5rem; }
+		@media (max-width: 40rem) {
+			.dropzone { padding: 2rem 1rem; }
+		}
+	</style>
+</head>
+<body>
+
+<header class="site-head">
+	<div class="wrap">
+		<a class="wordmark" href="../"><span class="dot">.</span>curt</a>
+		<nav class="site-nav" aria-label="the format">
+			<a href="../">the format</a>
+			<a href="../adopt/">adopt</a>
+			<a href="../listen/">listen</a>
+			<a href="../try/" aria-current="page">try</a>
+			<a href="../paper/">paper</a>
+			<a href="https://github.com/JordanNewell/dot_curt">github</a>
+		</nav>
+	</div>
+</header>
+
+<main class="wrap">
+
+	<section class="section" style="margin-top: 3rem;">
+		<p class="kicker">The trial counter — <b>nothing leaves this tab</b></p>
+		<h1>Try the format.</h1>
+		<p class="lede">Drag a ChatGPT or Claude export onto the counter and this page files every conversation as a dot curt file — converted, named, previewed, and zipped entirely in your browser. There is no server to upload to; the whole porter is this page.</p>
+
+		<div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Drop export files here, or press Enter to choose files">
+			<p class="d-big">Drop an export here, or click to choose</p>
+			<p class="d-sub">conversations.json · claude json · export zip · curt</p>
+		</div>
+		<input type="file" id="picker" multiple accept=".json,.zip,.curt,application/json,application/zip" hidden>
+
+		<p class="muted small" style="margin-top: 1.25rem; max-width: 46rem;">
+			Several files at once are fine, zips included. ChatGPT conversations are read by walking the mapping tree from its current node, so a regenerated answer stays in its branch and out of your file. Claude exports are read from their chat message lists. Bare .curt files are validated whole: a corrupted file is reported, never half-imported. Files are written by <code>porter-web@0.1.0</code> through the reference implementation, vendored into this page.
+		</p>
+	</section>
+
+	<section class="section" id="no-export">
+		<h2>No export handy</h2>
+		<p class="muted">Paste the body of a conversations.json — ChatGPT or Claude — and file the paste instead. A single .curt body pasted as JSON works too.</p>
+		<div class="not-yet" style="max-width: 46rem;">
+			<span class="ny-label">Paste an export body</span>
+			<textarea class="paste-box" id="pasteBox" rows="8" placeholder='[{"title": "...", "mapping": {...}}, ...]' aria-label="Paste an export body"></textarea>
+			<div class="cta-row" style="margin: 1rem 0 0;">
+				<button class="cta-quiet" id="pasteBtn" type="button">File the paste</button>
+				<span class="muted small" id="pasteNote" role="status"></span>
+			</div>
+		</div>
+	</section>
+
+	<section class="section" id="results" hidden>
+		<p class="label">Results — this run</p>
+		<div class="folder results-folder">
+			<span class="stamp" id="stamp" hidden>Filed</span>
+			<span class="folder-tab">Run summary</span>
+			<div class="folder-body" aria-live="polite">
+				<div class="f-row"><span class="k">in</span><span class="v" id="statIn">—</span></div>
+				<div class="f-row"><span class="k">out</span><span class="v f-ok" id="statOut">—</span></div>
+				<div class="f-row"><span class="k">skipped</span><span class="v" id="statSkipped">—</span></div>
+			</div>
+		</div>
+
+		<div class="records-list" id="rows" style="margin-top: 1.5rem;" aria-label="Produced files"></div>
+
+		<div class="cta-row" id="zipRow" hidden>
+			<button class="cta" id="zipBtn" type="button">Download the zip</button>
+			<span class="muted small">Entries are named by the curtFilename convention, the bulk (L3) rule.</span>
+		</div>
+
+		<div id="skippedBox" style="margin-top: 2.5rem;" hidden>
+			<p class="label">Skipped — reported, not dropped</p>
+			<div id="skippedRows"></div>
+		</div>
+	</section>
+
+</main>
+
+<footer class="site-foot">
+	<div class="wrap">
+		<span><span class="dot" style="font-family: var(--font-records);">.</span>curt — the conversation format · MIT · v1</span>
+		<span>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">registry</a>
+			· <a href="https://www.npmjs.com/package/curt-format">npm</a>
+			· <a href="https://github.com/JordanNewell/dot_curt">github</a>
+			· born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
+		</span>
+	</div>
+</footer>
+
+<!-- Vendored, file:// safe. Chrome blocks module imports from the null origin
+     of a file:// page, so these two load as classic scripts and attach
+     window.curtFormat / window.fflate; the app below is an inline module. -->
+<script src="curt-format.js"></script>
+<script src="fflate.js"></script>
+
+<script type="module">
+const { parseCurt, serializeCurt, curtFilename } = window.curtFormat;
+const { zipSync, unzipSync, strToU8, strFromU8 } = window.fflate;
+
+const GENERATOR = "porter-web@0.1.0";
+const MAX_JSON_BYTES = 256 * 1024 * 1024;
+const ZIP_MAX_TOTAL_UNCOMPRESSED = 1024 * 1024 * 1024;
+const ZIP_MAX_ENTRIES = 10000;
+const ROLES = new Set(["user", "assistant", "system", "tool"]);
+
+const $ = (id) => document.getElementById(id);
+
+/* ---------- parsing (ported from Curtis's Porter, adapted per the task) ---------- */
+
+// ChatGPT: content is either { text } or { parts: [...] } — only string parts
+// carry text; tool payloads inside multimodal parts are not text.
+function contentToText(content) {
+	if (!content) return "";
+	if (typeof content.text === "string" && content.parts === undefined) return content.text;
+	if (Array.isArray(content.parts)) {
+		return content.parts.filter((p) => typeof p === "string").join("\n").trim();
+	}
+	return "";
+}
+
+// The visible conversation is the path from the mapping root to current_node.
+// Regenerated answers are sibling branches off the same parent; only the
+// branch the current node sits on is the conversation the user actually saw.
+function chatgptChain(conv) {
+	const mapping = conv.mapping || {};
+	const chain = [];
+	const guard = new Set();
+	let cursor = typeof conv.current_node === "string" ? mapping[conv.current_node] : null;
+	while (cursor && !guard.has(cursor) && chain.length <= Object.keys(mapping).length) {
+		guard.add(cursor);
+		chain.push(cursor);
+		cursor = typeof cursor.parent === "string" ? mapping[cursor.parent] : null;
+	}
+	chain.reverse();
+	if (chain.some((n) => n && n.message && n.message.author && n.message.author.role !== undefined)) {
+		return chain;
+	}
+	// Old exports without a usable current node: time order over all nodes.
+	return Object.values(mapping)
+		.map((n, i) => ({ n, i }))
+		.sort((a, b) => ((a.n.message?.create_time ?? 0) - (b.n.message?.create_time ?? 0)) || a.i - b.i)
+		.map((x) => x.n);
+}
+
+function parseChatGpt(raw) {
+	if (!raw || typeof raw !== "object" || !raw.mapping || typeof raw.mapping !== "object") return null;
+	const messages = [];
+	for (const node of chatgptChain(raw)) {
+		const msg = node && node.message;
+		if (!msg) continue;
+		const role = msg.author && typeof msg.author.role === "string" ? msg.author.role : null;
+		if (!ROLES.has(role)) continue;
+		const text = contentToText(msg.content);
+		if (!text.trim()) continue;
+		const m = {
+			id: typeof msg.id === "string" && msg.id ? msg.id : "",
+			role,
+			content: text,
+			timestamp: Number.isFinite(msg.create_time) ? Math.round(msg.create_time * 1000) : undefined,
+		};
+		const model = msg.metadata && typeof msg.metadata.model_slug === "string" ? msg.metadata.model_slug : "";
+		if (role === "assistant" && model) m.model = model;
+		messages.push(m);
+	}
+	if (messages.length === 0) return null;
+	const toMs = (s) => (Number.isFinite(s) ? Math.round(s * 1000) : undefined);
+	return {
+		id: typeof raw.id === "string" && raw.id ? raw.id : "",
+		title: typeof raw.title === "string" && raw.title.trim() ? raw.title.trim() : "Imported ChatGPT chat",
+		messages,
+		createdAt: toMs(raw.create_time),
+		updatedAt: toMs(raw.update_time),
+		provider: "chatgpt",
+	};
+}
+
+function isoToMs(iso) {
+	if (typeof iso !== "string") return undefined;
+	const t = Date.parse(iso);
+	return Number.isFinite(t) ? t : undefined;
+}
+
+// Claude: chat_messages is a flat list joined by parent-uuid chaining; the
+// list order is the chain. Text is m.text, or joined text blocks.
+function blocksToText(content) {
+	if (typeof content === "string") return content;
+	if (!Array.isArray(content)) return "";
+	return content
+		.map((b) => (b && typeof b === "object" && typeof b.text === "string") ? b.text : "")
+		.join("\n").trim();
+}
+
+function parseClaude(raw) {
+	if (!raw || typeof raw !== "object" || !Array.isArray(raw.chat_messages)) return null;
+	const messages = [];
+	for (const m of raw.chat_messages) {
+		if (!m || typeof m !== "object") continue;
+		let role;
+		if (m.sender === "human") role = "user";
+		else if (m.sender === "assistant") role = "assistant";
+		else if (m.sender === "system") role = "system";
+		else continue;
+		const text = (typeof m.text === "string" && m.text.trim() ? m.text : blocksToText(m.content)).trim();
+		if (!text) continue;
+		messages.push({
+			id: typeof m.uuid === "string" && m.uuid ? m.uuid : "",
+			role,
+			content: text,
+			timestamp: isoToMs(m.created_at),
+		});
+	}
+	if (messages.length === 0) return null;
+	return {
+		id: typeof raw.uuid === "string" && raw.uuid ? raw.uuid : "",
+		title: typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : "Imported Claude chat",
+		messages,
+		createdAt: isoToMs(raw.created_at),
+		updatedAt: isoToMs(raw.updated_at),
+		provider: "claude",
+	};
+}
+
+/* ---------- normalization ---------- */
+
+const finite = (n) => (n !== undefined && Number.isFinite(n) ? n : undefined);
+
+function rand(chars) {
+	return Math.random().toString(36).slice(2, 2 + chars).padEnd(chars, "0");
+}
+
+function finalizeConversation(chat) {
+	const now = Date.now();
+	const first = chat.messages[0] && chat.messages[0].timestamp;
+	const last = chat.messages[chat.messages.length - 1] && chat.messages[chat.messages.length - 1].timestamp;
+	const createdAt = finite(chat.createdAt) ?? finite(first) ?? now;
+	const updatedAt = finite(chat.updatedAt) ?? finite(last) ?? createdAt;
+	const seen = new Set();
+	const messages = chat.messages.map((m) => {
+		let id = typeof m.id === "string" && m.id && !seen.has(m.id) ? m.id : "";
+		if (!id) {
+			do { id = `msg_${now}_${rand(6)}`; } while (seen.has(id));
+		}
+		seen.add(id);
+		const out = { id, role: m.role, content: m.content, timestamp: finite(m.timestamp) ?? createdAt };
+		if (m.role === "assistant" && typeof m.model === "string" && m.model) out.model = m.model;
+		return out;
+	});
+	const conv = {
+		id: typeof chat.id === "string" && chat.id ? chat.id : `conv_${now}_${rand(9)}`,
+		title: chat.title,
+		createdAt: Math.min(createdAt, updatedAt),
+		updatedAt: Math.max(createdAt, updatedAt),
+		messages,
+	};
+	if (chat.provider) conv.provider = chat.provider;
+	return conv;
+}
+
+function dedupeKey(conv) {
+	const first = conv.messages.find((m) => m.role === "user");
+	return `${conv.title.trim().toLowerCase()}|${conv.messages.length}|${(first ? first.content : "").slice(0, 200)}`;
+}
+
+function uniqueName(name, used) {
+	if (!used.has(name)) {
+		used.add(name);
+		return name;
+	}
+	const dot = name.lastIndexOf(".");
+	const stem = dot > 0 ? name.slice(0, dot) : name;
+	const ext = dot > 0 ? name.slice(dot) : "";
+	let n = 2;
+	let candidate = `${stem} ${n}${ext}`;
+	while (used.has(candidate)) {
+		n += 1;
+		candidate = `${stem} ${n}${ext}`;
+	}
+	used.add(candidate);
+	return candidate;
+}
+
+/* ---------- input decoding and zip safety (ported from the Porter) ---------- */
+
+function decodeText(bytes) {
+	if (bytes.length >= 2 && bytes[0] === 255 && bytes[1] === 254) return new TextDecoder("utf-16le").decode(bytes);
+	if (bytes.length >= 2 && bytes[0] === 254 && bytes[1] === 255) return new TextDecoder("utf-16be").decode(bytes);
+	return new TextDecoder().decode(bytes);
+}
+
+// Scan the central directory before inflating anything: bound parsing by
+// size, as SPEC.md's implementation notes direct.
+function zipPreflightOk(buf) {
+	const scanFloor = Math.max(0, buf.length - 22 - 65535);
+	let eocd = -1;
+	for (let i = buf.length - 22; i >= scanFloor; i--) {
+		if (buf[i] === 80 && buf[i + 1] === 75 && buf[i + 2] === 5 && buf[i + 3] === 6) {
+			eocd = i;
+			break;
+		}
+	}
+	if (eocd < 0) return false;
+	const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+	const entryCount = dv.getUint16(eocd + 10, true);
+	if (entryCount > ZIP_MAX_ENTRIES) return false;
+	let pos = dv.getUint32(eocd + 16, true);
+	const cdEnd = pos + dv.getUint32(eocd + 12, true);
+	if (cdEnd > buf.byteLength) return false;
+	let total = 0;
+	for (let i = 0; i < entryCount; i++) {
+		if (pos + 46 > cdEnd || dv.getUint32(pos, true) !== 33639248) return false;
+		const uncompressed = dv.getUint32(pos + 24, true);
+		if (uncompressed === 4294967295) return false;
+		total += uncompressed;
+		if (total > ZIP_MAX_TOTAL_UNCOMPRESSED) return false;
+		pos += 46 + dv.getUint16(pos + 28, true) + dv.getUint16(pos + 30, true) + dv.getUint16(pos + 32, true);
+	}
+	return true;
+}
+
+/* ---------- the pipeline ---------- */
+
+function convert(inputs) {
+	const entries = [];
+	const skipped = [];
+	const usedNames = new Set();
+	const seenIds = new Set();
+	const seenKeys = new Set();
+	let conversationsIn = 0;
+
+	const getText = (input) => (typeof input.text === "string" ? input.text : decodeText(input.bytes));
+
+	function pushConversation(parsed, verbatimBody, sourceName) {
+		const conversation = verbatimBody !== null ? parsed : finalizeConversation(parsed);
+		const body = verbatimBody !== null ? verbatimBody : serializeCurt(conversation, GENERATOR);
+		if (!parseCurt(body)) {
+			skipped.push({ name: sourceName, reason: "internal — the written body failed its own round-trip check, so it was not included" });
+			return;
+		}
+		const filename = uniqueName(curtFilename(conversation), usedNames);
+		entries.push({ conversation, body, filename, passthrough: verbatimBody !== null });
+	}
+
+	function addCandidate(parsed, sourceName, verbatimBody) {
+		const idKey = parsed.id || "";
+		const key = dedupeKey(parsed);
+		if ((idKey && seenIds.has(idKey)) || seenKeys.has(key)) {
+			skipped.push({ name: `${sourceName} — ${parsed.title}`, reason: "duplicate of an earlier conversation in this run" });
+			return;
+		}
+		seenIds.add(idKey);
+		seenKeys.add(key);
+		pushConversation(parsed, verbatimBody ?? null, sourceName);
+	}
+
+	function handleJson(name, data, rawText) {
+		const list = Array.isArray(data) ? data : [data];
+		const chatgpt = list.filter((c) => c && typeof c === "object" && c.mapping);
+		const claude = list.filter((c) => c && typeof c === "object" && Array.isArray(c.chat_messages));
+		if (chatgpt.length === 0 && claude.length === 0) {
+			// A .curt body pasted as JSON: validate it whole, same as a file.
+			if (!Array.isArray(data) && data && typeof data === "object" && data.curt === "curtis-conversation") {
+				const conv = parseCurt(rawText);
+				if (conv) {
+					conversationsIn += 1;
+					addCandidate(conv, name, rawText);
+					return 1;
+				}
+			}
+			skipped.push({ name, reason: "no conversations recognized — expected a ChatGPT mapping or Claude chat_messages shape" });
+			return 0;
+		}
+		conversationsIn += chatgpt.length + claude.length;
+		const label = (raw) => {
+			const t = typeof raw.title === "string" && raw.title.trim() ? raw.title.trim()
+				: typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : "";
+			return t || "untitled conversation";
+		};
+		for (const raw of chatgpt) {
+			const parsed = parseChatGpt(raw);
+			if (!parsed) skipped.push({ name: `${name} — ${label(raw)}`, reason: "no usable messages" });
+			else addCandidate(parsed, name);
+		}
+		for (const raw of claude) {
+			const parsed = parseClaude(raw);
+			if (!parsed) skipped.push({ name: `${name} — ${label(raw)}`, reason: "no usable messages" });
+			else addCandidate(parsed, name);
+		}
+		return chatgpt.length + claude.length;
+	}
+
+	function handleZip(name, bytes) {
+		if (!zipPreflightOk(bytes)) {
+			skipped.push({ name, reason: "not a readable zip, or past the 1 GiB / 10,000-entry safety bound" });
+			return;
+		}
+		let unzipped;
+		try {
+			unzipped = unzipSync(bytes);
+		} catch {
+			skipped.push({ name, reason: "not a readable zip" });
+			return;
+		}
+		const paths = Object.keys(unzipped);
+		const canonical = paths.find((p) => p === "conversations.json" || p.endsWith("/conversations.json"));
+		const jsonPaths = canonical ? [canonical] : paths.filter((p) => p.toLowerCase().endsWith(".json"));
+		const curtPaths = paths.filter((p) => p.toLowerCase().endsWith(".curt"));
+		let recognized = curtPaths.length > 0;
+		for (const p of curtPaths) {
+			const raw = strFromU8(unzipped[p]);
+			const conv = parseCurt(raw);
+			if (!conv) {
+				skipped.push({ name: `${name} — ${p}`, reason: "rejected — not a conforming .curt v1 file" });
+				continue;
+			}
+			conversationsIn += 1;
+			addCandidate(conv, `${name} — ${p}`, raw);
+		}
+		for (const p of jsonPaths) {
+			const raw = strFromU8(unzipped[p]);
+			let data;
+			try {
+				data = JSON.parse(raw);
+			} catch {
+				skipped.push({ name: `${name} — ${p}`, reason: "not valid JSON" });
+				continue;
+			}
+			if (handleJson(`${name} — ${p}`, data, raw) > 0) recognized = true;
+		}
+		if (!recognized) skipped.push({ name, reason: "no conversations recognized in zip" });
+	}
+
+	for (const input of inputs) {
+		const name = input.name || "unnamed input";
+		const ext = name.toLowerCase().split(".").pop() || "";
+		if (input.bytes && input.bytes.length === 0) {
+			skipped.push({ name, reason: "empty file" });
+			continue;
+		}
+		if (ext === "curt") {
+			const text = getText(input);
+			const conv = parseCurt(text);
+			if (!conv) {
+				skipped.push({ name, reason: "rejected — not a conforming .curt v1 file" });
+				continue;
+			}
+			conversationsIn += 1;
+			addCandidate(conv, name, text);
+			continue;
+		}
+		const isZip = ext === "zip" || (!!input.bytes && input.bytes.length > 4 && input.bytes[0] === 80 && input.bytes[1] === 75);
+		if (isZip) {
+			handleZip(name, input.bytes);
+			continue;
+		}
+		if (input.bytes && input.bytes.length > MAX_JSON_BYTES) {
+			skipped.push({ name, reason: `larger than ${Math.round(MAX_JSON_BYTES / 1024 / 1024)} MiB — split the export and try again` });
+			continue;
+		}
+		const trimmed = getText(input).trim();
+		if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) {
+			skipped.push({ name, reason: "unsupported — expected a JSON export, a zip, or a .curt file" });
+			continue;
+		}
+		let data;
+		try {
+			data = JSON.parse(trimmed);
+		} catch {
+			skipped.push({ name, reason: "not valid JSON" });
+			continue;
+		}
+		handleJson(name, data, trimmed);
+	}
+
+	let zip = null;
+	if (entries.length > 0) {
+		const obj = {};
+		for (const e of entries) obj[e.filename] = strToU8(e.body);
+		zip = zipSync(obj);
+	}
+
+	return { filesIn: inputs.length, conversationsIn, entries, skipped, zip };
+}
+
+/* ---------- rendering ---------- */
+
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+function fmtTs(ms) {
+	return Number.isFinite(ms) ? `${new Date(ms).toISOString().replace("T", " ").slice(0, 16)} UTC` : "no timestamp";
+}
+
+const PREVIEW_COUNT = 3;
+const PREVIEW_MAX_CHARS = 400;
+const truncate = (t) => (t.length > PREVIEW_MAX_CHARS ? `${t.slice(0, PREVIEW_MAX_CHARS)} …` : t);
+
+function renderRun(run) {
+	const resultsEl = $("results");
+	const wasHidden = resultsEl.hidden;
+	resultsEl.hidden = false;
+	$("stamp").hidden = run.entries.length === 0;
+
+	$("statIn").textContent = `${plural(run.filesIn, "file")} · ${plural(run.conversationsIn, "conversation")} found`;
+	$("statOut").textContent = plural(run.entries.length, ".curt file");
+	$("statSkipped").textContent = run.skipped.length === 0
+		? "none"
+		: `${run.skipped.length === 1 ? "1 entry" : `${run.skipped.length} entries`} — listed below, never dropped`;
+
+	const rows = $("rows");
+	rows.textContent = "";
+	run.entries.forEach((entry, i) => {
+		const row = document.createElement("div");
+		row.className = "record-row";
+
+		const main = document.createElement("div");
+		const line = document.createElement("div");
+		const toggle = document.createElement("button");
+		toggle.type = "button";
+		toggle.className = "linklike";
+		toggle.textContent = entry.filename;
+		toggle.setAttribute("aria-expanded", "false");
+		toggle.setAttribute("aria-controls", `preview-${i}`);
+		line.appendChild(toggle);
+		if (entry.passthrough) {
+			const note = document.createElement("span");
+			note.className = "muted small";
+			note.textContent = " · validated pass-through";
+			line.appendChild(note);
+		}
+		const meta = document.createElement("div");
+		const models = [...new Set(entry.conversation.messages.filter((m) => m.model).map((m) => m.model))];
+		meta.className = "r-meta";
+		meta.textContent = `${plural(entry.conversation.messages.length, "message")} · ${models.length > 0 ? models.join(", ") : "no model ids"}`;
+		main.append(line, meta);
+
+		const dl = document.createElement("button");
+		dl.type = "button";
+		dl.className = "linklike r-dl";
+		dl.textContent = "download";
+		dl.addEventListener("click", () => saveBlob(strToU8(entry.body), entry.filename, "application/json"));
+
+		row.append(main, dl);
+		rows.appendChild(row);
+
+		const pdiv = document.createElement("div");
+		pdiv.className = "record-preview";
+		pdiv.id = `preview-${i}`;
+		pdiv.hidden = true;
+		for (const m of entry.conversation.messages.slice(0, PREVIEW_COUNT)) {
+			const role = document.createElement("span");
+			role.className = "p-role";
+			role.textContent = `${m.role} · ${fmtTs(m.timestamp)}`;
+			const text = document.createElement("p");
+			text.className = "p-text";
+			text.textContent = truncate(m.content);
+			pdiv.append(role, text);
+		}
+		if (entry.conversation.messages.length > PREVIEW_COUNT) {
+			const more = document.createElement("span");
+			more.className = "p-role";
+			more.textContent = `+ ${entry.conversation.messages.length - PREVIEW_COUNT} more messages in the file`;
+			pdiv.appendChild(more);
+		}
+		rows.appendChild(pdiv);
+
+		toggle.addEventListener("click", () => {
+			const open = pdiv.hidden;
+			pdiv.hidden = !open;
+			toggle.setAttribute("aria-expanded", String(open));
+		});
+	});
+
+	$("zipRow").hidden = run.entries.length === 0;
+	$("zipBtn").onclick = () => {
+		if (run.zip) saveBlob(run.zip, `dot-curt-${new Date().toISOString().slice(0, 10)}.zip`, "application/zip");
+	};
+
+	const skippedBox = $("skippedBox");
+	skippedBox.hidden = run.skipped.length === 0;
+	const skippedRows = $("skippedRows");
+	skippedRows.textContent = "";
+	for (const s of run.skipped) {
+		const row = document.createElement("div");
+		row.className = "skip-row";
+		const name = document.createElement("span");
+		name.textContent = s.name;
+		const why = document.createElement("span");
+		why.className = "s-why";
+		why.textContent = ` — ${s.reason}`;
+		row.append(name, why);
+		skippedRows.appendChild(row);
+	}
+
+	// Round-trip self-check in the console: every body this page wrote must
+	// parse back through the reference parser, or it does not ship.
+	const okCount = run.entries.filter((e) => parseCurt(e.body) !== null).length;
+	console.info(`[dot-curt try] run: ${run.filesIn} in, ${run.conversationsIn} conversations, ${run.entries.length} out, ${run.skipped.length} skipped; round-trip ${okCount}/${run.entries.length}`);
+	if (okCount !== run.entries.length) {
+		console.error("[dot-curt try] a written body failed the round-trip check");
+	}
+
+	// Machine-readable handle for this page's own tests.
+	window.__curtTry = {
+		entries: run.entries.map((e) => ({ filename: e.filename, body: e.body, passthrough: e.passthrough, messages: e.conversation.messages.length })),
+		skipped: run.skipped.slice(),
+		stats: { filesIn: run.filesIn, conversationsIn: run.conversationsIn, filesOut: run.entries.length, skipped: run.skipped.length },
+		zip: run.zip,
+	};
+
+	if (!wasHidden || run.entries.length > 0 || run.skipped.length > 0) {
+		const behavior = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+		resultsEl.scrollIntoView({ behavior, block: "nearest" });
+	}
+}
+
+function saveBlob(bytes, filename, type) {
+	const blob = new Blob([bytes], { type });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement("a");
+	a.href = url;
+	a.download = filename;
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+	setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+/* ---------- wiring ---------- */
+
+function ingestFiles(fileList) {
+	// The promise is assigned synchronously, inside the event listener's own
+	// tick, so anything awaiting __curtTryReady right after a drop sees it.
+	const done = (async () => {
+		const inputs = [];
+		for (const f of fileList) {
+			inputs.push({ name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) });
+		}
+		renderRun(convert(inputs));
+	})();
+	window.__curtTryReady = done;
+	return done;
+}
+
+const zone = $("dropzone");
+const picker = $("picker");
+
+zone.addEventListener("click", () => picker.click());
+zone.addEventListener("keydown", (e) => {
+	if (e.key === "Enter" || e.key === " ") {
+		e.preventDefault();
+		picker.click();
+	}
+});
+for (const type of ["dragenter", "dragover"]) {
+	zone.addEventListener(type, (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		zone.classList.add("drag");
+	});
+}
+for (const type of ["dragleave", "drop"]) {
+	zone.addEventListener(type, (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		zone.classList.remove("drag");
+	});
+}
+zone.addEventListener("drop", (e) => {
+	const files = Array.from((e.dataTransfer && e.dataTransfer.files) || []);
+	if (files.length > 0) ingestFiles(files);
+});
+picker.addEventListener("change", () => {
+	ingestFiles(Array.from(picker.files || []));
+	picker.value = "";
+});
+// Keep stray drops from navigating the page away.
+window.addEventListener("dragover", (e) => e.preventDefault());
+window.addEventListener("drop", (e) => e.preventDefault());
+
+$("pasteBtn").addEventListener("click", () => {
+	const box = $("pasteBox");
+	const note = $("pasteNote");
+	const text = box.value.trim();
+	if (!text) {
+		note.textContent = "Nothing pasted yet.";
+		return;
+	}
+	note.textContent = "";
+	const done = Promise.resolve().then(() => renderRun(convert([{ name: "pasted.json", text }])));
+	window.__curtTryReady = done;
+});
+</script>
+
+</body>
+</html>
