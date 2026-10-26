@@ -5,10 +5,11 @@ one conversation, full fidelity (images and tool calls ride verbatim). Born in
 [Curtis AI Chat](https://github.com/JordanNewell/curtis-ai-chat), specified
 here so any app can read and write it.
 
-[**Spec site →**](https://dotcurt.org/) — served by Cloudflare Workers; merges to
-main that touch `site/` deploy automatically via
-[`.github/workflows/deploy-site.yml`](.github/workflows/deploy-site.yml) (or run
-`wrangler deploy` by hand).
+[**Spec site →**](https://dotcurt.org/) — served by Cloudflare Pages
+(`dotcurt-site` project). Pushes deploy via
+[`.github/workflows/deploy-site.yml`](.github/workflows/deploy-site.yml):
+main → production, other branches → previews; or run
+`wrangler pages deploy site --project-name=dotcurt-site` by hand.
 
 - [SPEC.md](SPEC.md) — the normative spec
 - [src/index.ts](src/index.ts) — reference implementation (TypeScript, zero dependencies, MIT)
