@@ -76,6 +76,17 @@ function walkMd(dir) {
   return out.sort();
 }
 
+function walkExt(dir, ext) {
+  const out = [];
+  for (const name of readdirSync(dir)) {
+    const p = path.join(dir, name);
+    const st = statSync(p);
+    if (st.isDirectory()) out.push(...walkExt(p, ext));
+    else if (name.endsWith(ext)) out.push(p);
+  }
+  return out.sort();
+}
+
 function collectSurfaces() {
   const surfaces = [];
   for (const f of ['README.md', 'CAPABILITIES.md', 'EXTENSIONS.md', 'SPEC.md', 'CHANGELOG.md']) {
@@ -125,6 +136,26 @@ function collectSurfaces() {
       surfaces.push({
         label: path.relative(ROOT, f).split(path.sep).join('/'),
         text: readFileSync(f, 'utf8'),
+      });
+    }
+  }
+
+  // Main-site pages (site/**) carry the same checkable facts — implementation
+  // counts, extension names/statuses, versions. 2026-11-01 lesson: the docs
+  // env got a drift guard and stayed honest while site/adopt kept saying
+  // "ten entries" for half a day. Same guard, same rules.
+  const siteDir = path.join(ROOT, 'site');
+  if (existsSync(siteDir)) {
+    const html = walkExt(siteDir, '.html');
+    for (const f of html) {
+      // strip tags so prose checks see words, not markup
+      const text = readFileSync(f, 'utf8')
+        .replace(/<script[\s\S]*?<\/script>/g, ' ')
+        .replace(/<style[\s\S]*?<\/style>/g, ' ')
+        .replace(/<[^>]+>/g, ' ');
+      surfaces.push({
+        label: path.relative(ROOT, f).split(path.sep).join('/'),
+        text,
       });
     }
   }
