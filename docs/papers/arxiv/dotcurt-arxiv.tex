@@ -14,8 +14,9 @@
 % final entries on a nearly-empty last page.
 \let\oldthebibliography\thebibliography
 \renewcommand{\thebibliography}[1]{%
+  \small% references in small type, the preprint convention
   \oldthebibliography{#1}%
-  \setlength{\itemsep}{2pt plus 0.5pt}%
+  \setlength{\itemsep}{0pt plus 0.3pt}%
   \setlength{\parskip}{0pt}%
 }
 
