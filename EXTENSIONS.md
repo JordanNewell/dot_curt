@@ -18,7 +18,7 @@ at least two independent implementations round-trip it.
 |---|---|---|---|
 | `images-inline` | stable | curtis plugin, porter, curtis-web, curtis-cloud, curtis-ai-tech | Image payloads ride inside `content` |
 | `usage-metadata` | stable | porter, curtis-web, curtis-ai-tech | Per-message cost/token/provider fields |
-| `tool-linkage` | draft | porter, curtis-ai-tech | Tool-call requests and their results |
+| `tool-linkage` | draft | porter, curtis-ai-tech, curt-convert (same author — does not count toward stability) | Tool-call requests and their results |
 | `agent-context` | draft | curtis plugin, porter, curtis-cloud, curtis-ai-tech | Agent/swarm provenance on conversations and messages |
 | `consensus-receipt` | draft | tractum | Signed k-of-n consensus decision bound to the transcript evidence |
 
@@ -53,6 +53,9 @@ Links assistant tool calls to their `tool`-role results:
   `name` (string), `arguments` (writer's JSON value)).
 - Tool message: `toolCallId` (string) referencing the `toolCalls[].id`.
 - Round-trip is verbatim; readers must not reorder or drop entries.
+- Status `draft`. Second emitter added 2026-11-01 (`curt-convert`, same
+  author as the reference) — stability still requires two *independent*
+  implementations.
 
 ### `agent-context` — draft
 
