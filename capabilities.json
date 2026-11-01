@@ -485,7 +485,7 @@
 				"jsonSchemaValidation": "no"
 			},
 			"gaps": [
-				"Python pipeline is draft/unpublished and has never been live-smoked inside a real Open WebUI pipelines runtime — only unit tests (8) plus the parseCurt cross-check",
+				"Python pipeline is draft/unpublished. Live-smoke against a real Open WebUI instance (main image, API-key auth) 2026-11-01: TS CLI end-to-end green (tree traversal, block-array content, model fields on real API records); pipeline serializer cross-checked 2/2 valid. Remaining: pipeline does not traverse chat.history trees (CLI does) — align during upstream PR; never run inside a live pipelines *runtime*",
 				"Python validator is shallower than parseCurt: validates the conversation dict, never the envelope; no BOM/magic handling exists at all (it only writes)",
 				"two more independent copies of the v1 rules now exist in the ecosystem (the TS side avoided this by depending on curt-format; the Python side did not)",
 				"TS generator string is a versionless constant (\"curt-openwebui-export\"), not package-version-derived",

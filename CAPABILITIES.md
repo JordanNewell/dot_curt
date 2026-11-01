@@ -111,11 +111,12 @@ losses) lives in `capabilities.json`.
    1169 inputs → 1169 distinct outputs, 0 self-check failures, 294
    hash-suffixed names, identical file lists across two runs. Suite grew
    25 → 30 tests, all green.
-4. **`curt-openwebui`'s Python pipeline is draft** — never live-smoked in a
-   real Open WebUI pipelines runtime; its validator is shallower than
-   `parseCurt` (conversation dict only, envelope never checked). A
-   pipeline-written body does parse valid in the reference parser
-   (cross-checked 2026-11-01).
+4. **`curt-openwebui`'s Python pipeline is draft** — live-smoked against a
+   real Open WebUI instance 2026-11-01 (TS CLI end-to-end green on real API
+   records; pipeline serializer cross-checked 2/2 valid). Still open:
+   pipeline doesn't traverse `chat.history` trees (CLI does), validator is
+   shallower than `parseCurt`, and it has not run inside a live pipelines
+   *runtime*.
 5. **`curt-openwith` added 2026-11-01 (docs-reconcile only, no code
    audit).** Its viewer parser is a hand-rolled port of the reference:
    strict reject, BOM tolerance, unknown-field round-trip per the file's
