@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light">
+	<title>Browser extension — export live chats to .curt</title>
+	<meta property="og:image" content="https://dotcurt.org/og.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://dotcurt.org/og.png">
+
+	<meta name="description" content="The Curt Conversation Exporter browser extension: one click turns the ChatGPT or Claude conversation in your tab into a portable .curt file. Zero collection, zero network, all local. Chrome, Edge, and Firefox 115+.">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
+	<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-head">
+	<div class="wrap">
+		<a class="wordmark" href="../"><span class="dot">.</span>curt</a>
+		<nav class="site-nav" aria-label="the format">
+			<a href="../">the format</a>
+			<a href="../posts/2026-10-25-one-file/">post</a>
+			<a href="../listen/">listen</a>
+			<a href="../try/">try</a>
+			<a href="../viewer/">viewer</a>
+			<a href="../paper/">paper</a>
+			<a href="../#conformance">conformance</a>
+			<a href="https://github.com/JordanNewell/dot_curt">github</a>
+		</nav>
+	</div>
+</header>
+
+<main class="wrap" id="top">
+
+	<div class="hero">
+		<div>
+			<p class="kicker">Curt Conversation Exporter — <b>Chrome · Edge · Firefox 115+</b></p>
+			<h1>The chat in your tab, as a .curt file.</h1>
+			<p class="lede">
+				One click on the extension and the conversation you're looking at —
+				ChatGPT or Claude — becomes a single portable, spec-compliant
+				<code>.curt</code> file on disk. No copy-paste, no cloud, no accounts.
+			</p>
+			<div class="cta-row">
+				<a class="cta" href="https://github.com/JordanNewell/curt-webext">Source on GitHub</a>
+				<a class="cta-quiet" href="#build">Build from source</a>
+			</div>
+		</div>
+	</div>
+
+	<section class="section" id="what">
+		<h2>What it does.</h2>
+		<ul class="rules">
+			<li><span class="r-num">01</span><div class="r-body"><b>One-click export.</b> Open a chat on a supported site, press Export in the popup — the whole thread, in order, lands as one UTF-8 <code>.curt</code> file.</div></li>
+			<li><span class="r-num">02</span><div class="r-body"><b>Spec-compliant by construction.</b> Output is .curt v1 per <a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">SPEC.md</a>, and the test suite round-trips every file through <code>curt-format</code>'s reference <code>parseCurt</code>.</div></li>
+			<li><span class="r-num">03</span><div class="r-body"><b>Nothing leaves the browser.</b> Zero collection, zero network calls — extraction and serialization happen entirely on your machine. <a href="../privacy/">Privacy policy</a>.</div></li>
+			<li><span class="r-num">04</span><div class="r-body"><b>Portable on arrival.</b> The file opens in every app that speaks the format — the <a href="../viewer/">viewer</a>, <code>curt-openwith</code>, or anything you build.</div></li>
+		</ul>
+	</section>
+
+	<section class="section" id="support">
+		<p class="label">Where it works</p>
+		<h2>Sites and browsers.</h2>
+		<div class="table-wrap">
+			<table class="records">
+				<thead>
+					<tr><th>site</th><th>browser</th><th>notes</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>chatgpt.com</td><td>Chrome / Edge (MV3), Firefox 115+</td><td></td></tr>
+					<tr><td>claude.ai</td><td>Chrome / Edge (MV3), Firefox 115+</td><td></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p class="muted small">
+			One codebase, two manifests. Chrome and Edge load the MV3 build;
+			Firefox ships MV3 with <code>strict_min_version: 115.0</code>.
+		</p>
+	</section>
+
+	<section class="section" id="stores">
+		<p class="label">Getting it</p>
+		<h2>In review.</h2>
+		<p class="muted small">
+			The extension is in review for the
+			Chrome Web Store and Firefox Add-ons (AMO) — store links will appear
+			here once the listings are live. Until then, build it from source;
+			it takes about a minute.
+		</p>
+	</section>
+
+	<section class="section" id="build">
+		<p class="label">Build from source</p>
+		<h2>Install it yourself.</h2>
+		<pre aria-label="Build commands"><code><span class="c"># requires Node 18+</span>
+npm install
+npm run build                      <span class="c"># tsc + Chrome staging -&gt; dist/</span>
+node platform/firefox/build.mjs    <span class="c"># Firefox staging -&gt; dist/firefox/</span></code></pre>
+		<p class="muted small">
+			<b>Chrome / Edge:</b> open <code>chrome://extensions</code> (or
+			<code>edge://extensions</code>), enable developer mode, "Load unpacked"
+			→ <code>dist/</code>.<br>
+			<b>Firefox:</b> open <code>about:debugging#/runtime/this-firefox</code>,
+			"Load Temporary Add-on…" → <code>dist/firefox/manifest.json</code>.
+		</p>
+		<p class="muted small">
+			Tests: <code>npx vitest run</code>. Full development notes in the
+			<a href="https://github.com/JordanNewell/curt-webext">repo README</a>.
+		</p>
+	</section>
+
+	<section class="section" id="privacy">
+		<h2>Privacy, stated plainly.</h2>
+		<p class="muted small">
+			The extension has no backend and makes no network requests. It reads
+			only the conversation already open in your tab, serializes it locally,
+			and hands you the file. That's the whole data flow — see the full
+			<a href="../privacy/">privacy policy</a>.
+		</p>
+	</section>
+
+</main>
+
+<footer class="site-foot">
+	<div class="wrap">
+		<span><span class="dot" style="font-family: var(--font-records);">.</span>curt — the conversation format · MIT · v1</span>
+		<span>
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">spec</a>
+			· <a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">registry</a>
+			· <a href="https://www.npmjs.com/package/curt-format">npm</a>
+			· <a href="https://github.com/JordanNewell/dot_curt">github</a>
+			· born in <a href="https://github.com/JordanNewell/curtis-ai-chat">Curtis AI Chat</a>
+			· <a href="https://www.curtisai.tech/curt/">curtisai.tech/curt</a>
+		</span>
+	</div>
+</footer>
+
+</body>
+</html>
