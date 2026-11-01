@@ -220,6 +220,19 @@
 			messages <em>are</em> shown, as the badges below each turn.
 		</p>
 		<div class="transcript" id="transcript" aria-label="Transcript"></div>
+
+		<div class="not-yet" id="storyBox" style="margin-top: 1.5rem; max-width: 46rem;">
+			<span class="ny-label">The story behind that conversation</span>
+			<p class="muted small" style="margin: 0.5rem 0 0.75rem;">
+				This session is real work, unscripted. It became a blog post and a
+				podcast episode — and the episode itself ships as a .curt file.
+			</p>
+			<div class="cta-row" style="margin: 0;">
+				<a class="cta-quiet" href="https://jordannewell.com/posts/xbox360-not-dead/" target="_blank" rel="noopener">Read the blog post</a>
+				<a class="cta-quiet" href="https://audio.jordannewell.com/episodes/xbox360-not-dead.mp3" target="_blank" rel="noopener">Listen to the episode</a>
+				<button class="cta-quiet" id="episodeBtn" type="button">Read the episode as .curt</button>
+			</div>
+		</div>
 	</section>
 
 </main>
@@ -552,6 +565,18 @@ $("realBtn").addEventListener("click", async () => {
 	} catch (err) {
 		$("errorBox").hidden = false;
 		$("errorMsg").textContent = "Could not load the example file (" + err.message + "). Drop a .curt file on the page instead.";
+		$("errorBox").scrollIntoView({ block: "center" });
+	}
+});
+
+$("episodeBtn").addEventListener("click", async () => {
+	try {
+		const res = await fetch("episode.curt");
+		if (!res.ok) throw new Error("HTTP " + res.status);
+		viewRaw("episode.curt", await res.text());
+	} catch (err) {
+		$("errorBox").hidden = false;
+		$("errorMsg").textContent = "Could not load the episode transcript (" + err.message + "). Drop a .curt file on the page instead.";
 		$("errorBox").scrollIntoView({ block: "center" });
 	}
 });
