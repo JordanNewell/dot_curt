@@ -62,6 +62,7 @@ const ROUTES = [
   { file: 'docs/schema/index.html', kind: 'html', route: '/docs/schema' },
   { file: 'docs/changelog/index.html', kind: 'html', route: '/docs/changelog' },
   { file: 'docs/spec-terms/index.html', kind: 'html', route: '/docs/spec-terms' },
+  { file: 'docs/status/index.html', kind: 'html', route: '/docs/status' },
 
   { file: 'adopt/index.html', kind: 'html', route: '/adopt' },
   { file: 'try/index.html', kind: 'html', route: '/try' },

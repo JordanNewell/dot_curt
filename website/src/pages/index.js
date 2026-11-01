@@ -159,6 +159,16 @@ export default function Home() {
               <span className="k">conformance</span>
               <a href="/docs/conformance">27 vectors · MIT</a>
             </li>
+            <li>
+              <span className="k">x</span>
+              <a
+                href="https://x.com/curtformat"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                x/@curtformat
+              </a>
+            </li>
           </ul>
         </div>
 

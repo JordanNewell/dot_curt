@@ -125,6 +125,10 @@ const config = {
             href: 'https://github.com/JordanNewell/dot_curt',
           },
           {
+            label: 'x/@curtformat',
+            href: 'https://x.com/curtformat',
+          },
+          {
             html: `born in <a href="https://github.com/JordanNewell/curtis-ai-chat" target="_blank" rel="noopener noreferrer">Curtis AI Chat</a> · <a href="https://www.curtisai.tech/curt/" target="_blank" rel="noopener noreferrer">curtisai.tech/curt</a>`,
           },
         ],
