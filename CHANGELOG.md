@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Ecosystem tracker grew 5 → 9 consumers: `curt-vcon` (.curt ⇄ vCon bridge),
+  `curt-convert` (Claude Code JSONL → .curt), and `curt-openwebui` (TS CLI +
+  draft Python pipelines filter) added to `capabilities.json` /
+  `CAPABILITIES.md`. All three are same-author (JordanNewell), local and
+  unpublished — the first consumers to depend on the `curt-format` package
+  rather than vendoring, and the first writers to use the spec `curtFilename`
+  algorithm. Same-author emissions do not promote draft extensions
+  (`tool-linkage` stays draft). Per-entry evidence dated 2026-11-01;
+  `lastAudited` (2026-10-14) not bumped — no full re-audit. No spec or
+  package changes; `curt-format` stays 1.2.0.
 - Documentation corrections from the post-release audit: SPEC's bulk
   convention now states the L3 rules normatively (import valid entries,
   report corrupted ones — never silently drop; ignore directory entries);

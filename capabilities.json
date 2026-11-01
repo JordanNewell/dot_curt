@@ -8,6 +8,11 @@
 		"conformanceLevel": "L1+L2+L3+L4",
 		"note": "this repo's implementation; vectors executed in CI"
 	},
+	"notes": [
+		"Per-consumer fields introduced 2026-11-01: \"author\" + \"sameAuthor\" (true = same author as this reference repo, i.e. JordanNewell), and \"evidenceDate\" (when that entry's evidence was last checked). Older entries predate the fields; their evidence dates are the lastAudited date.",
+		"\"repo\": \"<name> (local, unpublished)\" marks consumers with no public repository or npm package; no URLs are invented for them.",
+		"sameAuthor entries do NOT promote draft extensions to stable — EXTENSIONS.md requires two independent implementations; a second emission from the same author is not one."
+	],
 	"consumers": [
 		{
 			"id": "curtis",
@@ -279,6 +284,142 @@
 				"conformance vectors not executed from Python yet",
 				"hash convention (sha256 over canonical JSON) documented in EXTENSIONS.md but not yet normative in SPEC.md"
 			]
+		},
+		{
+			"id": "curt-vcon",
+			"repo": "curt-vcon (local, unpublished)",
+			"pkg": "curt-vcon@0.1.0 (unpublished)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Standards bridge — bidirectional .curt ⇄ vCon converter (library + CLI) targeting IETF draft-ietf-vcon-vcon-core-05",
+			"read": true,
+			"write": true,
+			"dependency": {
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 (1.2.0 installed) — parseCurt/serializeCurt come from the reference; no reimplementation of the rules"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.2.0 (delegated to the reference dependency)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not run against conformance/ vectors. All v1 parsing/serialization is the reference implementation's by construction (single dependency, no vendored copy); the bridge's own lossy mapping is covered by 18 tests (pass 2026-11-01).",
+			"extensions": {
+				"emits": [],
+				"accepts": []
+			},
+			"generator": "curt-vcon@0.1.0 (on serialize)",
+			"capabilities": {
+				"bomTolerance": "yes (reference parseCurt)",
+				"strictWholeFileRejection": "yes (reference parseCurt)",
+				"unknownFieldRoundTrip": "n/a for the bridge itself — input goes through reference parseCurt (conversation-level extras preserved where possible; envelope-top-level extras dropped); the vCon side keeps only mapped fields",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "no (single-file stdout CLI; filenames untouched)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"conversation.id → vCon uuid is one-way: uuidv5 of \"curt:<id>\" in a fixed project namespace — the original .curt id is not recoverable, and vconToCurt emits the derived uuid as the new id",
+				"message-level extras (model, thinking, tool fields) have no core vCon home and are dropped curt → vCon",
+				"vCon → curt skips recording/incomplete/url-referenced dialogs and unrecognized encodings; analysis/attachments arrays are unmapped; any party name outside user/assistant/system/tool degrades to role \"user\"",
+				"vconToCurt input check is structural (object + string uuid), not full draft validation",
+				"repo and package are not public"
+			],
+			"evidence": [
+				"src/index.ts:84-100 (uuidv5 namespace), 144-183 (curtToVcon), 225-274 (vconToCurt skip/drop rules)",
+				"test/convert.test.ts — 18 tests, all pass 2026-11-01",
+				"README.md fidelity matrix"
+			],
+			"evidenceDate": "2026-11-01"
+		},
+		{
+			"id": "curt-convert",
+			"repo": "curt-convert (local, unpublished)",
+			"pkg": "curt-convert@0.1.0 (unpublished)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Converter CLI — Claude Code session JSONL → .curt (bulk; write-only, with parseCurt self-check on every output)",
+			"read": false,
+			"write": true,
+			"dependency": {
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 (1.2.0 installed) — serializeCurt for output, curtFilename for naming, parseCurt as the pre-write self-check"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.2.0 (serialization/naming/validation delegated to the reference dependency)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not run against conformance/ vectors. As a writer, L1 parse rules apply only via its self-check (parseCurt on every body before it is written). Validated 2026-11-01 against the author's full real-session corpus: 1168/1168 transcripts converted, 0 self-check failures, exit 0.",
+			"extensions": {
+				"emits": [
+					"tool-linkage"
+				],
+				"accepts": []
+			},
+			"generator": "curt-convert@0.1.0",
+			"capabilities": {
+				"bomTolerance": "n/a (no .curt reader); self-check rides reference parseCurt (BOM-tolerant)",
+				"strictWholeFileRejection": "n/a (writer); never writes a body the reference parser rejects",
+				"unknownFieldRoundTrip": "writer emits conversation-level extras (provider, model, cwd, gitBranch, claudeCodeVersion) and message extras (thinking, isSidechain, nonTextContent, isError) — preserved where possible by conforming readers; parseCurt drops envelope-top-level extras only",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "yes (curtFilename from curt-format — first consumer to use the spec algorithm)",
+				"jsonSchemaValidation": "no (parseCurt self-check instead)"
+			},
+			"gaps": [
+				"bulk output is not collision-safe: transcripts sharing a sessionId (parent + sidechain subagent files) yield identical curtFilename names and silently overwrite — 2026-11-01 corpus run: 1168 inputs → 878 distinct filenames",
+				"same-author tool-linkage emission does NOT promote the extension to stable (needs two independent implementations)",
+				"thinking-block signatures, usage/cost, and parentUuid chains dropped (documented losses); server_tool_use results often have no matching result line (counted unlinked)",
+				"repo and package are not public"
+			],
+			"evidence": [
+				"src/convert.ts:28-31 (TOOL_LINKAGE), 328-351 (extension declaration + conversation extras)",
+				"src/cli.ts (self-check: parseCurt before every write)",
+				"test/convert.test.ts — 25 tests, all pass 2026-11-01",
+				"2026-11-01 full-corpus validation: 1168/1168 real Claude Code sessions, 0 self-check failures (exit 0), 878 distinct output filenames"
+			],
+			"evidenceDate": "2026-11-01"
+		},
+		{
+			"id": "curt-openwebui",
+			"repo": "curt-openwebui (local, unpublished)",
+			"pkg": "curt-openwebui-export@1.0.0 (unpublished) + pipelines/curt_export_pipeline.py v0.1.0 (draft)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Open WebUI exporter, two implementations in one repo: TypeScript CLI/library (export NDJSON/array or live API → .curt files) and a draft Python pipelines filter that writes a .curt file after each assistant reply",
+			"read": false,
+			"write": true,
+			"dependency": {
+				"type": "npm + hand-rolled",
+				"detail": "TS side: curt-format ^1.2.0 (1.2.0 installed) — serializeCurt/curtFilename/parseCurt from the reference. Python pipeline: stdlib reimplementation (json + own is_valid_conversation v1 structural validator)"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "TS: 1.2.0 (delegated to the reference). Python: pre-1.1.0 mirror (own validator; no BOM-rejection semantics — writer-only, envelope built from scratch)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not run against conformance/ vectors. TS side validated by 15 tests incl. a fixture round-trip through reference parseCurt (pass 2026-11-01). Python side: own validator mirrors the v1 structural rules; cross-validated 2026-11-01 — a pipeline-written .curt body parses valid in the reference JS parseCurt (ad-hoc cross-check, not a vector run). The pipeline itself is draft: never exercised in a live Open WebUI pipelines runtime.",
+			"extensions": {
+				"emits": [],
+				"accepts": []
+			},
+			"generator": "curt-openwebui-export (TS, versionless constant) / curt-openwebui-pipeline/0.1.0 (Python)",
+			"capabilities": {
+				"bomTolerance": "TS: yes (reference parseCurt, self-check). Python: n/a (writer)",
+				"strictWholeFileRejection": "TS: never writes a body parseCurt rejects. Python: conversation dict checked by is_valid_conversation before write; envelope never validated (built, not parsed)",
+				"unknownFieldRoundTrip": "writer only — TS passes through message extras (openwebuiContent, files, sources, error, usage, annotations) and conversation extras (folder_id, share_id, summary, openwebuiSkippedBranches), plus provider/model; preserved where possible by conforming readers",
+				"generatorStamped": "yes (both)",
+				"curtFilenameConvention": "yes on both — TS uses curtFilename from curt-format; Python reimplements the same <date> <slug> <suffix>.curt algorithm (post-underscore else last-8 suffix)",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"Python pipeline is draft/unpublished and has never been live-smoked inside a real Open WebUI pipelines runtime — only unit tests (8) plus the parseCurt cross-check",
+				"Python validator is shallower than parseCurt: validates the conversation dict, never the envelope; no BOM/magic handling exists at all (it only writes)",
+				"two more independent copies of the v1 rules now exist in the ecosystem (the TS side avoided this by depending on curt-format; the Python side did not)",
+				"TS generator string is a versionless constant (\"curt-openwebui-export\"), not package-version-derived",
+				"repo and package are not public"
+			],
+			"evidence": [
+				"src/cli.ts:90-96 (serialize + parseCurt check + curtFilename)",
+				"src/convert.ts (flattenMessages branch walk, seconds→ms, passthrough fields)",
+				"test/ — 15 tests, all pass 2026-11-01 (incl. 'every fixture conversion round-trips through parseCurt')",
+				"pipelines/curt_export_pipeline.py (is_valid_conversation, serialize_curt, curt_filename)",
+				"pipelines/test_curt_export_pipeline.py — 8 tests, all pass 2026-11-01"
+			],
+			"evidenceDate": "2026-11-01"
 		}
 	],
 	"outOfEcosystem": [
@@ -320,6 +461,8 @@
 		"Only the dot_curt reference implements the 1.1.0 BOM rule; every consumer fails a BOM-prefixed file (porter only by accident of TextDecoder).",
 		"Nobody implements the documented curtFilename naming convention — three different sanitizers, none matching SPEC.md.",
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
-		"Version lineage is broken: porter's oracle pins curtis-ai-chat v2.0.1 (1c7a19f) but that repo now self-identifies as curtis@1.0.0."
+		"Version lineage is broken: porter's oracle pins curtis-ai-chat v2.0.1 (1c7a19f) but that repo now self-identifies as curtis@1.0.0.",
+		"2026-11-01: the first npm-dependency consumers exist — curt-vcon, curt-convert, and curt-openwebui (TS side) depend on curt-format@1.2.0 instead of vendoring the rules. The zero-dependency finding above still holds for the five original consumers.",
+		"2026-11-01: all three new consumers are same-author (JordanNewell) local builds — none published to GitHub or npm. Same-author emissions do not promote draft extensions: curt-convert's tool-linkage emission keeps the extension at draft (stable requires two independent implementations)."
 	]
 }
