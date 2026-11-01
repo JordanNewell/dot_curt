@@ -47,6 +47,7 @@ curt-format/schema/curt-v1.schema.json
 ## Implementations
 
 - [Curtis AI Chat](https://github.com/JordanNewell/curtis-ai-chat) — origin, read + write
+- [curt-openwith](https://github.com/JordanNewell/curt-openwith) — read: double-click any `.curt` file (offline viewer, Windows + macOS + Linux)
 
 See [CAPABILITIES.md](CAPABILITIES.md) for the full ecosystem tracker — who
 reads and writes `.curt`, which spec revision each implementation carries,
