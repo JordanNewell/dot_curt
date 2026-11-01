@@ -1,0 +1,9 @@
+# Path-scoped OPSEC allowlist (gitignore-style, committed + reviewable).
+# Secret scans still run on these files; only the identifier-pattern scan is
+# waived for the paths below.
+#
+# site/viewer/episode.curt — Fleetcast episode transcript. Speaker names are
+# the podcast's public cast: they are spoken in the published audio at
+# audio.jordannewell.com/episodes/, which this transcript verbatim reflects.
+# Nothing added beyond what is broadcast.
+site/viewer/episode.curt
