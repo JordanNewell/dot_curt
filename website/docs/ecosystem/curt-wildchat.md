@@ -61,14 +61,19 @@ names follow the bulk convention via `curtFilename()`.
 
 ## Bulk conformance artifact
 
-`CONFORMANCE-1K.md` in the repo is an **L3 BULK** artifact proving the
-format scales on a real corpus: the first 1000 rows of WildChat-1M shard
-0 converted with zero failures — 995 distinct `.curt` files written, all
-995 re-parsed cleanly under an independent `parseCurt` pass, envelope
-overhead 1.126× over the source JSONL. The 5-file shortfall is the
-artifact's honest finding: duplicate `conversation_hash` rows in the
-source collide on the identity-keyed filename. The sample stays local;
-only aggregate statistics are published.
+:::info[Bulk evidence — 1000 real records, zero failures]
+
+The repo publishes **[CONFORMANCE-1K](/conformance-1k/CONFORMANCE-1K.md)**,
+an **L3 BULK** artifact proving the format scales on a real corpus: the
+first 1000 rows of WildChat-1M shard 0 converted with zero failures —
+995 distinct `.curt` files written, all 995 re-parsed cleanly under an
+independent `parseCurt` pass, envelope overhead **1.126×** over the source
+JSONL. The 5-file shortfall is the artifact's honest finding: duplicate
+`conversation_hash` rows in the source collide on the identity-keyed
+filename. The sample stays local; only aggregate statistics are published
+— no conversation content leaves the machine.
+
+:::
 
 ## License and attribution
 
@@ -82,5 +87,5 @@ and the verified license record are in
 
 Full mapping table, documented losses, the staged demos under `demos/`
 (hand-picked benign records with identity metadata scrubbed), and
-`CONFORMANCE-1K.md`:
+[`CONFORMANCE-1K.md`](/conformance-1k/CONFORMANCE-1K.md):
 [github.com/JordanNewell/curt-wildchat](https://github.com/JordanNewell/curt-wildchat).

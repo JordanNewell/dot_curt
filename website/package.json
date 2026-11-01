@@ -5,7 +5,7 @@
   "description": "dotcurt.org — Docusaurus docs environment for the .curt conversation format",
   "scripts": {
     "docusaurus": "docusaurus",
-    "sync-docs": "node ../scripts/sync-spec-docs.mjs",
+    "sync-docs": "node ../scripts/sync-spec-docs.mjs && node ../scripts/gen-status-page.mjs",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",

@@ -1,6 +1,7 @@
 // Sidebar — mirrors the route contract exactly:
 // spec, extensions (+5 children), conformance, api, ecosystem (+5 tool
-// children), governance, comparison, faq, schema, changelog, spec-terms.
+// children), status, governance, comparison, faq, schema, changelog,
+// spec-terms.
 
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
@@ -34,6 +35,7 @@ const sidebars = {
         'ecosystem/curt-openwebui',
       ],
     },
+    'status',
     'governance',
     'comparison',
     'faq',

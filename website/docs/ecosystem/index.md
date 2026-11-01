@@ -13,7 +13,8 @@ be checked in minutes. Per-consumer detail (dependency style, spec
 revision, conformance drift) lives in
 [CAPABILITIES.md](https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md)
 and its machine-readable twin
-[`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json).
+[`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json) — rendered for humans, at build time, on the
+[Ecosystem status](/docs/status) page.
 
 ## In (11)
 
@@ -54,7 +55,7 @@ Condensed from CAPABILITIES.md (full sweep 2026-10-14, addendum
 | tractum | native (own validator) | rejects BOM | yes | yes | n/a (dicts) | vectors not run |
 | curt-vcon | **npm `curt-format`** | via ref | via ref | n/a (bridge) | no | vectors not run |
 | curt-convert | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | vectors not run |
-| curt-wildchat | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | L3 artifact run (see its page) |
+| curt-wildchat | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | [L3 artifact run](/docs/ecosystem/curt-wildchat#bulk-conformance-artifact) |
 | curt-openwebui | **npm `curt-format`** (TS) / hand-rolled (Py) | TS via ref / n/a Py | TS self-check / shallow Py | writer extras | yes (both) | vectors not run |
 
 The trend the matrix records: the newest three writers depend on the
