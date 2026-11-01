@@ -170,6 +170,27 @@
 			<span class="muted small">A 93-message session of real AI-assisted work — shared with permission, details scrubbed.</span>
 		</div>
 
+		<div style="margin-top: 2.5rem;">
+			<p class="label">Real conversations, from the wild</p>
+			<div class="cta-row" style="margin-top: 0;">
+				<button class="cta-quiet wild-btn" data-src="demos/math-bacteria-cup.curt" type="button">The cup puzzle · 4 msgs</button>
+				<span class="muted small">Real reasoning: an exponential-growth puzzle, worked backwards.</span>
+			</div>
+			<div class="cta-row">
+				<button class="cta-quiet wild-btn" data-src="demos/creative-eldritch-sun.curt" type="button">The Sun is eldritch · 4 msgs</button>
+				<span class="muted small">Real co-writing: two friends argue the Sun is the one true eldritch entity.</span>
+			</div>
+			<div class="cta-row">
+				<button class="cta-quiet wild-btn" data-src="demos/writing-cover-letter.curt" type="button">The cover letter · 6 msgs</button>
+				<span class="muted small">Real drafting: a cover letter iterated across three public-service roles.</span>
+			</div>
+			<p class="muted small" style="margin-top: 0.5rem; max-width: 46rem;">
+				These are real users' chats from the
+				<a href="https://huggingface.co/datasets/allenai/WildChat-1M" target="_blank" rel="noopener">WildChat-1M dataset</a>,
+				ODC-BY licensed — shared with the license's attribution notice, metadata scrubbed.
+			</p>
+		</div>
+
 		<p class="muted small" style="margin-top: 1.25rem; max-width: 46rem;">
 			Validation runs through the reference implementation, vendored into this
 			page: a corrupted file is reported, never half-rendered. Content is read
@@ -580,6 +601,23 @@ $("episodeBtn").addEventListener("click", async () => {
 		$("errorBox").scrollIntoView({ block: "center" });
 	}
 });
+
+// WildChat demos — same fetch-and-render path as the buttons above.
+for (const btn of document.querySelectorAll(".wild-btn")) {
+	btn.addEventListener("click", async () => {
+		const src = btn.dataset.src;
+		const name = src.split("/").pop();
+		try {
+			const res = await fetch(src);
+			if (!res.ok) throw new Error("HTTP " + res.status);
+			viewRaw(name, await res.text());
+		} catch (err) {
+			$("errorBox").hidden = false;
+			$("errorMsg").textContent = "Could not load " + name + " (" + err.message + "). Drop a .curt file on the page instead.";
+			$("errorBox").scrollIntoView({ block: "center" });
+		}
+	});
+}
 
 $("pasteBtn").addEventListener("click", () => {
 	const text = $("pasteBox").value.trim();
