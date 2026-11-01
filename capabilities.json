@@ -15,6 +15,46 @@
 	],
 	"consumers": [
 		{
+			"id": "curt-openwith",
+			"repo": "curt-openwith",
+			"pkg": "viewer/curt-format.js (hand-rolled, unversioned)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Offline viewer — double-click any .curt file (Windows + macOS + Linux file-association launcher + local browser viewer page); read-only",
+			"read": true,
+			"write": false,
+			"dependency": {
+				"type": "hand-rolled",
+				"detail": "viewer/curt-format.js is a port of the reference: strict magic/version reject, single leading BOM ignored, unknown fields preserved for round-trip (per the file's own doc comments)"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.1.0 rules ported (BOM tolerance present); not formally audited",
+			"conformanceLevel": null,
+			"conformanceNotes": "Docs-reconcile addition 2026-11-01, no code audit run — port claims verified only against the source comments, not vectors or a test suite.",
+			"extensions": {
+				"emits": [],
+				"accepts": []
+			},
+			"generator": "n/a (viewer never rewrites; serializeCurt exists in the port but is unused by the viewer flow)",
+			"capabilities": {
+				"bomTolerance": "yes (per doc comment)",
+				"strictWholeFileRejection": "yes (per doc comment)",
+				"unknownFieldRoundTrip": "yes (per doc comment)",
+				"generatorStamped": "no (displays it only)",
+				"curtFilenameConvention": "no",
+				"jsonSchemaValidation": "no"
+			},
+			"gaps": [
+				"no test suite; port not audited against conformance vectors",
+				"added to the tracker before a formal code audit"
+			],
+			"evidence": [
+				"viewer/curt-format.js:23 (CURT_MAGIC), 64-81 (parse + BOM handling)",
+				"README.md — 3-OS install, read-only viewer flow"
+			],
+			"evidenceDate": "2026-11-01"
+		},
+		{
 			"id": "curtis",
 			"repo": "curtis",
 			"pkg": "curtis@1.0.0",
@@ -287,8 +327,8 @@
 		},
 		{
 			"id": "curt-vcon",
-			"repo": "curt-vcon (local, unpublished)",
-			"pkg": "curt-vcon@0.1.0 (unpublished)",
+			"repo": "curt-vcon",
+			"pkg": "curt-vcon@1.0.1 (npm 2026-11-01)",
 			"author": "JordanNewell",
 			"sameAuthor": true,
 			"role": "Standards bridge — bidirectional .curt ⇄ vCon converter (library + CLI) targeting IETF draft-ietf-vcon-vcon-core-05",
@@ -319,8 +359,7 @@
 				"conversation.id → vCon uuid is one-way: uuidv5 of \"curt:<id>\" in a fixed project namespace — the original .curt id is not recoverable, and vconToCurt emits the derived uuid as the new id",
 				"message-level extras (model, thinking, tool fields) have no core vCon home and are dropped curt → vCon",
 				"vCon → curt skips recording/incomplete/url-referenced dialogs and unrecognized encodings; analysis/attachments arrays are unmapped; any party name outside user/assistant/system/tool degrades to role \"user\"",
-				"vconToCurt input check is structural (object + string uuid), not full draft validation",
-				"repo and package are not public"
+				"vconToCurt input check is structural (object + string uuid), not full draft validation"
 			],
 			"evidence": [
 				"src/index.ts:84-100 (uuidv5 namespace), 144-183 (curtToVcon), 225-274 (vconToCurt skip/drop rules)",
@@ -331,8 +370,8 @@
 		},
 		{
 			"id": "curt-convert",
-			"repo": "curt-convert (local, unpublished)",
-			"pkg": "curt-convert@0.1.0 (unpublished)",
+			"repo": "curt-convert",
+			"pkg": "curt-convert@1.0.2 (npm 2026-11-01)",
 			"author": "JordanNewell",
 			"sameAuthor": true,
 			"role": "Converter CLI — Claude Code session JSONL → .curt (bulk; write-only, with parseCurt self-check on every output)",
@@ -363,8 +402,7 @@
 			},
 			"gaps": [
 				"same-author tool-linkage emission does NOT promote the extension to stable (needs two independent implementations)",
-				"thinking-block signatures, usage/cost, and parentUuid chains dropped (documented losses); server_tool_use results often have no matching result line (counted unlinked)",
-				"repo and package are not public"
+				"thinking-block signatures, usage/cost, and parentUuid chains dropped (documented losses); server_tool_use results often have no matching result line (counted unlinked)"
 			],
 			"evidence": [
 				"src/convert.ts:28-31 (TOOL_LINKAGE), 328-351 (extension declaration + conversation extras)",
@@ -372,6 +410,47 @@
 				"test/convert.test.ts — 30 tests, all pass 2026-11-01",
 				"2026-11-01 full-corpus validation: 1168/1168 real Claude Code sessions, 0 self-check failures (exit 0), 878 distinct output filenames",
 				"2026-11-01 post-fix corpus revalidation: 1169 inputs → 1169 distinct outputs, 0 self-check failures, 294 deterministic hash-suffixed names, identical file lists across two runs (fix commit curt-convert@4719816)"
+			],
+			"evidenceDate": "2026-11-01"
+		},
+		{
+			"id": "curt-wildchat",
+			"repo": "curt-wildchat",
+			"pkg": "curt-wildchat@1.0.2 (npm 2026-11-01)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Bulk converter — WildChat-1M (HF allenai/WildChat-1M, ODC-BY) records → .curt files + staged demo conversations (write-only, parseCurt self-check on every output)",
+			"read": false,
+			"write": true,
+			"dependency": {
+				"type": "npm",
+				"detail": "curt-format — serializeCurt for output, curtFilename for naming, parseCurt as the pre-write self-check"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.2.0 (serialization/naming/validation delegated to the reference dependency)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not run against conformance/ vectors. L3-style bulk artifact: CONFORMANCE-1K corpus run — 1000 records → 995 files, 100% independent re-parse, 1.126× envelope overhead. 17 tests pass 2026-11-01.",
+			"extensions": {
+				"emits": [],
+				"accepts": []
+			},
+			"generator": "curt-wildchat@<version>",
+			"capabilities": {
+				"bomTolerance": "n/a (no .curt reader); self-check rides reference parseCurt (BOM-tolerant)",
+				"strictWholeFileRejection": "n/a (writer); never writes a body the reference parser rejects",
+				"unknownFieldRoundTrip": "writer extras preserved where possible by conforming readers",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "yes (curtFilename from curt-format); duplicate conversation_hash rows collide into the same filename — bulk consumer's responsibility to dedupe upstream (CONFORMANCE-1K finding 1)",
+				"jsonSchemaValidation": "no (parseCurt self-check instead)"
+			},
+			"gaps": [
+				"duplicate WildChat-1M conversation_hash rows produce identical curtFilename names (documented; dedupe upstream)",
+				"conformance vectors not run"
+			],
+			"evidence": [
+				"CONFORMANCE-1K.md — 1000-record corpus artifact (995 files, 100% re-parse, 1.126× overhead), 2026-11-01",
+				"test/ — 17 tests, all pass 2026-11-01",
+				"dataset license: ODC-BY (attribution carried on dotcurt.org/viewer demos)"
 			],
 			"evidenceDate": "2026-11-01"
 		},
@@ -463,6 +542,7 @@
 		"All copies are v1-strict on parse, which is the spec's most load-bearing rule — that part has held.",
 		"Version lineage is broken: porter's oracle pins curtis-ai-chat v2.0.1 (1c7a19f) but that repo now self-identifies as curtis@1.0.0.",
 		"2026-11-01: the first npm-dependency consumers exist — curt-vcon, curt-convert, and curt-openwebui (TS side) depend on curt-format@1.2.0 instead of vendoring the rules. The zero-dependency finding above still holds for the five original consumers.",
-		"2026-11-01: all three new consumers are same-author (JordanNewell) local builds — none published to GitHub or npm. Same-author emissions do not promote draft extensions: curt-convert's tool-linkage emission keeps the extension at draft (stable requires two independent implementations)."
+		"2026-11-01: all three new consumers are same-author (JordanNewell) local builds — none published to GitHub or npm. Same-author emissions do not promote draft extensions: curt-convert's tool-linkage emission keeps the extension at draft (stable requires two independent implementations).",
+		"2026-11-01 (publish day, supersedes the previous finding's publication half): curt-vcon@1.0.1, curt-convert@1.0.2, and curt-wildchat@1.0.2 are live on npm; curt-vcon, curt-convert, curt-wildchat, and curt-openwith are public GitHub repos (Gitea-SSOT + GH mirror). curt-openwebui remains local/unpublished. Same-author rule unchanged: draft extensions stay draft."
 	]
 }

@@ -1,0 +1,36 @@
+# .curt
+
+> .curt is an open, MIT-licensed file format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity (base64 images and tool calls ride verbatim in content), strict whole-file validation (unknown fields survive round-trip; a corrupted file is rejected whole, never half-imported), and executable conformance vectors. Spec v1 is frozen: version 1 never changes meaning, growth happens through a named extension registry, and an extension is promoted draft → stable only when two independent implementations round-trip it. The reference implementation is the zero-dependency TypeScript package `curt-format` on npm. Born in Curtis AI Chat, owned by no one.
+
+## Docs
+
+- [/](/): Project landing — the format at a glance, vitals (conformance vectors, audit date, implementation count), and links to everything else.
+- [/docs/spec](/docs/spec): The normative SPEC.md — envelope fields, validation rules, the v1 freeze rule (NORMATIVE badge + freeze banner).
+- [/docs/extensions](/docs/extensions): The extension registry overview; links per-extension pages (images-inline, usage-metadata, tool-linkage, agent-context, consensus-receipt).
+- [/docs/conformance](/docs/conformance): The L1–L4 conformance ladder, how to claim a level, and the executable vectors.
+- [/docs/api](/docs/api): curt-format API reference — parseCurt, serializeCurt, curtFilename, isCurtMessage, isCurtConversation, CURT_MAGIC, CURT_VERSION.
+- [/docs/ecosystem](/docs/ecosystem): Capability matrix and the 10 known implementations, with overview pages per tool (curt-vcon, curt-convert, curt-wildchat, curt-openwith, curt-openwebui).
+- [/docs/comparison](/docs/comparison): .curt vs vCon vs vendor exports — an adversarially reviewed comparison citing the vCon draft.
+- [/docs/faq](/docs/faq): The magic string, BOM tolerance, zip bulk convention, why not vCon, and the license split.
+- [/docs/governance](/docs/governance): BDFL, the extension proposal process, and the two-independent-implementations stability criterion.
+- [/docs/schema](/docs/schema): The non-normative JSON Schema, rendered, plus a validate-your-file snippet.
+- [/docs/changelog](/docs/changelog): CHANGELOG.md, rendered.
+- [/docs/spec-terms](/docs/spec-terms): RFC 2119 keyword usage and the v1 freeze rule.
+
+## Tools
+
+- [/adopt](/adopt/): How to make your application speak .curt — install, round-trip, and claim conformance.
+- [/try](/try/): In-browser converter — drop a vendor chat export, get .curt files back (runs entirely client-side).
+- [/viewer](/viewer/): In-browser .curt file viewer — open any .curt file and read the whole transcript, badges and all.
+
+## Reading room
+
+- [/posts/2026-10-25-one-file/](/posts/2026-10-25-one-file/): "One file, one conversation, kept whole" — the launch post.
+- [/paper/](/paper/): The preprint — ".curt: A Conversations-First, LLM-Native File Format with Executable Conformance for AI Chat Portability" (Jordan Newell, 2026).
+- [/listen/](/listen/): Audio reading of the paper (mp3, playable in the page).
+
+## Optional
+
+- [curt-format on npm](https://www.npmjs.com/package/curt-format): The reference implementation package — zero dependencies, TypeScript, MIT.
+- [SPEC.md on GitHub](https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md): The spec at the source of truth.
+- [GitHub repository](https://github.com/JordanNewell/dot_curt): Spec, conformance vectors, JSON Schema, and all issue tracking.
