@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `curt-convert` bulk-output collision gap closed (commit `4719816`):
+  colliding `curtFilename` outputs in one run now get a deterministic
+  `-<6 hex>` SHA-256-of-source-path suffix instead of silently overwriting;
+  post-fix corpus revalidation 1169 inputs → 1169 distinct outputs, 0
+  self-check failures, deterministic across runs. Gap removed from the
+  `curt-convert` tracker entry; dated fix note appended to CAPABILITIES.md
+  finding 3.
 - Ecosystem tracker grew 5 → 9 consumers: `curt-vcon` (.curt ⇄ vCon bridge),
   `curt-convert` (Claude Code JSONL → .curt), and `curt-openwebui` (TS CLI +
   draft Python pipelines filter) added to `capabilities.json` /
