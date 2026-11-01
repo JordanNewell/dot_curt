@@ -11,7 +11,7 @@
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:image" content="https://dotcurt.org/og.png">
 	
-	<meta name="description" content="The .curt adoption hub: install curt-format, claim conformance against the executable vectors, meet the five apps that already speak the format, and build on the JSON Schema, fixtures, and extension registry.">
+	<meta name="description" content="The .curt adoption hub: install curt-format, claim conformance against the executable vectors, meet the apps that already speak the format, and build on the JSON Schema, fixtures, and extension registry.">
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="../style.css">
 </head>
@@ -148,12 +148,12 @@
 
 	<section class="section" id="users">
 		<p class="label">For end users</p>
-		<h2>Five apps already speak it.</h2>
+		<h2>Six apps already speak it.</h2>
 		<p class="muted small">
-			In production across five apps, audited 2026-10-14 — all five the
-			author's own Curtis applications, stated plainly. If you use any of
-			them, your conversations are already files — one per thread, portable
-			between them all.
+			In production across six apps — five audited 2026-10-14, the sixth
+			(<code>curt-openwith</code>) added 2026-11-01 — all the author's own,
+			stated plainly. If you use any of them, your conversations are
+			already files — one per thread, portable between them all.
 		</p>
 		<div class="table-wrap">
 			<table class="records">
@@ -162,6 +162,7 @@
 				</thead>
 				<tbody>
 					<tr><td>curtis plugin</td><td>Obsidian — import, export, full-backup zip</td></tr>
+					<tr><td>curt-openwith</td><td>double-click any .curt file — offline viewer (Windows + macOS + Linux)</td></tr>
 					<tr><td>porter</td><td>converter (ChatGPT, Claude, Grok, Gemini → .curt and back) + verify oracle</td></tr>
 					<tr><td>curtis-web</td><td>chat app — export single .curt and bulk zip</td></tr>
 					<tr><td>curtis-cloud</td><td>shared library — import/export serialization</td></tr>
@@ -170,10 +171,12 @@
 			</table>
 		</div>
 		<p class="muted small">
-			The tracker carries a sixth entry — tractum, a Python SDK that emits
-			signed consensus receipts. The honest score: six entries, one author,
-			and none depend on the <code>curt-format</code> package yet — every
-			copy vendored or hand-rolled. First outside consumer sets the tone;
+			The tracker carries ten entries — the newest are tractum, a Python
+			SDK that emits signed consensus receipts, and three bridges built on
+			the npm package. The honest score: ten entries, one author; three
+			depend on <code>curt-format</code> directly, while the five original
+			applications still vendor or hand-roll the rules. First outside
+			consumer sets the tone;
 			<a href="../posts/2026-10-25-one-file/">the launch post</a> doesn't
 			pretend otherwise.
 		</p>

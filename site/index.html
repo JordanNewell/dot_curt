@@ -87,8 +87,8 @@
 
 	<ul class="vitals" aria-label="The checkable claims">
 		<li><span class="k">conformance</span><a href="https://github.com/JordanNewell/dot_curt/actions/workflows/ci.yml">27 vectors · passing in CI</a></li>
-		<li><span class="k">audit</span><a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">2026-10-14 · public</a></li>
-		<li><span class="k">in production</span>5 apps</li>
+		<li><span class="k">audit</span><a href="https://github.com/JordanNewell/dot_curt/blob/main/CAPABILITIES.md">2026-10-14 · addendum 11-01 · public</a></li>
+		<li><span class="k">implementations</span>10 — read, write, or both</li>
 	</ul>
 
 	<section class="section" id="shape">
@@ -290,7 +290,7 @@
 				<tbody>
 					<tr><td>images-inline</td><td><span class="status status-stable">stable</span></td><td>image payloads ride inside content</td><td class="small-cell">plugin · porter · web · cloud · ai-tech</td></tr>
 					<tr><td>usage-metadata</td><td><span class="status status-stable">stable</span></td><td>per-message tokens, cost, provider</td><td class="small-cell">porter · web · ai-tech</td></tr>
-					<tr><td>tool-linkage</td><td><span class="status">draft</span></td><td>tool calls linked to their results</td><td class="small-cell">porter · ai-tech</td></tr>
+					<tr><td>tool-linkage</td><td><span class="status">draft</span></td><td>tool calls linked to their results</td><td class="small-cell">porter · ai-tech · curt-convert</td></tr>
 					<tr><td>agent-context</td><td><span class="status">draft</span></td><td>agent and swarm provenance</td><td class="small-cell">plugin · porter · cloud · ai-tech</td></tr>
 					<tr><td>consensus-receipt</td><td><span class="status">draft</span></td><td>signed k-of-n consensus bound to the transcript evidence</td><td class="small-cell">tractum</td></tr>
 				</tbody>
@@ -350,19 +350,27 @@
 				</thead>
 				<tbody>
 					<tr><td>curtis plugin</td><td>import · export · backup</td><td class="req">R + W</td><td class="small-cell">vendored copy</td></tr>
+					<tr><td>curt-openwith</td><td>offline viewer — double-click any .curt</td><td class="req">R</td><td class="small-cell">hand-rolled port</td></tr>
 					<tr><td>porter</td><td>converter + verify oracle</td><td class="req">R + W</td><td class="small-cell">vendored oracle</td></tr>
 					<tr><td>curtis-web</td><td>export endpoint</td><td>W</td><td class="small-cell">hand-rolled</td></tr>
 					<tr><td>curtis-cloud</td><td>shared library</td><td class="req">R + W</td><td class="small-cell">vendored mirror</td></tr>
 					<tr><td>curtis-ai-tech</td><td>embedded converter + docs</td><td class="req">R + W</td><td class="small-cell">inline copy</td></tr>
-					<tr><td>tractum</td><td>consensus emitter</td><td>W</td><td class="small-cell">consensus-receipt draft</td></tr>
+					<tr><td>tractum</td><td>signed consensus receipts</td><td class="req">R + W</td><td class="small-cell">own validator</td></tr>
+					<tr><td>curt-vcon</td><td>.curt ⇄ vCon bridge</td><td class="req">R + W</td><td class="small-cell">npm <code>curt-format</code></td></tr>
+					<tr><td>curt-convert</td><td>Claude Code JSONL → .curt</td><td>W</td><td class="small-cell">npm <code>curt-format</code></td></tr>
+					<tr><td>curt-openwebui</td><td>Open WebUI exporter (local)</td><td>W</td><td class="small-cell">npm <code>curt-format</code></td></tr>
 				</tbody>
 			</table>
 		</div>
 		<p class="muted small">
-			None depend on the <code>curt-format</code> package yet — every one
-			vendored or hand-rolled the rules. All six are the author's own
-			applications; the first outside consumer is the open item. The
-			ladder from six copies to one dependency is written down in the audit.
+			Every implementation here is the author's own — the first outside
+			consumer is still the open item. The three newest
+			(<code>curt-vcon</code>, <code>curt-convert</code>,
+			<code>curt-openwebui</code>) depend on the
+			<code>curt-format</code> package directly; the five original
+			application readers still vendor or hand-roll the rules, so a
+			spec revision lands in five places by hand. The ladder from ten
+			copies to one dependency is written down in the audit.
 		</p>
 	</section>
 
@@ -396,12 +404,13 @@
 	<section class="section">
 		<div class="not-yet">
 			<span class="ny-label">NOT YET — STATED PLAINLY</span>
-			<p>The npm package is documentation, not infrastructure. Every
-			consumer today vendors or hand-rolls the rules, so a spec revision
-			still lands in five places by hand.</p>
-			<p>The 1.1.0 BOM tolerance is unimplemented outside the reference
-			reader, and three filename conventions compete with the spec's
-			<code>curtFilename</code>.</p>
+			<p>The five original application readers still vendor or
+			hand-roll the rules instead of depending on the
+			<code>curt-format</code> package, so a spec revision still lands
+			in five places by hand.</p>
+			<p>The 1.1.0 BOM tolerance is unimplemented in the five original
+			application readers, and their filename conventions compete with
+			the spec's <code>curtFilename</code>.</p>
 			<p>Bindings beyond TypeScript. The predicates are small — Rust,
 			Python, Go, Swift: pick one and keep it in lockstep with SPEC.md.
 			PRs to <a href="https://github.com/JordanNewell/dot_curt">dot_curt</a>

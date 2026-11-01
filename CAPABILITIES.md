@@ -7,10 +7,12 @@ implements, and where conformance has drifted. Machine-readable twin:
 
 **Audited: 2026-10-14 · Format version: 1 · Spec revision: `curt-format@1.2.0`**
 
-Entries dated 2026-11-01 (`curt-vcon`, `curt-convert`, `curt-openwebui`) were
-added without a full re-audit — their per-entry `evidenceDate` is when their
-evidence was last checked; `lastAudited` still refers to the 2026-10-14
-sweep. All three are same-author (JordanNewell) local builds, unpublished.
+Entries dated 2026-11-01 (`curt-vcon`, `curt-convert`, `curt-openwebui`,
+`curt-openwith`) were added without a full re-audit — their per-entry
+`evidenceDate` is when their evidence was last checked; `lastAudited` still
+refers to the 2026-10-14 sweep. `curt-vcon` and `curt-convert` are public on
+GitHub; `curt-openwebui` remains a same-author (JordanNewell) local build.
+All are same-author.
 
 Two version axes (per SPEC.md "Versioning"):
 
@@ -23,10 +25,11 @@ Two version axes (per SPEC.md "Versioning"):
 
 ## In / out
 
-**In (9):** `curtis` (Obsidian plugin) · `curtis-ai-chat-porter` ·
-`curtis-web` · `curtis-cloud` (`@curtisai/shared`) · `curtis-ai-tech`
-(inline Porter app) · `tractum` (Python SDK) · `curt-vcon` (unpublished) ·
-`curt-convert` (unpublished) · `curt-openwebui` (unpublished).
+**In (10):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
+`curtis-ai-chat-porter` · `curtis-web` · `curtis-cloud`
+(`@curtisai/shared`) · `curtis-ai-tech` (inline Porter app) · `tractum`
+(Python SDK) · `curt-vcon` · `curt-convert` · `curt-openwebui`
+(local, unpublished).
 
 **Out (8, no `.curt` code):** curtis-compliance, curtis-console, curtis-os,
 curtis-ai-chat-zed, curtis-ai-symphony, curtis-ai-crm, curtis-ai-browser,
@@ -37,14 +40,15 @@ curtis-ai-theme.
 | Consumer | Role | R/W | Dependency | Gen stamp | BOM (1.1.0) | Strict reject | Unknown fields RT | `curtFilename` | Schema | Conformance |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **dot_curt** (`curt-format@1.2.0`) | normative spec + reference impl | R/W | — | n/a | ✅ | ✅ | ✅ | ✅ | ✅ | ref=L1–L4 ✅ |
+| **curt-openwith** (`viewer/curt-format.js`) | offline viewer (file association) | R only | hand-rolled port of the reference | n/a (viewer never rewrites) | ✅ | ✅ | ✅ (per doc comment) | ❌ | ❌ | ⚠️ not audited (added 2026-11-01) |
 | **curtis** plugin (`curtis@1.0.0`) | import/export/backup | R/W | vendored copy | `curtis@v` | ❌ | ✅ (per file) | ⚠️ partial | ⚠️ divergent (`<id-6>`) | ❌ | ❌ (see notes) |
 | **curtis-ai-chat-porter** (`curtis-ai-porter@1.0.0`) | converter + verify oracle | R/W | vendored oracle (curtis-ai-chat v2.0.1) | `curtis-ai-porter@v` | ⚠️ incidental | ✅ (per file) | ✅ (top-level dropped) | ⚠️ divergent | ❌ (17-test suite) | ❌ (see notes) |
 | **curtis-web** (private, `curtis-web@0.1.0`) | export endpoint | W only | hand-rolled | `curtis-web@0.1.0` | n/a | n/a | ✅ on write | ❌ divergent (title-only) | ❌ | ❌ (writer only — see notes) |
 | **curtis-cloud** (`@curtisai/shared@0.1.2`) | shared lib (no in-repo callers) | R/W | vendored mirror | `curtis@v` | ❌ | ✅ (shallow) | ⚠️ partial | ❌ absent | ❌ | ❌ (see notes) |
 | **curtis-ai-tech** (`porter-app.html`) | embedded web app + docs | R/W | inline copy | `curtis-ai-chat-porter@v` | ⚠️ incidental | ✅ | ✅ | ⚠️ divergent | ❌ | ❌ (see notes) |
 | **tractum** (`tractum@0.5.0`) | Python SDK — signed consensus receipts | R/W | native (own validator) | `tractum@v` | ✅ (rejects) | ✅ | ✅ | n/a (emits dicts) | ❌ | ⚠️ vectors not run — audit pending |
-| **curt-vcon** (`curt-vcon@0.1.0`, unpublished) | .curt ⇄ vCon bridge | R/W | **npm `curt-format`** | `curt-vcon@0.1.0` | ✅ (via ref) | ✅ (via ref) | n/a (bridge) | ❌ (stdout CLI) | ❌ | ⚠️ vectors not run; 18 tests 2026-11-01 |
-| **curt-convert** (`curt-convert@0.1.0`, unpublished) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@0.1.0` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
+| **curt-vcon** (`curt-vcon@0.1.0`) | .curt ⇄ vCon bridge | R/W | **npm `curt-format`** | `curt-vcon@0.1.0` | ✅ (via ref) | ✅ (via ref) | n/a (bridge) | ❌ (stdout CLI) | ❌ | ⚠️ vectors not run; 18 tests 2026-11-01 |
+| **curt-convert** (`curt-convert@0.1.0`) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@0.1.0` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
 | **curt-openwebui** (`curt-openwebui-export@1.0.0` + Python pipeline, unpublished) | Open WebUI exporter (TS CLI + draft pipelines filter) | W only | **npm `curt-format`** (TS) / hand-rolled (Python) | both stamped | ✅ TS (via ref) / n/a Py | ✅ TS (self-check) / ⚠️ Py (conv dict only) | ⚠️ writer extras | ✅ both (spec algorithm) | ❌ | ⚠️ vectors not run; TS 15 tests + Py 8 tests + parseCurt cross-check 2026-11-01; pipeline not live-smoked |
 
 ## Findings (2026-10-14)
@@ -85,10 +89,11 @@ losses) lives in `capabilities.json`.
    consumers. `curt-convert` and `curt-openwebui` are also the first writers
    to use the spec's `curtFilename` algorithm (finding 3 narrows the same
    way).
-2. **All three are same-author (JordanNewell) and unpublished** — local
-   repos, no GitHub remotes, no npm packages. Same-author emissions do not
-   promote draft extensions: `curt-convert` emitting `tool-linkage` keeps it
-   at draft (stable requires two *independent* implementations).
+2. **All are same-author (JordanNewell).** `curt-vcon` and `curt-convert`
+   are public on GitHub; `curt-openwebui` remains a local build. None of
+   the three ships an npm package yet. Same-author emissions do not
+   promote draft extensions: `curt-convert` emitting `tool-linkage` keeps
+   it at draft (stable requires two *independent* implementations).
 3. **`curt-convert` bulk output is not collision-safe:** transcripts sharing
    a `sessionId` (parent + sidechain subagent files) produce identical
    `curtFilename` names and silently overwrite — 2026-11-01 corpus run:
@@ -106,6 +111,11 @@ losses) lives in `capabilities.json`.
    `parseCurt` (conversation dict only, envelope never checked). A
    pipeline-written body does parse valid in the reference parser
    (cross-checked 2026-11-01).
+5. **`curt-openwith` added 2026-11-01 (docs-reconcile only, no code
+   audit).** Its viewer parser is a hand-rolled port of the reference:
+   strict reject, BOM tolerance, unknown-field round-trip per the file's
+   own doc comments. It was present in the README's implementation list
+   but missing from this audit — fixed; formal audit still owed.
 
 ## Conformance ladder
 

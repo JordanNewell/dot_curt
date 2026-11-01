@@ -6,6 +6,10 @@ no escaping edge cases, base64 images and tool calls survive verbatim — and so
 a reader can validate strictly: a corrupted file is rejected whole, never
 half-imported.
 
+The magic string `"curtis-conversation"` is a version-1 compatibility legacy
+of the format's origin in Curtis AI Chat; the format itself is
+vendor-neutral, and nothing in this spec favors Curtis.
+
 Reference implementation: [`src/index.ts`](src/index.ts) (TypeScript, zero
 dependencies, MIT). Third-party writers are welcome; the `generator` field
 exists so your app can sign what it wrote. A non-normative
@@ -46,7 +50,7 @@ it is not part of the JSON body, and writers must not emit it:
 | `title` | yes | Human-readable title (string, may be empty). |
 | `createdAt` | yes | Epoch milliseconds (number). |
 | `updatedAt` | yes | Epoch milliseconds (number). |
-| `messages` | yes | Array of message objects (below). Must be non-empty to be meaningful, but readers may accept empty arrays. |
+| `messages` | yes | Array of message objects (below). An empty array is spec-valid — readers accept it; writers should not emit one, since a conversation with no messages carries nothing. |
 
 ### Each message in `messages`
 
@@ -82,12 +86,13 @@ Writers may declare named extensions they use via an optional top-level
 }
 ```
 
-1. When present, the array holds non-empty strings naming entries in
-   [`EXTENSIONS.md`](EXTENSIONS.md) — the registry.
-2. A reader that does not implement an extension ignores its name, and
-   ignores the `extensions` field entirely whatever its shape. It is an
-   unknown field like any other: never a validation input, never a reason
-   to reject.
+1. **Writer obligation:** when present, the array holds non-empty strings
+   naming entries in [`EXTENSIONS.md`](EXTENSIONS.md) — the registry.
+2. **Reader obligation:** the `extensions` field is never a validation
+   input and never a reason to reject. A reader that does not implement a
+   declared extension ignores its name and reads only the fields it knows;
+   a malformed `extensions` value (wrong type, wrong shape) is ignored like
+   any other unknown field.
 3. Extension behavior lives in the fields an extension reads and writes
    inside `conversation` and its messages; the registry entry documents
    those fields. An extension must not change how the core validates.
