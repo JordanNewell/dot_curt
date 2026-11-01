@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="dark">
+	<meta name="theme-color" content="#1A1A1A">
+	<meta name="robots" content="noindex">
+	<title>.curt — page not found</title>
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23212121' stroke='%231F1F1F' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%23E8C878'/%3E%3C/svg%3E">
+	<style>
+		:root {
+			--paper: #1A1A1A;
+			--surface: #141414;
+			--ruling: #1F1F1F;
+			--text: #F4F1E8;
+			--muted: #9C947F;
+			--gold: #D4A717;
+			--mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+		}
+		* { box-sizing: border-box; }
+		html, body { margin: 0; background: var(--paper); color: var(--text); }
+		body {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			font-family: var(--mono);
+		}
+		.head {
+			border-bottom: 1px solid var(--ruling);
+			padding: 1rem 1.5rem;
+			font-size: 0.9375rem;
+			font-weight: 600;
+			letter-spacing: -0.02em;
+		}
+		.head .dot { color: var(--gold); }
+		.head a { color: var(--text); text-decoration: none; }
+		main {
+			flex: 1;
+			max-width: 44rem;
+			width: 100%;
+			margin: 0 auto;
+			padding: 5rem 1.5rem 4rem;
+		}
+		.code {
+			font-size: clamp(3.5rem, 10vw, 6rem);
+			font-weight: 600;
+			letter-spacing: -0.03em;
+			line-height: 1;
+			margin: 0 0 1.5rem;
+		}
+		.code span { color: var(--gold); }
+		.label {
+			font-size: 0.8125rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+			margin: 0 0 1.25rem;
+		}
+		h1 { font-size: 1.25rem; font-weight: 500; margin: 0 0 1rem; }
+		p { font-family: Georgia, 'Times New Roman', serif; font-size: 1.0625rem; line-height: 1.6; color: var(--muted); margin: 0 0 2rem; }
+		.links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+		.links a {
+			display: inline-block;
+			font-size: 0.9375rem;
+			text-decoration: none;
+			padding: 0.75rem 1.5rem;
+			border-radius: 9999px;
+			border: 1px solid var(--ruling);
+			color: var(--text);
+		}
+		.links a.primary { background: var(--gold); border-color: var(--gold); color: var(--paper); font-weight: 500; }
+		.links a:hover { border-color: var(--muted); color: var(--text); }
+		.links a.primary:hover { color: var(--paper); }
+		.foot {
+			border-top: 1px solid var(--ruling);
+			padding: 1.5rem;
+			font-size: 0.8125rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+		}
+	</style>
+</head>
+<body>
+
+<header class="head">
+	<a href="/"><span class="dot">.</span>curt</a>
+</header>
+
+<main>
+	<p class="code"><span>4</span>04</p>
+	<p class="label">FILE NOT FOUND — NO PARTIAL READS</p>
+	<h1>.curt — page not found</h1>
+	<p>The page you asked for does not exist. Consistent with the format's
+	own rules, a missing file is rejected whole — never half-served.</p>
+	<nav class="links" aria-label="Where to go next">
+		<a class="primary" href="/">home</a>
+		<a href="/docs/spec">docs · spec</a>
+		<a href="/adopt/">adopt</a>
+		<a href="/try/">try</a>
+		<a href="https://github.com/JordanNewell/dot_curt">github</a>
+	</nav>
+</main>
+
+<footer class="foot">
+	<span class="dot" style="color: var(--gold);">.</span>curt — the conversation format · MIT · v1
+</footer>
+
+</body>
+</html>
