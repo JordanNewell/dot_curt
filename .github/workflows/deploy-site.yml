@@ -1,9 +1,31 @@
-# dotcurt.org — same deploy shape as jordannewell.com: Cloudflare Pages,
-# branch-per-preview. main -> dotcurt-site.pages.dev (production alias);
-# any other branch -> <branch>.dotcurt-site.pages.dev (design playground,
-# behind Cloudflare Access). Requires the CLOUDFLARE_API_TOKEN repo secret
-# (same token as curtis-ai-tech / tractum-site / jordannewell-com; needs
-# Pages: Edit + Workers Scripts: Edit during the Worker cutover).
+# dotcurt.org deploy — Docusaurus docs environment on Cloudflare Pages,
+# branch-per-preview (same shape as jordannewell.com).
+#
+# Pipeline (deploy is GATED on docs-qa — QA failure means no deploy):
+#   docs-qa:
+#     1. scripts/check-doc-facts.mjs — fact-drift guard: docs vs npm reality
+#        (versions, impl count, extension statuses, magic string, version 1)
+#     2. build: cd website && npm ci && npm run sync-docs && npm run build
+#        NOTE: agent A's website/package.json MUST expose the scripts
+#        'sync-docs' (root SPEC/EXTENSIONS/CAPABILITIES/CHANGELOG ->
+#        website/docs/ with frontmatter injected) and 'build' (docusaurus
+#        build). If those script names change, this step breaks by design.
+#     3. website/e2e/route-smoke.mjs — every contract route exists in
+#        website/build + runs the judge-proofing TS sample against the
+#        installed curt-format package
+#     4. website/e2e/link-check.mjs — every local href/src in the build
+#        output resolves (no external calls)
+#     5. upload website/build as the artifact
+#   deploy (needs: docs-qa):
+#     downloads the QA'd artifact and wrangler-deploys the exact bytes that
+#     passed QA. main -> production alias (dotcurt-site.pages.dev /
+#     dotcurt.org after the cutover); any other branch ->
+#     <branch>.dotcurt-site.pages.dev (design playground, behind
+#     Cloudflare Access).
+#
+# Requires the CLOUDFLARE_API_TOKEN repo secret (same token as
+# curtis-ai-tech / tractum-site / jordannewell-com; needs Pages: Edit +
+# Workers Scripts: Edit during the Worker cutover).
 #
 # The dotcurt-site WORKER still serves the dotcurt.org custom domain until
 # the cutover (attach Pages custom domain, detach worker domain, retire
@@ -14,7 +36,15 @@ name: Deploy site
 on:
   push:
     branches: ["**"]
-    paths: ['site/**', '.github/workflows/deploy-site.yml']
+    paths:
+      - 'website/**'
+      - 'scripts/**'
+      - 'README.md'
+      - 'SPEC.md'
+      - 'EXTENSIONS.md'
+      - 'CAPABILITIES.md'
+      - 'CHANGELOG.md'
+      - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
 
 permissions:
@@ -26,16 +56,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  docs-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+
+      - name: Fact-drift guard (docs vs npm reality)
+        # STRICT in CI: an unreachable npm registry is a real outage, not a
+        # reason to skip the version check. Locally it degrades to cache/warn.
+        run: node scripts/check-doc-facts.mjs
+        env:
+          FACTS_STRICT: '1'
+
+      - name: Build the docs environment
+        # Depends on agent A's website/package.json exposing 'sync-docs'
+        # (root docs -> website/docs with frontmatter) and 'build'
+        # (docusaurus build -> website/build). Never hand-edit website/docs
+        # copies of the root docs — the sync script owns them.
+        working-directory: website
+        run: npm ci && npm run sync-docs && npm run build
+
+      - name: Route smoke (contract routes in build output + docs sample)
+        run: node website/e2e/route-smoke.mjs
+
+      - name: Link check (local hrefs/srcs resolve, no network)
+        run: node website/e2e/link-check.mjs
+
+      - name: Upload QA'd build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: website/build
+          retention-days: 3
+
+  deploy:
+    needs: docs-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Download QA'd build
+        uses: actions/download-artifact@v4
+        with:
+          name: site-build
+          path: website/build
 
       - name: Ensure Pages project exists
         if: env.HAS_CF_TOKEN == 'true'
@@ -48,7 +121,7 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         if: env.HAS_CF_TOKEN == 'true'
-        run: npx wrangler pages deploy site --project-name=dotcurt-site --branch="${{ github.ref_name }}"
+        run: npx wrangler pages deploy website/build --project-name=dotcurt-site --branch="${{ github.ref_name }}"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 554619f8c7d3a4010cb161df3037269d
@@ -68,7 +141,7 @@ jobs:
             base="https://${{ github.ref_name }}.dotcurt-site.pages.dev"
             ok_codes="200 302"
           fi
-          for path in / /style.css /adopt/ /posts/2026-10-25-one-file/; do
+          for path in / /docs/faq/ /docs/spec/ /adopt/ /posts/2026-10-25-one-file/; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "${base}${path}")
             echo "${path} -> ${code}"
             echo "$ok_codes" | grep -qw "$code" || { echo "FAIL: ${path} not in [$ok_codes]"; exit 1; }
@@ -77,4 +150,4 @@ jobs:
       - name: No token yet — skip deploy
         if: env.HAS_CF_TOKEN != 'true'
         run: |
-          echo "::warning::CLOUDFLARE_API_TOKEN secret is not set — site present, deploy skipped."
+          echo "::warning::CLOUDFLARE_API_TOKEN secret is not set — QA passed, deploy skipped."
