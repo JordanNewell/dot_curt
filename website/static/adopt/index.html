@@ -171,10 +171,30 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="install" style="margin-top: 1rem;">
+			<span class="ps">$</span>
+			<code>scoop bucket add jordannewell https://github.com/JordanNewell/bucket &amp;&amp; scoop install curt-openwith</code>
+		</div>
+		<div class="install">
+			<span class="ps">$</span>
+			<code>brew tap JordanNewell/tap https://github.com/JordanNewell/homebrew-tap &amp;&amp; brew install curt-openwith</code>
+		</div>
 		<p class="muted small">
-			The tracker carries ten entries — the newest are tractum, a Python
-			SDK that emits signed consensus receipts, and three bridges built on
-			the npm package. The honest score: ten entries, one author; three
+			Package installs unpack the viewer — run the printed registration step
+			(<code>install.cmd</code> on Windows, the <code>install.sh</code> the
+			formula prints on macOS/Linux) to wire up the double-click handler.
+			Manual zip installs live at
+			<a href="https://github.com/JordanNewell/curt-openwith/releases">curt-openwith releases</a>.
+		</p>
+		<p class="muted small">
+			The tracker carries eleven entries — the newest are tractum, a Python
+			SDK that emits signed consensus receipts, and the npm bridges built on
+			the <code>curt-format</code> package. The honest score: eleven entries,
+			one author; four depend on
+			<code>curt-format</code> directly (curt-vcon, curt-convert,
+			curt-wildchat, curt-openwebui — all on npm since 2026-11-01), while
+			the five original applications still vendor or hand-roll the rules.
+			First outside consumer sets the tone;
 			depend on <code>curt-format</code> directly, while the five original
 			applications still vendor or hand-roll the rules. First outside
 			consumer sets the tone;
