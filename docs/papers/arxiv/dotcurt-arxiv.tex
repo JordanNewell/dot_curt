@@ -1,13 +1,26 @@
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=1.1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
+\usepackage{titling}
+
+\setlength{\droptitle}{-3em}
+
+% Tighten the bibliography: default itemsep wastes lines and strands the
+% final entries on a nearly-empty last page.
+\let\oldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{%
+  \oldthebibliography{#1}%
+  \setlength{\itemsep}{2pt plus 0.5pt}%
+  \setlength{\parskip}{0pt}%
+}
 
 \title{.curt: A Conversations-First, LLM-Native File Format with\\ Executable Conformance for AI Chat Portability}
-\author{Jordan Newell}
+\author{Jordan Newell\\[2pt]\small Independent researcher}
 \date{October 26, 2026}
 
 \begin{document}
@@ -19,6 +32,9 @@ The conversation histories users accumulate with large language model services a
 \end{abstract}
 
 \noindent\textit{Artifact:} \url{https://dotcurt.org/} \textperiodcentered{} \texttt{npm install curt-format} \textperiodcentered{} MIT
+
+\smallskip
+\noindent\textit{Keywords:} data portability; GDPR Article 20; large language models; file format design; conformance testing; personal data archives
 
 \section{Introduction}
 
