@@ -28,13 +28,15 @@ Full per-consumer emit/accept data: [`capabilities.json`](capabilities.json).
 
 ### `images-inline` — stable
 
-Images are not a separate field: a message whose content is a data URI
-(`data:image/...;base64,...`) or raw base64 carries an image inline. Readers
-never decode or transform `content`; writers never emit a BOM-wrapped or
-otherwise altered payload.
+The convention this extension declares: images are not a separate field — a
+message whose `content` is a data URI (`data:image/...;base64,...`) or raw
+base64 carries an image inline. Declaring it tells other readers what to
+expect; it adds no fields and changes no behavior.
 
-- Fields: none beyond core (`content` carries the payload; `kind: "image"`
-  is a common optional marker).
+- Fields: none beyond core — `content` carries the payload; `kind: "image"`
+  is a common optional marker.
+- Readers never decode or transform `content`, and files never carry a
+  byte-order mark (see SPEC.md, "File shape").
 
 ### `usage-metadata` — stable
 
