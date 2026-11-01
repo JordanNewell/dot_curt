@@ -7,6 +7,7 @@ title: "Extension registry — full text"
 description: "The full EXTENSIONS.md registry text: entry process, status rules, and the five registered extensions."
 ---
 
+
 Extensions are named, optional capability sets a writer declares in the
 top-level `extensions` array (see SPEC.md, "Extensions"). Core v1 parsing is
 never affected: a reader that doesn't know an extension ignores it.
@@ -17,7 +18,7 @@ Open a PR adding a section below. Each entry: `name` (lowercase, hyphenated,
 unique), `status` (`draft` → `stable`; `deprecated` retires it), purpose, the
 exact fields it reads/writes and where, and any conformance vectors
 (`conformance/vectors/extensions.json`). Status moves `draft` → `stable` when
-at least two independent implementations round-trip it.
+at least two independent implementations round-trip it. Exception: the two seed entries (`images-inline`, `usage-metadata`) entered the registry already stable — they predate the rule and are round-tripped across the ecosystem; the criterion governs entries that enter as draft.
 
 ## Registry
 
