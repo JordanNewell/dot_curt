@@ -6,7 +6,7 @@
 const config = {
   title: '.curt — the conversation format',
   tagline: 'One file, one conversation, kept whole.',
-  url: 'https://dotcurt.org',
+  url: 'https://docs.dotcurt.org',
   baseUrl: '/',
   // 'warn' (not 'throw'): /adopt /try /viewer /posts /paper /listen are
   // carried static HTML pages under static/ — the broken-link checker only
@@ -94,9 +94,9 @@ const config = {
           { to: '/docs/spec', label: 'Docs', position: 'left' },
           { to: '/docs/ecosystem', label: 'Ecosystem', position: 'left' },
           { to: '/docs/conformance', label: 'Conformance', position: 'left' },
-          { to: '/adopt/', label: 'Adopt', position: 'left' },
-          { to: '/try/', label: 'Try', position: 'left' },
-          { to: '/viewer/', label: 'Viewer', position: 'left' },
+          { href: 'https://dotcurt.org/adopt/', label: 'Adopt', position: 'left' },
+          { href: 'https://dotcurt.org/try/', label: 'Try', position: 'left' },
+          { href: 'https://dotcurt.org/viewer/', label: 'Viewer', position: 'left' },
           {
             href: 'https://github.com/JordanNewell/dot_curt',
             label: 'GitHub',

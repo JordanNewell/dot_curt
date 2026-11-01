@@ -108,9 +108,9 @@ export default function Home() {
           </p>
 
           <div className="lp-cta-row">
-            <Link className="button button--primary button--lg" to="/try/">
+            <a className="button button--primary button--lg" href="https://dotcurt.org/try/">
               Try it — drop an export
-            </Link>
+            </a>
             <Link className="button button--secondary button--lg" to="/docs/spec">
               Read the spec
             </Link>
