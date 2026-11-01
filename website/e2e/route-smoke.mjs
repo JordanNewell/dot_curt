@@ -64,12 +64,6 @@ const ROUTES = [
   { file: 'docs/spec-terms/index.html', kind: 'html', route: '/docs/spec-terms' },
   { file: 'docs/status/index.html', kind: 'html', route: '/docs/status' },
 
-  { file: 'adopt/index.html', kind: 'html', route: '/adopt' },
-  { file: 'try/index.html', kind: 'html', route: '/try' },
-  { file: 'viewer/index.html', kind: 'html', route: '/viewer' },
-  { file: 'posts/2026-10-25-one-file/index.html', kind: 'html', route: '/posts/2026-10-25-one-file' },
-  { file: 'paper/index.html', kind: 'html', route: '/paper' },
-  { file: 'listen/index.html', kind: 'html', route: '/listen' },
 ];
 
 const failures = [];
