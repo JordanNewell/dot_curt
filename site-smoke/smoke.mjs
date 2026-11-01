@@ -9,6 +9,8 @@ import { chromium } from 'playwright';
 
 const BASE = (process.env.BASE_URL || 'https://dotcurt.org').replace(/\/$/, '');
 const PAGES = ['/', '/adopt/', '/try/', '/viewer/', '/paper/', '/listen/', '/posts/2026-10-25-one-file/'];
+// WildChat demos the viewer fetches by button — not links, so check 3 won't see them
+const VIEWER_DEMOS = ['/viewer/demos/math-bacteria-cup.curt', '/viewer/demos/creative-eldritch-sun.curt', '/viewer/demos/writing-cover-letter.curt'];
 const failures = [];
 
 const browser = await chromium.launch();
@@ -16,6 +18,10 @@ const page = await browser.newPage();
 
 // 1. every known page responds
 for (const path of PAGES) {
+  const res = await page.request.get(BASE + path);
+  if (res.status() !== 200) failures.push(`GET ${path} -> ${res.status()} (expected 200)`);
+}
+for (const path of VIEWER_DEMOS) {
   const res = await page.request.get(BASE + path);
   if (res.status() !== 200) failures.push(`GET ${path} -> ${res.status()} (expected 200)`);
 }
@@ -46,7 +52,7 @@ for (const url of links) {
 
 await browser.close();
 
-console.log(`pages: ${PAGES.length} · widths: 1440+390 · same-origin links checked: ${links.size}`);
+console.log(`pages: ${PAGES.length} · viewer demos: ${VIEWER_DEMOS.length} · widths: 1440+390 · same-origin links checked: ${links.size}`);
 if (failures.length) {
   console.error(`SMOKE FAIL — ${failures.length} issue(s):`);
   for (const f of failures) console.error('  ' + f);
