@@ -10,7 +10,7 @@ Open a PR adding a section below. Each entry: `name` (lowercase, hyphenated,
 unique), `status` (`draft` → `stable`; `deprecated` retires it), purpose, the
 exact fields it reads/writes and where, and any conformance vectors
 (`conformance/vectors/extensions.json`). Status moves `draft` → `stable` when
-at least two independent implementations round-trip it.
+at least two independent implementations round-trip it. Exception: the two seed entries (`images-inline`, `usage-metadata`) entered the registry already stable — they predate the rule and are round-tripped across the ecosystem; the criterion governs entries that enter as draft.
 
 ## Registry
 
