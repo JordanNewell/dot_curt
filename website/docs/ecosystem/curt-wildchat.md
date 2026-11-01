@@ -63,7 +63,7 @@ names follow the bulk convention via `curtFilename()`.
 
 :::info[Bulk evidence — 1000 real records, zero failures]
 
-The repo publishes **[CONFORMANCE-1K](/conformance-1k/CONFORMANCE-1K.md)**,
+The repo publishes **<a href="/conformance-1k/CONFORMANCE-1K.md">CONFORMANCE-1K</a>**,
 an **L3 BULK** artifact proving the format scales on a real corpus: the
 first 1000 rows of WildChat-1M shard 0 converted with zero failures —
 995 distinct `.curt` files written, all 995 re-parsed cleanly under an
@@ -87,5 +87,5 @@ and the verified license record are in
 
 Full mapping table, documented losses, the staged demos under `demos/`
 (hand-picked benign records with identity metadata scrubbed), and
-[`CONFORMANCE-1K.md`](/conformance-1k/CONFORMANCE-1K.md):
+<a href="/conformance-1k/CONFORMANCE-1K.md"><code>CONFORMANCE-1K.md</code></a>:
 [github.com/JordanNewell/curt-wildchat](https://github.com/JordanNewell/curt-wildchat).

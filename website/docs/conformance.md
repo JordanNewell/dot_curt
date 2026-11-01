@@ -36,7 +36,7 @@ what the vectors accept and rejects what they reject, you match the level.
 The suite is 27 cases: 13 L1 accept/reject bodies, 7 L2 naming cases, 6
 extension cases, and the L3 rules. The reference implementation passes
 L1–L4 in CI. For a real-world bulk example, see
-[CONFORMANCE-1K](/conformance-1k/CONFORMANCE-1K.md) — a 1000-record
+<a href="/conformance-1k/CONFORMANCE-1K.md">CONFORMANCE-1K</a> — a 1000-record
 WildChat-1M run that exercises the L3 naming convention end to end
 (995/995 independent re-parse, 1.126× envelope overhead).
 
