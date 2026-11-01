@@ -8,7 +8,7 @@
 import { chromium } from 'playwright';
 
 const BASE = (process.env.BASE_URL || 'https://dotcurt.org').replace(/\/$/, '');
-const PAGES = ['/', '/adopt/', '/try/', '/paper/', '/listen/', '/posts/2026-10-25-one-file/'];
+const PAGES = ['/', '/adopt/', '/try/', '/viewer/', '/paper/', '/listen/', '/posts/2026-10-25-one-file/'];
 const failures = [];
 
 const browser = await chromium.launch();
