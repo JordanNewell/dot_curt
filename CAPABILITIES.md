@@ -44,7 +44,7 @@ curtis-ai-theme.
 | **curtis-ai-tech** (`porter-app.html`) | embedded web app + docs | R/W | inline copy | `curtis-ai-chat-porter@v` | ⚠️ incidental | ✅ | ✅ | ⚠️ divergent | ❌ | ❌ (see notes) |
 | **tractum** (`tractum@0.5.0`) | Python SDK — signed consensus receipts | R/W | native (own validator) | `tractum@v` | ✅ (rejects) | ✅ | ✅ | n/a (emits dicts) | ❌ | ⚠️ vectors not run — audit pending |
 | **curt-vcon** (`curt-vcon@0.1.0`, unpublished) | .curt ⇄ vCon bridge | R/W | **npm `curt-format`** | `curt-vcon@0.1.0` | ✅ (via ref) | ✅ (via ref) | n/a (bridge) | ❌ (stdout CLI) | ❌ | ⚠️ vectors not run; 18 tests 2026-11-01 |
-| **curt-convert** (`curt-convert@0.1.0`, unpublished) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@0.1.0` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`) | ❌ | ⚠️ vectors not run; 25 tests + 1168/1168 corpus self-check 2026-11-01 |
+| **curt-convert** (`curt-convert@0.1.0`, unpublished) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@0.1.0` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
 | **curt-openwebui** (`curt-openwebui-export@1.0.0` + Python pipeline, unpublished) | Open WebUI exporter (TS CLI + draft pipelines filter) | W only | **npm `curt-format`** (TS) / hand-rolled (Python) | both stamped | ✅ TS (via ref) / n/a Py | ✅ TS (self-check) / ⚠️ Py (conv dict only) | ⚠️ writer extras | ✅ both (spec algorithm) | ❌ | ⚠️ vectors not run; TS 15 tests + Py 8 tests + parseCurt cross-check 2026-11-01; pipeline not live-smoked |
 
 ## Findings (2026-10-14)
@@ -93,6 +93,14 @@ losses) lives in `capabilities.json`.
    a `sessionId` (parent + sidechain subagent files) produce identical
    `curtFilename` names and silently overwrite — 2026-11-01 corpus run:
    1168 inputs → 878 distinct filenames (0 self-check failures).
+   **Fixed 2026-11-01** (curt-convert commit `4719816`): bulk runs now keep
+   the plain `curtFilename` name for the first occurrence and give later
+   colliding inputs a deterministic `-<6 hex>` suffix (SHA-256 of the source
+   file's absolute path) — no timestamps or randomness, stable across runs;
+   single-file and `--stdout` modes unchanged. Post-fix corpus revalidation:
+   1169 inputs → 1169 distinct outputs, 0 self-check failures, 294
+   hash-suffixed names, identical file lists across two runs. Suite grew
+   25 → 30 tests, all green.
 4. **`curt-openwebui`'s Python pipeline is draft** — never live-smoked in a
    real Open WebUI pipelines runtime; its validator is shallower than
    `parseCurt` (conversation dict only, envelope never checked). A
