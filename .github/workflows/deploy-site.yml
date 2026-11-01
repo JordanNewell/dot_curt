@@ -166,6 +166,8 @@ jobs:
 
       - name: Smoke-check the deployment
         if: env.HAS_CF_TOKEN == 'true'
+        # A brand-new *.pages.dev subdomain can take minutes to get its TLS
+        # cert — retry each path before declaring failure (curl exit 35).
         run: |
           sleep 20
           if [ "${{ github.ref_name }}" = "main" ]; then
@@ -176,7 +178,12 @@ jobs:
             ok_codes="200 302"
           fi
           for path in / /docs/spec/ /docs/faq/ /docs/status/; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' "${base}${path}")
+            code=""
+            for attempt in 1 2 3 4 5 6; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "${base}${path}" || echo 000)
+              [ "$code" = "000" ] && { echo "tls not ready (attempt $attempt)"; sleep 30; continue; }
+              break
+            done
             echo "${path} -> ${code}"
             echo "$ok_codes" | grep -qw "$code" || { echo "FAIL: ${path} not in [$ok_codes]"; exit 1; }
           done
