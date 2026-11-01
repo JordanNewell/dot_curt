@@ -7,8 +7,3 @@
 # audio.jordannewell.com/episodes/, which this transcript verbatim reflects.
 # Nothing added beyond what is broadcast.
 site/viewer/episode.curt
-
-# website/static/viewer/episode.curt — same file carried into the docs-env
-# static tree (website/); identical justification: the transcript verbatim
-# reflects the published broadcast cast. Secret scans still run on it.
-website/static/viewer/episode.curt
