@@ -7,13 +7,12 @@ implements, and where conformance has drifted. Machine-readable twin:
 
 **Audited: 2026-10-14 · Format version: 1 · Spec revision: `curt-format@1.2.0`**
 
-Entries dated 2026-11-01 (`curt-vcon`, `curt-convert`, `curt-wildchat`,
-`curt-openwebui`, `curt-openwith`) were added without a full re-audit —
-their per-entry `evidenceDate` is when their evidence was last checked;
-`lastAudited` still refers to the 2026-10-14 sweep. `curt-vcon`,
-`curt-convert`, and `curt-wildchat` are public on GitHub and on npm as of
-2026-11-01; `curt-openwebui` remains a same-author (JordanNewell) local
-build. All are same-author.
+Entries dated 2026-11-01 (`curt-vcon`, `curt-convert`, `curt-openwebui`,
+`curt-openwith`) were added without a full re-audit — their per-entry
+`evidenceDate` is when their evidence was last checked; `lastAudited` still
+refers to the 2026-10-14 sweep. `curt-vcon` and `curt-convert` are public on
+GitHub; `curt-openwebui` remains a same-author (JordanNewell) local build.
+All are same-author.
 
 Two version axes (per SPEC.md "Versioning"):
 
@@ -26,11 +25,11 @@ Two version axes (per SPEC.md "Versioning"):
 
 ## In / out
 
-**In (11):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
+**In (10):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
 `curtis-ai-chat-porter` · `curtis-web` · `curtis-cloud`
 (`@curtisai/shared`) · `curtis-ai-tech` (inline Porter app) · `tractum`
-(Python SDK) · `curt-vcon` · `curt-convert` · `curt-wildchat` ·
-`curt-openwebui` (local, unpublished).
+(Python SDK) · `curt-vcon` · `curt-convert` · `curt-openwebui`
+(local, unpublished).
 
 **Out (8, no `.curt` code):** curtis-compliance, curtis-console, curtis-os,
 curtis-ai-chat-zed, curtis-ai-symphony, curtis-ai-crm, curtis-ai-browser,
@@ -48,9 +47,8 @@ curtis-ai-theme.
 | **curtis-cloud** (`@curtisai/shared@0.1.2`) | shared lib (no in-repo callers) | R/W | vendored mirror | `curtis@v` | ❌ | ✅ (shallow) | ⚠️ partial | ❌ absent | ❌ | ❌ (see notes) |
 | **curtis-ai-tech** (`porter-app.html`) | embedded web app + docs | R/W | inline copy | `curtis-ai-chat-porter@v` | ⚠️ incidental | ✅ | ✅ | ⚠️ divergent | ❌ | ❌ (see notes) |
 | **tractum** (`tractum@0.5.0`) | Python SDK — signed consensus receipts | R/W | native (own validator) | `tractum@v` | ✅ (rejects) | ✅ | ✅ | n/a (emits dicts) | ❌ | ⚠️ vectors not run — audit pending |
-| **curt-vcon** (`curt-vcon@1.0.1`, npm 2026-11-01) | .curt ⇄ vCon bridge | R/W | **npm `curt-format`** | `curt-vcon@v` | ✅ (via ref) | ✅ (via ref) | n/a (bridge) | ❌ (stdout CLI) | ❌ | ⚠️ vectors not run; 18 tests 2026-11-01 |
-| **curt-convert** (`curt-convert@1.0.2`, npm 2026-11-01) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
-| **curt-wildchat** (`curt-wildchat@1.0.2`, npm 2026-11-01) | WildChat-1M records → .curt (bulk converter + demos) | W only | **npm `curt-format`** | `curt-wildchat@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`; duplicate `conversation_hash` rows collide — see CONFORMANCE-1K finding 1) | ❌ | ⚠️ vectors not run; L3 1K-corpus artifact (1000 records → 995 files, 100% independent re-parse, 1.126× envelope overhead) + 17 tests, 2026-11-01 |
+| **curt-vcon** (`curt-vcon@0.1.0`) | .curt ⇄ vCon bridge | R/W | **npm `curt-format`** | `curt-vcon@0.1.0` | ✅ (via ref) | ✅ (via ref) | n/a (bridge) | ❌ (stdout CLI) | ❌ | ⚠️ vectors not run; 18 tests 2026-11-01 |
+| **curt-convert** (`curt-convert@0.1.0`) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@0.1.0` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
 | **curt-openwebui** (`curt-openwebui-export@1.0.0` + Python pipeline, unpublished) | Open WebUI exporter (TS CLI + draft pipelines filter) | W only | **npm `curt-format`** (TS) / hand-rolled (Python) | both stamped | ✅ TS (via ref) / n/a Py | ✅ TS (self-check) / ⚠️ Py (conv dict only) | ⚠️ writer extras | ✅ both (spec algorithm) | ❌ | ⚠️ vectors not run; TS 15 tests + Py 8 tests + parseCurt cross-check 2026-11-01; pipeline not live-smoked |
 
 ## Findings (2026-10-14)
@@ -92,13 +90,10 @@ losses) lives in `capabilities.json`.
    to use the spec's `curtFilename` algorithm (finding 3 narrows the same
    way).
 2. **All are same-author (JordanNewell).** `curt-vcon` and `curt-convert`
-   are public on GitHub; `curt-openwebui` remains a local build. At the
-   time of writing none of the three shipped an npm package — superseded
-   by publish day (item 6 below: `curt-vcon` and `curt-convert` now on
-   npm, joined by `curt-wildchat`; `curt-openwebui` still unpublished).
-   Same-author emissions do not promote draft extensions: `curt-convert`
-   emitting `tool-linkage` keeps it at draft (stable requires two
-   *independent* implementations).
+   are public on GitHub; `curt-openwebui` remains a local build. None of
+   the three ships an npm package yet. Same-author emissions do not
+   promote draft extensions: `curt-convert` emitting `tool-linkage` keeps
+   it at draft (stable requires two *independent* implementations).
 3. **`curt-convert` bulk output is not collision-safe:** transcripts sharing
    a `sessionId` (parent + sidechain subagent files) produce identical
    `curtFilename` names and silently overwrite — 2026-11-01 corpus run:
@@ -121,35 +116,6 @@ losses) lives in `capabilities.json`.
    strict reject, BOM tolerance, unknown-field round-trip per the file's
    own doc comments. It was present in the README's implementation list
    but missing from this audit — fixed; formal audit still owed.
-6. **Publish day, 2026-11-01: three packages went to npm.** `curt-vcon`
-   (1.0.1), `curt-convert` (1.0.2), and `curt-wildchat` (1.0.1), all MIT.
-   The matrix version pins above were updated for this (previously
-   0.1.0/0.1.0 local builds); dependency, generator, and conformance
-   columns are unchanged from when the entries were added earlier today.
-   `curt-wildchat` joins as consumer #11 — first entry to arrive with a
-   bulk conformance artifact rather than a vectors run (`CONFORMANCE-1K.md`
-   in its repo: L3-style corpus run, not an official L3 claim). The
-   `curt-wildchat` row and this addendum were written without a full
-   re-audit; `lastAudited` (2026-10-14) is deliberately not bumped. The
-   machine-readable twin `capabilities.json` does not yet carry the
-   `curt-wildchat` entry or the publish-day version bumps — owed a
-   follow-up edit.
-7. **In/Out re-verification against npm + GitHub (2026-11-01, partial —
-   API rate limit hit).** npm confirms `curt-format@1.2.0`,
-   `curt-vcon@1.0.1`, `curt-convert@1.0.2`, `curt-wildchat@1.0.2` — the
-   In list now matches npm reality. GitHub code search re-confirmed zero
-   `curtis-conversation` usage in curtis-crm, curtis-acp, curtis-panel,
-   curtis-compliance, curtis-compliance-pro, curtis-console, curtis-os,
-   curtis-ai-audit, curtis-site, and projectcurtis; the sweep stopped on
-   rate limit before curtis/curtis-cloud/curtis-ai-porter/curtis-ai-tech
-   (their vendored copies are already documented above, so their status is
-   unaffected). **Name drift in the Out list:** `curtis-ai-crm` now
-   appears on GitHub as `curtis-crm` (still zero hits); `curtis-ai-chat-zed`,
-   `curtis-ai-symphony`, and `curtis-ai-theme` did not appear in the
-   account's repo listing at all (renamed or deleted — unchecked
-   successors, no `.curt` code found in the candidates checked). Out
-   entries keep their recorded names until a full sweep confirms the
-   renames.
 
 ## Conformance ladder
 
