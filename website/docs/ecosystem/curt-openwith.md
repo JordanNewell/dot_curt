@@ -9,6 +9,9 @@ description: "Double-click any .curt file — offline viewer for Windows, macOS,
 Double-click a `.curt` file on Windows, macOS, or Linux and it opens in
 the offline Curt Viewer — a browser page that renders the conversation
 locally. No server, no network; installs only under your user account.
+The same rendering runs online at
+[dotcurt.org/viewer](https://dotcurt.org/viewer/) if you would rather
+drop a file in a browser tab than install anything.
 
 - **Repo:** [github.com/JordanNewell/curt-openwith](https://github.com/JordanNewell/curt-openwith)
 - **Install:** Scoop (Windows), Homebrew (macOS/Linux), or a GitHub

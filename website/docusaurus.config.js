@@ -77,6 +77,9 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
+      // Default social image for every docs page (static/og.png, 1200×630);
+      // Docusaurus resolves it against url → https://docs.dotcurt.org/og.png.
+      image: 'og.png',
       metadata: [
         {
           name: 'description',
@@ -85,7 +88,11 @@ const config = {
         },
         { property: 'og:site_name', content: '.curt' },
         { property: 'og:type', content: 'website' },
-        { name: 'twitter:card', content: 'summary' },
+        { property: 'og:image', content: 'https://docs.dotcurt.org/og.png' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: 'https://docs.dotcurt.org/og.png' },
       ],
       navbar: {
         title: '.curt',

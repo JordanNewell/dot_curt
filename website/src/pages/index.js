@@ -36,9 +36,15 @@ const SECTIONS = [
   },
   {
     num: '06',
+    title: 'Guides',
+    to: '/docs/guides/export-chats',
+    body: 'Exporting AI conversations: what ChatGPT, Claude, and Gemini exports contain, what breaks, and how .curt fits.',
+  },
+  {
+    num: '07',
     title: 'FAQ',
     to: '/docs/faq',
-    body: 'The magic string, the BOM, zip bulk, why not vCon, and the license split — stated plainly.',
+    body: 'Exporting your chats, the magic string, the BOM, zip bulk, why not vCon, and the license split — stated plainly.',
   },
 ];
 
@@ -90,8 +96,8 @@ function NotYet() {
 export default function Home() {
   return (
     <Layout
-      title="one file, one conversation, full fidelity"
-      description="An open format for AI conversations. Your history is files, not hostages."
+      title="the open file format for AI conversations"
+      description=".curt is an open, MIT-licensed format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity, strict whole-file validation. Spec, extensions, conformance vectors, and converters."
     >
       <main>
         <header className="lp-hero container">
