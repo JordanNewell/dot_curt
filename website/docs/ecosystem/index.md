@@ -71,5 +71,10 @@ original audit ranked highest.
 - [`curt-openwith`](/docs/ecosystem/curt-openwith) — offline desktop viewer
 - [`curt-openwebui`](/docs/ecosystem/curt-openwebui) — Open WebUI exporter
 
+To view a `.curt` file without installing anything:
+[dotcurt.org/viewer](https://dotcurt.org/viewer/) — the in-browser
+viewer, fully client-side. To convert a vendor export into `.curt`
+files: [dotcurt.org/try](https://dotcurt.org/try/).
+
 These pages are high-level overviews; deep-dives (field-mapping tables,
 loss ledgers, packaging internals) live in each tool's repo.

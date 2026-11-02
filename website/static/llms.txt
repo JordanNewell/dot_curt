@@ -13,6 +13,7 @@
 - [/docs/status](/docs/status): Ecosystem status — the capabilities.json tracker rendered for humans, generated at build time.
 - [/docs/comparison](/docs/comparison): .curt vs vCon vs vendor exports — an adversarially reviewed comparison citing the vCon draft.
 - [/docs/faq](/docs/faq): The magic string, BOM tolerance, zip bulk convention, why not vCon, and the license split.
+- [/docs/guides/export-chats](/docs/guides/export-chats): Exporting AI conversations — what ChatGPT, Claude, Gemini, and agent-session exports contain, what breaks, and how to convert to .curt.
 - [/docs/governance](/docs/governance): BDFL, the extension proposal process, and the two-independent-implementations stability criterion.
 - [/docs/schema](/docs/schema): The non-normative JSON Schema, rendered, plus a validate-your-file snippet.
 - [/docs/changelog](/docs/changelog): CHANGELOG.md, rendered.

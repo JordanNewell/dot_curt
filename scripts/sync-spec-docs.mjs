@@ -66,9 +66,12 @@ function banner(source) {
 
 function sync({ source, target, id, slug, title, description, body }) {
 	const raw = readFileSync(join(ROOT, source), 'utf8');
+	// Frontmatter MUST be the first thing in the file — a leading HTML
+	// comment makes Docusaurus skip parsing it (title/description fall back
+	// to the raw '---' excerpt in <head>). Banner goes after it.
 	const out =
-		banner(source) +
 		frontmatter(id, slug, title, description) +
+		banner(source) +
 		'\n' +
 		body(rewriteLinks(stripH1(raw)));
 	mkdirSync(dirname(target), { recursive: true });
