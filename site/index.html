@@ -4,12 +4,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="color-scheme" content="light">
-	<title>.curt — one file, one conversation, full fidelity</title>
+	<title>.curt — the open file format for AI conversations</title>
 	<meta name="description" content=".curt is an open, MIT-licensed format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity, strict whole-file validation. Spec, reference implementation, JSON Schema, and executable conformance vectors.">
-	<meta name="theme-color" content="#FAF6E9">
 	<link rel="canonical" href="https://dotcurt.org/">
-	<meta property="og:title" content=".curt — one file, one conversation, full fidelity">
-	<meta property="og:description" content="An open format for AI conversations. Your history is files, not hostages.">
+	<meta property="og:title" content=".curt — the open file format for AI conversations">
+	<meta property="og:description" content="An open, MIT-licensed file format for AI conversations — export ChatGPT or Claude chats into one UTF-8 JSON file you own. Spec v1 frozen, conformance vectors in CI.">
 	<meta property="og:type" content="website">
 	<meta property="og:url" content="https://dotcurt.org/">
 	<meta property="og:site_name" content=".curt">
@@ -18,10 +17,39 @@
 	<meta property="og:image:height" content="630">
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:image" content="https://dotcurt.org/og.png">
-	
+	<meta name="theme-color" content="#FAF6E9">
+
 	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 16a4 4 0 0 1 4-4h13l6 6h21a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23F3ECD3' stroke='%23E0D6B4' stroke-width='2'/%3E%3Ccircle cx='32' cy='40' r='9' fill='%238A6A00'/%3E%3C/svg%3E">
 
 	<link rel="stylesheet" href="style.css">
+
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "SoftwareApplication",
+				"name": ".curt",
+				"applicationCategory": "DeveloperApplication",
+				"operatingSystem": "any (file format)",
+				"url": "https://dotcurt.org/",
+				"description": "An open, MIT-licensed file format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity, strict whole-file validation, and executable conformance vectors.",
+				"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+				"author": { "@type": "Person", "name": "Jordan Newell", "url": "https://dotcurt.org/" },
+				"license": "https://opensource.org/licenses/MIT",
+				"softwareVersion": "1",
+				"identifier": "curt-format"
+			},
+			{
+				"@type": "WebSite",
+				"name": ".curt — the open file format for AI conversations",
+				"url": "https://dotcurt.org/",
+				"publisher": { "@type": "Person", "name": "Jordan Newell" },
+				"inLanguage": "en"
+			}
+		]
+	}
+	</script>
 </head>
 <body>
 
@@ -235,7 +263,9 @@
 			Writers may attach extra fields anywhere — tokens, images, tool-call
 			linkage — and readers must preserve them on round-trip where
 			possible and never fail on them. Full field tables live in
-			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">the spec</a>;
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md">the spec</a>
+			and rendered in the
+			<a href="https://docs.dotcurt.org/docs/spec/">docs</a>;
 			a non-normative
 			<a href="https://github.com/JordanNewell/dot_curt/blob/main/schema/curt-v1.schema.json">JSON Schema</a>
 			ships for tooling. The reference implementation is TypeScript, zero
@@ -299,7 +329,9 @@
 		</div>
 		<p class="muted small">
 			Full field definitions per entry:
-			<a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>.
+			<a href="https://github.com/JordanNewell/dot_curt/blob/main/EXTENSIONS.md">EXTENSIONS.md</a>,
+			with per-entry pages in the
+			<a href="https://docs.dotcurt.org/docs/extensions/">extension registry docs</a>.
 		</p>
 	</section>
 
@@ -310,7 +342,8 @@
 			<a href="https://github.com/JordanNewell/dot_curt/tree/main/conformance">conformance/</a>
 			and claim the levels they pass — self-reported, but reproducible
 			from the vectors. The reference implementation runs them in CI and
-			passes L1–L4.
+			passes L1–L4. The ladder is explained in the
+			<a href="https://docs.dotcurt.org/docs/conformance/">conformance docs</a>.
 		</p>
 		<ul class="claims">
 			<li>
@@ -366,8 +399,10 @@
 		<p class="muted small">
 			Every implementation here is the author's own — the first outside
 			consumer is still the open item. The three newest
-			(<code>curt-vcon</code>, <code>curt-convert</code>,
-			<code>curt-openwebui</code>) depend on the
+			(<a href="https://docs.dotcurt.org/docs/ecosystem/curt-vcon/"><code>curt-vcon</code></a>,
+			<a href="https://docs.dotcurt.org/docs/ecosystem/curt-convert/"><code>curt-convert</code></a>,
+			<a href="https://docs.dotcurt.org/docs/ecosystem/curt-openwebui/"><code>curt-openwebui</code></a>)
+			depend on the
 			<code>curt-format</code> package directly; the five original
 			application readers still vendor or hand-roll the rules, so a
 			spec revision lands in five places by hand. The ladder from ten

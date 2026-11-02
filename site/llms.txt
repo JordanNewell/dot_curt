@@ -1,0 +1,34 @@
+# .curt — the open file format for AI conversations
+
+> .curt is an open, MIT-licensed file format for AI chat conversations: one UTF-8 JSON file per conversation, full fidelity (base64 images and tool calls ride verbatim in content), strict whole-file validation (unknown fields survive round-trip; a corrupted file is rejected whole, never half-imported), and executable conformance vectors. Spec v1 is frozen: version 1 never changes meaning, growth happens through a named extension registry. The reference implementation is the zero-dependency TypeScript package `curt-format` on npm. Born in Curtis AI Chat, owned by no one. This is the project site — tools, demos, and the paper; the documentation subdomain lives at docs.dotcurt.org.
+
+## Format
+
+- [SPEC.md](https://github.com/JordanNewell/dot_curt/blob/main/SPEC.md): The normative v1 specification — envelope fields, validation rules, bulk convention, versioning freeze.
+- [Spec docs](https://docs.dotcurt.org/docs/spec/): The same specification, rendered, with the freeze rule called out.
+- [Extension registry docs](https://docs.dotcurt.org/docs/extensions/): The five named optional capability sets (images-inline, usage-metadata, tool-linkage, agent-context, consensus-receipt).
+- [Conformance docs](https://docs.dotcurt.org/docs/conformance/): The L1–L4 conformance ladder, the executable vectors, and how to claim a level.
+
+## Tools
+
+- [Try it](https://dotcurt.org/try/): In-browser converter — drop a ChatGPT `conversations.json` or a Claude export, get conforming .curt files back as a zip. Entirely client-side.
+- [Viewer](https://dotcurt.org/viewer/): In-browser .curt file viewer — open any .curt file, read the transcript, inspect the envelope. Nothing uploaded.
+- [Curt Conversation Exporter](https://dotcurt.org/extension/): Browser extension that turns the ChatGPT or Claude conversation in your tab into a .curt file in one click. Zero collection, zero network.
+- [Adopt](https://dotcurt.org/adopt/): How to make your application speak .curt — install curt-format (npm), round-trip the fixtures, claim conformance.
+
+## Guides
+
+- [Exporting AI conversations](https://docs.dotcurt.org/docs/guides/export-chats/): What ChatGPT, Claude, Gemini, OpenClaw, and Hermes exports actually look like, what breaks, and how .curt fits.
+
+## Research
+
+- [The preprint](https://dotcurt.org/paper/): ".curt: A Conversations-First, LLM-Native File Format with Executable Conformance for AI Chat Portability" (Jordan Newell, 2026) — the portability argument, the vendor-export landscape survey, the design, the conformance ladder.
+- [Listen](https://dotcurt.org/listen/): The paper read aloud — a 39-minute audio edition with the full reading script on the page.
+- [Launch post](https://dotcurt.org/posts/2026-10-25-one-file/): "One file, one conversation, kept whole" — why the format exists and what shipped with v1.
+
+## Optional
+
+- [curt-format on npm](https://www.npmjs.com/package/curt-format): The reference implementation — zero dependencies, TypeScript, MIT.
+- [GitHub repository](https://github.com/JordanNewell/dot_curt): Spec, reference implementation, JSON Schema, conformance vectors, and all issue tracking.
+- [FAQ](https://docs.dotcurt.org/docs/faq/): The magic string, BOM tolerance, bulk zip convention, why not vCon, and the license split — answered from the spec.
+- [Comparison](https://docs.dotcurt.org/docs/comparison/): .curt vs vCon (IETF) vs vendor exports — an honest accounting of what each solves.
