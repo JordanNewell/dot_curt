@@ -33,6 +33,10 @@ const sidebars = {
         'ecosystem/curt-wildchat',
         'ecosystem/curt-openwith',
         'ecosystem/curt-openwebui',
+        'ecosystem/curt-openclaw',
+        'ecosystem/curt-hermes',
+        'ecosystem/curt-codex',
+        'ecosystem/langchain-curt',
       ],
     },
     {
