@@ -99,12 +99,20 @@ internal model of a session.
 **Converting:** [`curt-convert`](/docs/ecosystem/curt-convert) (npm)
 maps Claude Code session JSONL to `.curt`, including the
 [`tool-linkage`](/docs/extensions/tool-linkage) extension for
-tool-call/result pairs. For other frameworks' JSONL logs there is not
-yet a published converter — the mapping is small (the .curt envelope has
-few required fields), and the [extension
-registry](/docs/extensions/) is the intended route for agent-specific
-provenance such as multi-agent context
-([agent-context](/docs/extensions/agent-context)).
+tool-call/result pairs. Agent-framework runtimes have their own
+converters: [`curt-openclaw`](/docs/ecosystem/curt-openclaw) (npm) reads
+OpenClaw's file-based gateway session store, and
+[`curt-hermes`](/docs/ecosystem/curt-hermes) (npm) reads Hermes's
+`state.db` — and emits Claude Code session JSONL, which Hermes imports
+natively, closing the loop without any upstream change.
+[`curt-codex`](/docs/ecosystem/curt-codex) (npm) bridges OpenAI Codex CLI
+rollouts both ways. For runtimes without a converter yet, the mapping is
+small (the .curt envelope has few required fields), and the
+[extension registry](/docs/extensions/) is the intended route for
+agent-specific provenance such as multi-agent context
+([agent-context](/docs/extensions/agent-context)). LangChain
+applications can read `.curt` directly via
+[`langchain-curt`](https://pypi.org/project/langchain-curt/) (PyPI).
 
 ## Self-hosted chat UIs
 

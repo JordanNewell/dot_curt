@@ -171,3 +171,12 @@ Grep each repo for `curtis-conversation|.curt` (exclude `node_modules`,
 rejection, unknown-field preservation, generator stamp, filename helper,
 schema usage. Update `capabilities.json` (this file follows from it) and bump
 `lastAudited`. Out-of-ecosystem repos need one grep to confirm still-out.
+5. **Four more same-author converters added at registration (2026-11-01,
+   post-audit, without full re-audit — marked in their gaps):**
+   curt-openclaw (OpenClaw gateway sessions -> .curt, npm 1.0.0),
+   curt-hermes (Hermes state.db -> .curt + .curt -> Claude Code JSONL
+   emitter, npm 1.0.0), curt-codex (Codex rollouts <-> .curt, npm 1.0.0),
+   langchain-curt (.curt -> LangChain messages, PyPI 0.1.0). All public
+   repos, all round-trip-validate output via the reference parser per
+   their readmes. Consumer count 11 -> 15.
+

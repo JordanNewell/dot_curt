@@ -1,0 +1,237 @@
+[SECTION] Open
+
+dot curt. A conversations-first, L L M native file format, with executable conformance, for A I chat portability.
+
+By Jordan Newell, independent researcher. November 2026.
+
+[SECTION] Abstract
+
+The conversation histories people accumulate with large language model services are exported — when they can be exported at all — as undocumented, platform-internal JSON. Each vendor defines the structure ad hoc, and changes it without notice.
+
+Legal analysis of G D P R Article 20 has established that the right to data portability fails in practice without genuinely interoperable formats. The recent literature has begun to test G D P R rights against generative A I — through compliance surveys of model internals, conceptual work on generated data, and agentic-A I analyses of the E U Data Act — but no scholarly work treats the conversation archive itself as a portability problem.
+
+The one open export specification published outside academia — a nonprofit's conversation-history schema — defines a generic sender, text, channel transcript. No L L M native semantics. No validation rules. No conformance testing.
+
+This paper presents dot curt: a file format and reference implementation filling that gap. A frozen-core JSON envelope. Strict whole-file validation. One file per conversation. Full-fidelity content, including inline binary payloads. Extended by a named, additive extension registry. And graded by tiered, machine-executable conformance vectors — from level one, core, through level four, per extension — run in continuous integration.
+
+The specification, reference implementation, JSON schema, and test vectors are M I T licensed, and published as curt-format on N P M.
+
+The paper places dot curt against vendor exports, training-corpus formats, agent transport protocols, formal containers like vee-con and m-box, and memory-interoperability efforts — and discusses, honestly, the governance model: a single maintainer, with self-reported conformance.
+
+[SECTION] One — Introduction
+
+Every major L L M chat platform holds its users' conversation history in a private structure, and exposes it — if at all — through a one-off export facility designed for archiving, not re-use.
+
+The exports share three properties.
+
+They are undocumented: no schema, no normative description. They are platform-internal: field names and nesting mirror implementation details, not a data model. And they are unstable: they change without notice, because nothing external depends on them contractually.
+
+The consequences are concrete.
+
+Open-A-I's ChatGPT export centers on a conversations dot json file, in which a conversation is a tree — messages form a directed structure navigated by a current-node pointer, each node carrying role, content parts, and recursion metadata. Anthropic's Claude export flattens conversations into message lists, joined by parent U U I D chaining. Google's Gemini arrives inside a Takeout bundle as activity logs — not conversations at all.
+
+Each import path is different enough that every bridge tool — the scripts and apps that move conversations between platforms — re-implements parsing from observations of a moving target. None of the exports carry a version. None can be validated. A consumer faced with a malformed file has no rule for detecting it, and typically half-imports whatever parses.
+
+This is the export trap. The data is legally yours, and practically unreachable.
+
+Portability engineering that starts from vendor exports inherits their instability — because there is nothing stable to target.
+
+The market's response is visible and measurable. A micro-industry of bridge tools: browser extensions converting chats across sixteen or more A I sites, offline command-line converters, round-up guides — each re-implementing its own parser against an undocumented, unversioned target. And institutional archivists documenting the exports' quirks by hand. Every one of them converts away from the platforms — to P D F, Word, Markdown. None converts between them — because no target schema exists that a second platform could adopt.
+
+This paper presents dot curt — an open, single-file format for A I chat conversations, designed as the stable target.
+
+Its design position is: conversations-first. L L M native. And conformance-tested.
+
+Conversations-first: one file is one conversation. No manifest, no account wrapper, no activity log to interpret. A directory of conversations is a directory of files — and bulk transfer is a zip of them.
+
+L L M native: the core data model carries what L L M conversations actually contain — roles including tool results, model identifiers, timestamps, and full-fidelity content, in which base64 images and tool payloads ride verbatim. Economics and multi-agent provenance are available as named extensions, rather than bolted-on vendor fields.
+
+Conformance-tested: a tiered vector suite — twenty-seven executable cases — defines what conforming means per level, and the reference implementation executes the suite in continuous integration. Claims are graded against vectors, not prose.
+
+The format is deliberately small. A frozen core: four envelope fields, five conversation fields, five message fields. Strict whole-file validation. And an additive extension registry as the only forward-motion mechanism within version one.
+
+It is M I T licensed, and published as the zero-dependency package curt-format, version one point two, with a normative specification, a non-normative JSON schema, and round-trip fixtures.
+
+The paper makes four contributions. One: a problem statement for L L M chat portability, grounded in the portability-rights literature — the legal literature has reached generative A I, but the specific slot, conversation archives as a data class requiring an interoperable file format, remains unclaimed. Two: a survey of the adjacent landscape, and of the specific gap each family leaves open. Three: the dot curt design — frozen core, strict rejection semantics, unknown-field tolerance, extension registry, tiered executable conformance, deterministic bulk naming. And four: an honest account of single-maintainer governance with self-reported conformance — including the precedents that succeeded the same way, and the one that did not.
+
+[SECTION] Two — The right that needs formats
+
+G D P R Article 20 grants a data subject the right to receive personal data in a structured, commonly used, machine-readable format — and to have it transmitted to another controller.
+
+Recital 68 makes the intent sharper. It speaks of portability between systems on the basis of interoperable formats. That recital is the load-bearing one: the right is not satisfied by any machine-readable dump. It is satisfied by data another system can actually take in.
+
+The legal literature has converged on the conclusion that this condition fails empirically. De Hert and colleagues trace the right's legislative history, and its structural dependence on format choices that controllers make unilaterally. Syrmoudis, in the sharpest formulation, shows that the portability right underperforms its competition-and-control goals precisely because portable data without interoperable formats produces ex-situ access to inert files — rather than usable migration. And the O E C D's review of data-portability initiatives reaches the same practical conclusion, identifying common formats and interoperability frameworks as the policy lever.
+
+Article 20 scholarship has historically discussed health records, smart-meter data, and social-graph portability. A recent wave has now reached generative A I — and this paper engages it directly rather than around it.
+
+The heaviest-cited work in the space, a compliance survey by Feretzakis and colleagues, analyzes Articles 15, 16, 17, and 22 as applied to data inside model weights — unlearning, explainability, differential privacy. It defines Article 20 in its rights overview without analyzing it. Conversation archives, export formats, and interoperability are absent from its twenty-six pages. Matsumi asks whose data an A I output is — conceptually, without reaching the archive question. And Beduschi extends the portability discussion through the E U Data Act, for agentic A I acting on the user's behalf — agent-side, not archive-side.
+
+The pattern across all three strands: the data class users actually hold — the conversation archive. A class that did not exist when the G D P R was drafted, and is now among the most intimate records a person keeps. It is never treated as a portability problem requiring an interoperable file format.
+
+That slot — Article 20, crossed with L L M chat archives — is unclaimed. And now demonstrably so: the nearest neighbors are named, and the gap between them is exactly where this paper sits. It does not attempt to fill the slot legally. It fills the precondition the legal analysis identifies: an interoperable format for the data class, published openly, with an executable definition of conformance — so that supports-dot-curt is a testable claim, rather than a marketing one.
+
+One more motivation, beyond G D P R's territorial scope. Platform churn is a practical certainty in this market: services shut down, accounts are banned, pricing tiers change, users migrate. A conversation archive that only a single vendor's current exporter can produce, and only its current importer can read, is fragile in exactly the way Syrmoudis describes — regardless of jurisdiction.
+
+The legal analysis also fixes the requirements on the engineering side — and they are stricter than they first appear. For Article 20 to bind practice rather than aspiration, an interoperable format for L L M conversations must supply at least four things.
+
+A published specification, that a third party can implement without observing a vendor's behavior. A schema, or validation rule set, that makes well-formedness decidable — so a receiving controller knows whether it has received what it was told it would. Stability guarantees — so a file written today parses after the exporting platform, or the importing tool, changes. And an executable definition of conformance — so a controller's claim to accept the format can be tested, rather than trusted.
+
+No vendor export satisfies any of the four. The design in section four is dot curt's answer, item by item, to this list.
+
+[SECTION] Three — Landscape
+
+The paper surveys six families of adjacent work, and the gap each leaves.
+
+Family one: vendor exports. ChatGPT, with its tree-structured conversations file. Claude, with message lists and parent-U U I D chaining. Gemini, with Takeout activity logs. Common properties: undocumented, unversioned, platform-internal, no schema to validate against, no import path on the vendor side. They are the problem statement — not part of the solution space.
+
+Family two: training-corpus formats. The fine-tuning ecosystem standardized early on JSONL line formats — ShareGPT's conversations array, and OpenAI-style and Cohere-style chat JSONL. These are purpose-built for training: role and content pairs, aggressively normalized. They are lossy in exactly the dimensions archives care about. Attachments are dropped or referenced externally. Tool calls are flattened or elided. Model metadata and timestamps are optional at best. Multi-modal content is reduced to text. And they have no validation story beyond: the trainer eventually errors. Training formats answer: what can a model learn from. The archive question is: what actually happened. And the answer needs the fields training throws away.
+
+Family three: agent transport protocols. The Agent-to-Agent protocol and the Model Context Protocol standardize live inter-agent and agent-tool communication. Persistence is explicitly out of scope for both. A transcript exists for the duration of a session, and its canonical serialization is the transport's own event stream — not a durable document. These protocols are complementary, not competing. An agent framework that speaks M C P still needs a file format for the conversations it produces. A survey of the M C P ecosystem catalogs dozens of client and server implementations — and not one durable conversation-archive format among them.
+
+Family four: formal containers. Vee-con — the I E T F standards-track container for conversational data — is the closest relative. Two things distinguish it from what L L M chat archives need.
+
+First, its home community is human, real-time communications: voice and video calls, messaging. Its data model has no L L M native semantics — no assistant, user, system, tool role vocabulary tied to model inference. No tool-call linkage. No model metadata. Its charter explicitly scopes chat logs in — so the fair statement is not that vee-con cannot represent chat. It is that representing chat requires application-private conventions, atop a container designed for another domain.
+
+Second, conformance. Vee-con ships no executable test vectors. Implementation claims are checked by reading.
+
+The paper also reads vee-con's own evolution as evidence for dot curt's design bet: the draft deprecates the top-level version field in favor of an extension mechanism — the frozen-core-plus-registry pattern. Containers of this kind get pushed toward additive extension, rather than version churn.
+
+And there is an archival precedent worth keeping in view: m-box. A decades-old, boring, single-file-per-folder container that outlived every proprietary mail format around it. Its lesson is the container-not-content pattern: the format standardizes envelopes and framing, and stays out of content semantics. The H T T P Archive format extends the same pattern to web traffic. Dot curt adopts the pattern deliberately.
+
+Family five: memory-first efforts. P A M — Portable A I Memory — is the most serious peer effort. Credit where due: P A M has a named maintainer, published governance and versioning policy, and real technical substance — Ed25519 signatures, W 3 C decentralized identifiers, canonical JSON, and shipped importers for Open-A-I, Anthropic, and x-A-I exports. Its gap is orientation. P A M is memory-first. Conversations appear as an index plus companion files, in service of a memory graph — not as first-class, self-sufficient single-file archives. And P A M defines no conformance levels, so implementation claims are not testable against vectors. The two projects are, at present, answers to different questions.
+
+The memory lane is academically active, too. A portable-agent-memory protocol presents cryptographically verified memory transfer across heterogeneous A I agents. And an analysis of A I memory as an infrastructure-layer lock-in problem argues that portability regulation must reach memory graphs. The conversation archive sits directly downstream of that lock-in. That sharpened contrast is itself evidence for the gap: the adjacent problem has scholarly work and open protocols. The conversation archive has neither.
+
+The W 3 C A I Agent Memory Interoperability Community Group — chartered in June 2026 — confirms institutional interest in the space. It has produced no file format. The field is open.
+
+Family six: open export specifications. The nearest peer effort is not academic, and was easy to miss. The Data Transfer Initiative — a nonprofit devoted to data-portability engineering — publishes an A I Conversation History schema in a public schema registry. Its motivation is ours, stated by a practitioner body: your conversations with your A I tools and services are your personal data. Its goal: switching A I services without losing the history, context, and preferences you've built.
+
+The specification itself is a JSON transcript model. Conversation-level details — creator, start and end times, modality. An identifiers array of named participant identities. And messages carrying a sent-at time, sender, text, and channel — with the rule that every sender must appear among the identifiers.
+
+The paper credits it as the first open specification aimed at exactly the lock-in problem — and distinguishes it precisely, because the distinction is this paper's contribution. The D T I schema is a registry entry: no version number, no stated license, no validation semantics, no conformance vectors, no tooling, and a single listed implementation. Its data model is a lowest-common-denominator transcript — a generic sender, text, channel triple — with no role vocabulary tied to model inference, no tool calls, no model metadata, no attachment story, and no bulk convention.
+
+Nothing in it is wrong. It simply answers the transcript-portability question — who said what to whom, when — and stops before the L L M native question: what did the models do, with which tools, at what cost.
+
+That a portability-focused standards body independently converged on the problem is evidence the problem is real. That its answer stops where dot curt's design begins — is evidence the design space was open.
+
+[SECTION] Four — The dot curt design
+
+A dot curt file is U T F eight JSON with a four-field envelope. A field named curt — the magic string, matched exactly. A version field — the format version, also matched exactly. The string one is a rejection, a rule that costs nothing and eliminates an entire class of lenient-parser bugs. A generator field — provenance, writer-name at version — which readers must ignore: presence, absence, or value never affects parsing, which keeps the format from growing de-facto required vendor stamps. And the conversation itself.
+
+The conversation carries: an id, a title, created-at and updated-at timestamps in epoch milliseconds, and messages. Each message carries an id, a role — user, assistant, system, or tool — content, a timestamp, and an optional model: the provider's model id, typically on assistant messages.
+
+That is the entire core. Four envelope fields. Five conversation fields. Five message fields.
+
+Two envelope decisions deserve defense.
+
+First: epoch milliseconds for time. No calendar semantics, no timezone ambiguity, trivially comparable — and tolerant at the validator level. Version-one validators accept any JSON number, and must not reject fractional or negative values — so a file written from a language with richer time types is never rejected over its representation.
+
+Second: content as a single string. Binary payloads ride inline — base64, or data U R Is — verbatim. Readers never decode, transform, or re-encode content. This is what full fidelity means, operationally. The bytes that went in are the bytes that come out. And a small conversation with images may legitimately be a large file. The specification accordingly directs implementers to treat files as untrusted input, and bound parsing by size before validation.
+
+Next: strict whole-file validation.
+
+Version-one validation is a conjunction. The body parses as JSON — tolerating at most one leading B O M, which writers must not emit. The magic matches exactly. The version is exactly the number one. And the conversation, and every message, carry required fields with exact types. Anything else is a rejection of the whole file — never a best-effort parse that half-imports.
+
+The rationale comes directly from the failure mode of vendor exports. When a reader imports whatever parses, corruption propagates silently, and no one can define what was lost. Whole-file rejection converts silent corruption into a loud, actionable error, at a known boundary. The reference implementation's parse function returns the parsed conversation, or null. Null means invalid. Its component predicates are exported for reuse — so third-party validators share the canonical behavior, rather than re-deriving it.
+
+Strictness has a cost. One malformed message dooms its entire conversation file, and a strict reader must skip that whole file in a bulk import. The bulk convention restores the pragmatic middle ground at the level where it belongs — the archive — by requiring readers to import valid entries and report corrupted ones, rather than drop them.
+
+Next: unknown fields — tolerated, and preserved where possible.
+
+Real conversations carry more than any core can anticipate. Writers may attach extra fields at the top level, on the conversation, and on messages. Readers must not fail on them. On round-trip, readers preserve unknown fields where possible.
+
+The qualifier matters, and the paper states it precisely. Preservation is a quality aim, not a normative guarantee. The reference implementation preserves unknown fields on the conversation object and on messages, verbatim — but rebuilds the envelope on serialization, and so drops unknown top-level envelope extras. A reader that cannot represent an unknown field in its internal model will drop it too. The spec's obligation is non-failure, and best-effort preservation. Stronger guarantees would be unenforceable across heterogeneous implementations — and would make the format harder to adopt, not safer.
+
+Unknown fields are data, never code. The specification directs implementers not to interpret, dereference, or execute anything found in them — a caution underlined by serialization-vulnerability advisories in adjacent ecosystems.
+
+Next: the frozen core, and the extension registry.
+
+Capability growth inside version one proceeds through a named extension registry — not spec edits. A writer declares the extensions it uses, in an optional top-level extensions array of registry names.
+
+Three properties make the mechanism safe.
+
+One: declaration costs nothing. The array is itself an unknown field to old readers. Never a validation input. Never a reason to reject — whatever its shape.
+
+Two: extensions are behaviorally inert at the core. Extension behavior lives entirely in the fields an extension reads and writes inside the conversation and its messages. An extension must not change how the core validates. Malformed extension data cannot corrupt a conforming parse.
+
+Three: the registry is additive. New entries never change how existing version-one files parse. And entries cannot conflict with core field names. Status moves from draft to stable when at least two independent implementations round-trip the entry.
+
+The seed registry is drawn from what implementations already round-trip informally — grandfathered as stable at seeding, since those entries predate the promotion rule, which governs entries that enter as draft. Images-inline: payloads inside content. Usage-metadata: per-message token counts, cost, provider. Tool-linkage — a draft: assistant tool-calls linked to tool-role results by a call id. And agent-context — a draft: multi-agent provenance, such as swarm role, leader id, and skill ids.
+
+Since the first audit, a fifth entry has arrived. Consensus-receipt — signed k-of-n consensus decisions, bound to the transcript evidence — submitted by the author's own project, tractum. So it exercises the mechanism rather than evidencing adoption: a new capability class entered the format, the version stayed one, and no existing file parsed differently.
+
+The core, tool-role split is deliberate. The existence of tool results is core — an L L M conversation without them is not full fidelity. The linkage schema is still stabilizing, and so rides as a draft extension. Cost, token, and provider metadata are similarly placed: widely written, not yet universal — and therefore registry, rather than core.
+
+This is the same evolutionary pressure vee-con responded to, by deprecating its version field in favor of extensions. Dot curt starts there. The registry is the only forward-motion mechanism inside version one. And breaking changes — anything that would make a conforming v-one reader reject or misparse a file it previously accepted — require version two. Never a silent redefinition of one.
+
+Next: tiered executable conformance.
+
+What does it mean to support dot curt? Conforming is made testable by a tiered vector suite, executable as plain JSON fixtures.
+
+The suite comprises twenty-seven cases. Thirteen level-one accept-and-reject bodies. Seven level-two naming cases. Six extension cases — all must-accept, encoding the rule that extension presence or malformation never causes rejection. And the level-three rules, with a canonical example.
+
+The levels. Level one — core. Strict parse and serialize: magic and exact version, whole-file rejection, a single leading B O M tolerated, unknown fields preserved where possible on round-trip, any JSON-number timestamps accepted. Must, for conforming.
+
+Level two — named. The deterministic naming algorithm, implemented exactly. Should.
+
+Level three — bulk. The zip convention. Readers never depend on names. Corrupted entries reported; valid ones imported. May.
+
+Level four, and above — per extension. That extension's own vectors. May.
+
+The reference implementation executes the full suite in continuous integration. A third party claims a level by passing its vectors and recording the claim — with a link to a reproducing run — in the ecosystem's machine-readable capabilities file.
+
+The conformance design answers the question — what does it mean to support dot curt — with a per-level answer, instead of an adjective. It also creates the ecosystem's honest scoreboard. At the first audit, only the reference implementation passed level one.
+
+Next: deterministic naming, and bulk transfer.
+
+Bulk transfer is a zip of dot curt files, with no manifest requirement. Entry names should come from the naming function — and readers must not depend on names for parsing or ordering. Names are a convenience, never an input.
+
+The naming function is specified so the name depends only on immutable fields: the created date, rendered as a U T C date; a slug derived from the title; and a suffix derived from the id. So the name survives title edits and later updates, orders chronologically, and collides safely.
+
+Alongside the normative text, the project ships a non-normative JSON schema — a draft-zero-seven rendering of the validation rules — for editors, linters, and third-party tooling. Its non-normativity is deliberate and stated. The rules of the specification are the norm, and the reference implementation is the arbiter when prose and schema disagree. A schema alone cannot express whole-file rejection semantics, or round-trip obligations. Treating a schema as the specification invites the drift dot curt's audit found in the wild — five vendored copies, none fully conforming. The schema earns its place as an adoption accelerator for tool builders. Not as a second norm.
+
+[SECTION] Five — Governance
+
+The paper describes the governance as it is — not as a committee would describe a committee.
+
+One maintainer. Dot curt has a single maintainer acting as benevolent-dictator-for-life. Spec, registry, and vector changes land as ordinary commits. There is no working group, no chair, no consensus procedure. This is a limitation — and, at the current scale, a feature. The format moves at the speed of its problem, and the audit trail is the git history.
+
+Self-reported conformance. Conformance claims are made by implementers, against public vectors, recorded in a public tracker, with the expectation of a reproducible run. Nothing independently audits the reference implementation either. What makes the system honest is that the vectors are executable and public — so any claim can be checked by anyone, in minutes.
+
+The first ecosystem audit graded the five consumers — all applications within the author's own ecosystem — and found none passing level one. The reference implementation is the only conforming reader, and the drift concentrates on B O M tolerance and the naming algorithm — precisely the failures the vector suite exists to catch. The tracker exists to make drift visible. And it did.
+
+Precedents. Small-foundation formats have reached ubiquity before, in exactly this shape. JSON was controlled by Douglas Crockford until it was standardized as an R F C. R S S two-point-zero was un-forked and shepherded by Dave Winer, with a frozen spec. The instructive failure is Markdown — whose ambiguity plus single-implementer drift produced the CommonMark fork: a community rebuilding the standard, because the original would not move.
+
+The lesson dot curt takes: freeze the core early — done; version one's rules are frozen at release. Keep extension as the only motion — done. And donate to a foundation early enough that the fork never becomes the rational move.
+
+Licensing. The licensing story is version-scoped, and stated plainly. Through release one-point-one, the spec, reference implementation, schema, and fixtures were B U S L. As of one-point-two, they are M I T — permanently. A standard that requires permission to implement is not open, whatever its file format is. The M I T re-license was prerequisite to this paper's claims. The Curtis applications that gave rise to the format remain B U S L. The moat is in the apps, not the standard.
+
+[SECTION] Six — Limitations
+
+No cryptographic layer. P A M signs memories, and identifies actors via decentralized identifiers. Dot curt has no signing, no canonicalization, no provenance chain. For conversations — where the integrity threat is corruption, not forgery, and the archive is typically self-produced — the complexity is judged unearned today. The extension mechanism is the migration path: a signatures extension, alongside JSON canonicalization, slots in without touching the core — if and when the need materializes.
+
+Preservation where possible. Unknown-field preservation is best-effort by design. A pipeline of readers and writers can, in the worst case, shed enrichment fields. Applications that must not lose such fields should treat the dot curt file as the system of record, and re-read it — rather than relying on intermediate representations.
+
+Container, not content. Dot curt standardizes the envelope. It does not define content semantics — what a summary means, how tool arguments are typed, what a memory is. This is the m-box pattern, adopted deliberately. But it means semantic interoperability between two dot-curt-reading applications is real only for core fields and registered extensions. Everything else is passthrough.
+
+Governance concentration. One maintainer is a bus factor of one — and conformance is self-reported. The JSON and R S S precedents suggest this can work. The CommonMark precedent suggests what happens when it stops working. The mitigation chosen — frozen core, executable vectors, public tracker — is to make the standard's artifacts independent of any maintainer's continued attention.
+
+Parallel standardization. The D T I conversation-history schema now addresses the same problem statement, from the portability-engineering side. Two open specifications for A I conversation export could fragment exactly the bridge-tool ecosystem the format is meant to unify. The differences are concrete — L L M native semantics, validation, conformance — and convergence is a live option in either direction: a dot curt interop profile of the D T I identity model, or L L M native extensions registered against the D T I schema. Competition between open specifications is healthier than competition between proprietary exports. But it is still fragmentation — and it is the landscape's most likely near-term change.
+
+Adoption is unproven. The honest scoreboard: as of the first audit, zero consumers depended on the package, and none of the five consumers was independent of the author. One consumer has since joined through the registry process — the author's own project, writer of the consensus-receipt extension — which demonstrates the registry mechanism, but is not independent growth. Still no independent adoption. No third-party conformance run. The format's technical claims are executable and tested. Its ecosystem claims are aspirations, with a tracker.
+
+The intended sequence — M I T license, then package adoption, then third-party implementations — has begun to produce evidence. On November first, 2026, the first package-dependency consumers published to N P M, declaring curt-format as their dependency. This is not independent adoption — every consumer remains the author's. But the tracker records both facts. Which is the mechanism working as designed.
+
+[SECTION] Seven — Conclusion and artifact
+
+This paper presented dot curt: a single-file, conversations-first, L L M native conversation format. A frozen core. An additive extension registry. Tiered executable conformance.
+
+And an account of the gap it fills. Vendor exports are undocumented and unstable. Training formats are lossy. Agent transports do not persist. Standards-track containers lack L L M native semantics and executable vectors. Memory-first efforts index conversations rather than archive them. And the one open export specification — a portability nonprofit's schema-registry entry — stops at a generic transcript, with no validation and no conformance story.
+
+The portability-rights literature establishes that rights without interoperable formats fail. The recent scholarship reaches generative A I without ever reaching the conversation archive. Dot curt is the format-side contribution for that unclaimed data class. The invitation to convergence with parallel efforts stands open.
+
+The artifact: the specification, extension registry, conformance vectors, ecosystem tracker, JSON schema, and zero-dependency reference implementation — all M I T licensed at the dot curt repository, and published as curt-format on N P M. The spec site is dotcurt.org. The vectors are plain JSON, runnable without the reference implementation. Independent implementations, and conformance reports, are invited.
+
+[SECTION] Preparation disclosure
+
+Literature discovery, citation verification, and first-draft prose for this paper were produced with A I assistance, under the author's direction. Every source cited was retrieved and verified against the original. The verification method is documented in a public evidence report accompanying the artifact. And all claims, decisions, and accountability — rest with the author.

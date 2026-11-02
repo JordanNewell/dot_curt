@@ -11,7 +11,7 @@ description: "Live status of every .curt consumer, rendered from the machine-rea
 
 Rendered from [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json) — the single source of truth, regenerated on every site build. Last audit 2026-10-17; tracker format version 1; spec revision curt-format@1.2.0. Reference conformance: L1+L2+L3+L4.
 
-## Consumers (11)
+## Consumers (15)
 
 | Consumer | Pkg | R/W | Dependency | Conformance | Evidence date |
 |---|---|---|---|---|---|
@@ -26,6 +26,10 @@ Rendered from [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blo
 | curt-convert | curt-convert@1.0.2 (npm 2026-11-01) | W | npm | not audited | 2026-11-01 |
 | curt-wildchat | curt-wildchat@1.0.2 (npm 2026-11-01) | W | npm | not audited | 2026-11-01 |
 | curt-openwebui | curt-openwebui-export@1.0.0 (unpublished) + pipelines/curt_export_pipeline.py v0.1.0 (draft) | W | npm + hand-rolled | not audited | 2026-11-01 |
+| curt-openclaw | curt-openclaw@1.0.0 | R + W | — | not audited | 2026-11-01 |
+| curt-hermes | curt-hermes@1.0.0 | R + W | — | not audited | 2026-11-01 |
+| curt-codex | curt-codex@1.0.0 | R + W | — | not audited | 2026-11-01 |
+| langchain-curt | langchain-curt@0.1.0 (PyPI) | R + W | — | not audited | 2026-11-01 |
 
 Entries without an explicit `evidenceDate` predate that field; their evidence date is the tracker's `lastAudited` date.
 
@@ -42,6 +46,10 @@ Entries without an explicit `evidenceDate` predate that field; their evidence da
 - **curt-convert** — Not run against conformance/ vectors. As a writer, L1 parse rules apply only via its self-check (parseCurt on every body before it is written). Validated 2026-11-01 against the author's full real-session corpus: 1168/1168 transcripts converted, 0 self-check failures, exit 0. Re-validated 2026-11-01 after the bulk collision fix: 1169/1169 transcripts (corpus grew by one), 1169 distinct output filenames, 0 self-check failures, identical file lists across two runs.
 - **curt-wildchat** — Not run against conformance/ vectors. L3-style bulk artifact: CONFORMANCE-1K corpus run — 1000 records → 995 files, 100% independent re-parse, 1.126× envelope overhead. 17 tests pass 2026-11-01.
 - **curt-openwebui** — Not run against conformance/ vectors. TS side validated by 15 tests incl. a fixture round-trip through reference parseCurt (pass 2026-11-01). Python side: own validator mirrors the v1 structural rules; cross-validated 2026-11-01 — a pipeline-written .curt body parses valid in the reference JS parseCurt (ad-hoc cross-check, not a vector run). The pipeline itself is draft: never exercised in a live Open WebUI pipelines runtime.
+- **curt-openclaw** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
+- **curt-hermes** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
+- **curt-codex** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
+- **langchain-curt** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
 
 ## Out of ecosystem (8)
 
