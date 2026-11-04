@@ -87,6 +87,13 @@ lives in [CAPABILITIES.md](CAPABILITIES.md) (full sweep 2026-10-14; addendum
 PRs welcome for bindings in other languages; keep `src/index.ts` and SPEC.md
 in lockstep.
 
+## Contributing
+
+PRs welcome. Run `npm test` (vitest, includes the conformance vectors) before
+submitting; keep `src/index.ts` and SPEC.md in lockstep. Security issues go to
+**security@jordannewell.com** — see [SECURITY.md](SECURITY.md), not the issue
+tracker.
+
 ## Conformance
 
 Implementations are graded against executable vectors in
