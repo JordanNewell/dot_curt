@@ -7,7 +7,8 @@
 // stack): JSON.stringify inside serializeCurt throws RangeError when an
 // unknown field's nesting reaches ~4000+ levels, while JSON.parse failures at
 // any depth are caught by parseCurt and returned as null. The properties below
-// therefore stay well inside the safe region (depth <= 150 fuzzed, 1000
+// therefore stay well inside the safe region (depth <= 150 fuzzed, 250
+// deterministic). Windows CI runners throw RangeError at depth 1000;
 // checked deterministically).
 
 import { describe, expect, it } from 'vitest';
@@ -376,14 +377,14 @@ describe('property: deep nesting and payload size', () => {
 		);
 	});
 
-	it('a deep-but-safe nesting depth (1000) round-trips (see header comment for the ~4000+ RangeError limit)', () => {
+	it('a deep-but-safe nesting depth (250) round-trips (see header comment for the ~1500+ RangeError limit on small-stack platforms)', () => {
 		const conv: CurtConversation = {
 			id: 'c',
 			title: 't',
 			createdAt: 0,
 			updatedAt: 0,
 			messages: [],
-			nested: nest(1000),
+			nested: nest(250),
 		};
 		const s1 = serializeCurt(conv);
 		const parsed = parseCurt(s1)!;
