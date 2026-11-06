@@ -191,3 +191,32 @@ jobs:
       - name: No token yet — skip deploy
         if: env.HAS_CF_TOKEN != 'true'
         run: echo "::warning::CLOUDFLARE_API_TOKEN secret is not set — docs QA passed, deploy skipped."
+
+  # ---------- notify: deploy failures are never silent again ----------
+  # 2026-11-02 → 2026-11-06 every main-branch deploy failed (fact-drift on
+  # site/listen) and nobody noticed until an unrelated deploy needed the
+  # lane. This job posts to ntfy on any main-branch failure so a dead
+  # deploy page shows up on the phone within seconds. Topic lives in the
+  # NTFY_DEPLOY_TOPIC repo secret (public repo — a plaintext topic on
+  # ntfy.sh is a public posting target). PR-branch failures stay quiet:
+  # they surface in the PR checks where they belong.
+  notify:
+    needs: [site, docs-qa, docs-deploy]
+    if: failure() && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Post deploy failure to ntfy
+        run: |
+          title="dotcurt deploy FAILED on main"
+          body="${{ github.event.head_commit.message }}"
+          curl -s -m 10 \
+            -H "Title: ${title}" \
+            -H "Priority: high" \
+            -H "Tags: warning,cloudflare" \
+            -d "Commit: ${body:0:120}
+Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+Failed jobs: site=${{ needs.site.result }} docs-qa=${{ needs.docs-qa.result }} docs-deploy=${{ needs.docs-deploy.result }}" \
+            "https://ntfy.sh/${NTFY_DEPLOY_TOPIC}" > /dev/null
+        env:
+          NTFY_DEPLOY_TOPIC: ${{ secrets.NTFY_DEPLOY_TOPIC }}
