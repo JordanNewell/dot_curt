@@ -620,6 +620,47 @@
 				"https://pypi.org/project/langchain-curt/",
 				"https://github.com/JordanNewell/langchain-curt"
 			]
+		},
+		{
+			"id": "curt-busabase",
+			"repo": "curt-busabase",
+			"pkg": "curt-busabase@1.0.1 (npm 2026-11-05)",
+			"author": "JordanNewell",
+			"sameAuthor": true,
+			"role": "Converter CLI \u2014 Busabase record review trails (change requests, reviews, comments) \u2192 .curt (offline, read-only input; write-only with parseCurt self-check on every output)",
+			"read": false,
+			"write": true,
+			"dependency": {
+				"type": "npm",
+				"detail": "curt-format ^1.2.0 \u2014 serializeCurt for output, curtFilename for naming, parseCurt as the pre-write self-check"
+			},
+			"specVersion": 1,
+			"specRevisionImplemented": "1.2.0 (serialization/naming/validation delegated to the reference dependency)",
+			"conformanceLevel": null,
+			"conformanceNotes": "Not run against conformance/ vectors. As a writer, L1 parse rules apply only via its self-check (parseCurt on every body before it is written). Validated 2026-11-05: 8 tests green; live-space smoke on a self-hosted Busabase instance (2 change requests + 1 comment \u2192 1 conversation, 0 round-trip failures); CI green node 20/22 \u00d7 ubuntu/windows.",
+			"extensions": {
+				"emits": [],
+				"accepts": []
+			},
+			"generator": "curt-busabase@1.0.1",
+			"capabilities": {
+				"bomTolerance": "n/a (no .curt reader); self-check rides reference parseCurt (BOM-tolerant)",
+				"strictWholeFileRejection": "n/a (writer); never writes a body the reference parser rejects",
+				"unknownFieldRoundTrip": "writer emits a conversation-level 'busabase' extra (recordId, baseId, recordStatus, trail counts) and message extras (model on agent turns) \u2014 preserved where possible by conforming readers",
+				"generatorStamped": "yes",
+				"curtFilenameConvention": "yes (curtFilename from curt-format \u2014 the spec algorithm)",
+				"jsonSchemaValidation": "no (parseCurt self-check instead)"
+			},
+			"gaps": [
+				"conformance vectors not run",
+				"record field values carried as provenance extras and head-commit fallback turn only \u2014 attachment bytes and workflow/audit events out of scope (documented losses)"
+			],
+			"evidence": [
+				"src/busabase.ts (tolerant readers, attribution-based role mapping, mergeSummary.recordIds linkage, headCommit payload titles)",
+				"test/convert.test.ts \u2014 8 tests, all pass 2026-11-05",
+				"2026-11-05 live-space smoke: 1 record trail \u2192 1 .curt, chronological roles, 0 round-trip failures"
+			],
+			"evidenceDate": "2026-11-05"
 		}
 	],
 	"outOfEcosystem": [
