@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Ecosystem tracker grew 15 → 16 consumers: `curt-busabase` (Busabase
+  record review trails — agent change requests, human reviews, comments —
+  → .curt) added to `capabilities.json` / `CAPABILITIES.md` and the docs
+  ecosystem suite. Same-author (JordanNewell), public on GitHub and npm
+  (`curt-busabase@1.0.1`, 2026-11-05), depends on the `curt-format`
+  package, uses the spec `curtFilename` algorithm. Per-entry evidence
+  dated 2026-11-05; `lastAudited` not bumped — no full re-audit. No spec
+  or package changes; `curt-format` stays 1.2.0.
 - `curt-convert` bulk-output collision gap closed (commit `4719816`):
   colliding `curtFilename` outputs in one run now get a deterministic
   `-<6 hex>` SHA-256-of-source-path suffix instead of silently overwriting;
