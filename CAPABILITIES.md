@@ -13,7 +13,8 @@ their per-entry `evidenceDate` is when their evidence was last checked;
 `lastAudited` still refers to the 2026-10-14 sweep. `curt-vcon`,
 `curt-convert`, and `curt-wildchat` are public on GitHub and on npm as of
 2026-11-01; `curt-openwebui` remains a same-author (JordanNewell) local
-build. All are same-author.
+build. The 2026-11-05 `curt-busabase` entry was added on the same basis
+(evidence checked at add time, no full re-audit). All are same-author.
 
 Two version axes (per SPEC.md "Versioning"):
 
@@ -26,11 +27,11 @@ Two version axes (per SPEC.md "Versioning"):
 
 ## In / out
 
-**In (11):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
+**In (12):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
 `curtis-ai-chat-porter` · `curtis-web` · `curtis-cloud`
 (`@curtisai/shared`) · `curtis-ai-tech` (inline Porter app) · `tractum`
 (Python SDK) · `curt-vcon` · `curt-convert` · `curt-wildchat` ·
-`curt-openwebui` (local, unpublished).
+`curt-openwebui` (local, unpublished) · `curt-busabase` (npm 2026-11-05).
 
 **Out (8, no `.curt` code):** curtis-compliance, curtis-console, curtis-os,
 curtis-ai-chat-zed, curtis-ai-symphony, curtis-ai-crm, curtis-ai-browser,
@@ -52,6 +53,7 @@ curtis-ai-theme.
 | **curt-convert** (`curt-convert@1.0.2`, npm 2026-11-01) | Claude Code JSONL → .curt | W only | **npm `curt-format`** | `curt-convert@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`, bulk collision-safe since 4719816) | ❌ | ⚠️ vectors not run; 30 tests + 1169→1169 corpus self-check (post collision fix) 2026-11-01 |
 | **curt-wildchat** (`curt-wildchat@1.0.2`, npm 2026-11-01) | WildChat-1M records → .curt (bulk converter + demos) | W only | **npm `curt-format`** | `curt-wildchat@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`; duplicate `conversation_hash` rows collide — see CONFORMANCE-1K finding 1) | ❌ | ⚠️ vectors not run; L3 1K-corpus artifact (1000 records → 995 files, 100% independent re-parse, 1.126× envelope overhead) + 17 tests, 2026-11-01 |
 | **curt-openwebui** (`curt-openwebui-export@1.0.0` + Python pipeline, unpublished) | Open WebUI exporter (TS CLI + draft pipelines filter) | W only | **npm `curt-format`** (TS) / hand-rolled (Python) | both stamped | ✅ TS (via ref) / n/a Py | ✅ TS (self-check) / ⚠️ Py (conv dict only) | ⚠️ writer extras | ✅ both (spec algorithm) | ❌ | ⚠️ vectors not run; TS 15 tests + Py 8 tests + parseCurt cross-check 2026-11-01; pipeline not live-smoked |
+| **curt-busabase** (`curt-busabase@1.0.1`, npm 2026-11-05) | Busabase record review trails → .curt (offline, read-only input) | W only | **npm `curt-format`** | `curt-busabase@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`) | ❌ | ⚠️ vectors not run; 8 tests + live-space smoke (2 CRs + 1 comment → 1 conversation, 0 round-trip failures) 2026-11-05 |
 
 ## Findings (2026-10-14)
 

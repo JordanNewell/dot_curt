@@ -6,7 +6,7 @@ description: "Who reads and writes .curt — the capability matrix and the tool 
 
 # Ecosystem
 
-Eleven implementations read or write `.curt` today. All are same-author
+Twelve implementations read or write `.curt` today. All are same-author
 (JordanNewell); third-party implementations are invited — the
 [conformance vectors](/docs/conformance) exist so a claim from anyone can
 be checked in minutes. Per-consumer detail (dependency style, spec
@@ -16,7 +16,7 @@ and its machine-readable twin
 [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json) — rendered for humans, at build time, on the
 [Ecosystem status](/docs/status) page.
 
-## In (11)
+## In (12)
 
 | Implementation | Role | Read/Write |
 |---|---|---|
@@ -29,6 +29,7 @@ and its machine-readable twin
 | [tractum](https://github.com/JordanNewell/tractum) | Python SDK — signed consensus receipts | R + W |
 | [curt-vcon](https://github.com/JordanNewell/curt-vcon) | .curt ⇄ vCon (IETF) bridge | R + W |
 | [curt-convert](https://github.com/JordanNewell/curt-convert) | Claude Code transcripts → .curt | W |
+| [curt-busabase](https://github.com/JordanNewell/curt-busabase) | Busabase review trails → .curt | W |
 | [curt-wildchat](https://github.com/JordanNewell/curt-wildchat) | WildChat-1M records → .curt | W |
 | curt-openwebui (local, unpublished) | Open WebUI exporter | W |
 
@@ -57,6 +58,7 @@ Condensed from CAPABILITIES.md (full sweep 2026-10-14, addendum
 | curt-convert | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | vectors not run |
 | curt-wildchat | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | [L3 artifact run](/docs/ecosystem/curt-wildchat#bulk-conformance-artifact) |
 | curt-openwebui | **npm `curt-format`** (TS) / hand-rolled (Py) | TS via ref / n/a Py | TS self-check / shallow Py | writer extras | yes (both) | vectors not run |
+| curt-busabase | **npm `curt-format`** | n/a (W only) | self-check via ref | writer extras | yes | vectors not run |
 
 The trend the matrix records: the newest three writers depend on the
 `curt-format` package instead of vendoring the rules, and they are the
@@ -70,6 +72,7 @@ original audit ranked highest.
 - [`curt-wildchat`](/docs/ecosystem/curt-wildchat) — WildChat-1M research data
 - [`curt-openwith`](/docs/ecosystem/curt-openwith) — offline desktop viewer
 - [`curt-openwebui`](/docs/ecosystem/curt-openwebui) — Open WebUI exporter
+- [`curt-busabase`](/docs/ecosystem/curt-busabase) — Busabase review trails
 
 To view a `.curt` file without installing anything:
 [dotcurt.org/viewer](https://dotcurt.org/viewer/) — the in-browser
