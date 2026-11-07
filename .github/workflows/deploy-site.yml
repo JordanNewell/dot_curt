@@ -207,16 +207,12 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Post deploy failure to ntfy
-        run: |
-          title="dotcurt deploy FAILED on main"
-          body="${{ github.event.head_commit.message }}"
-          curl -s -m 10 \
-            -H "Title: ${title}" \
-            -H "Priority: high" \
-            -H "Tags: warning,cloudflare" \
-            -d "Commit: ${body:0:120}
-Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-Failed jobs: site=${{ needs.site.result }} docs-qa=${{ needs.docs-qa.result }} docs-deploy=${{ needs.docs-deploy.result }}" \
-            "https://ntfy.sh/${NTFY_DEPLOY_TOPIC}" > /dev/null
         env:
           NTFY_DEPLOY_TOPIC: ${{ secrets.NTFY_DEPLOY_TOPIC }}
+          TITLE: dotcurt deploy FAILED on main
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILED_JOBS: site=${{ needs.site.result }} docs-qa=${{ needs.docs-qa.result }} docs-deploy=${{ needs.docs-deploy.result }}
+        run: |
+          BODY="$(printf '%s' "Commit: ${COMMIT_MSG:0:120} | Run: ${RUN_URL} | Failed jobs: ${FAILED_JOBS}")"
+          curl -s -m 10 -H "Title: ${TITLE}" -H "Priority: high" -H "Tags: warning,cloudflare" -d "${BODY}" "https://ntfy.sh/${NTFY_DEPLOY_TOPIC}" > /dev/null
