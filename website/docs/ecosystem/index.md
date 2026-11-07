@@ -6,7 +6,7 @@ description: "Who reads and writes .curt — the capability matrix and the tool 
 
 # Ecosystem
 
-Twelve implementations read or write `.curt` today. All are same-author
+Sixteen implementations read or write `.curt` today. All are same-author
 (JordanNewell); third-party implementations are invited — the
 [conformance vectors](/docs/conformance) exist so a claim from anyone can
 be checked in minutes. Per-consumer detail (dependency style, spec
@@ -16,7 +16,7 @@ and its machine-readable twin
 [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json) — rendered for humans, at build time, on the
 [Ecosystem status](/docs/status) page.
 
-## In (12)
+## In (16)
 
 | Implementation | Role | Read/Write |
 |---|---|---|
@@ -30,6 +30,10 @@ and its machine-readable twin
 | [curt-vcon](https://github.com/JordanNewell/curt-vcon) | .curt ⇄ vCon (IETF) bridge | R + W |
 | [curt-convert](https://github.com/JordanNewell/curt-convert) | Claude Code transcripts → .curt | W |
 | [curt-busabase](https://github.com/JordanNewell/curt-busabase) | Busabase review trails → .curt | W |
+| [curt-openclaw](https://github.com/JordanNewell/curt-openclaw) | OpenClaw gateway sessions → .curt | W |
+| [curt-hermes](https://github.com/JordanNewell/curt-hermes) | Hermes state.db → .curt; .curt → Claude Code JSONL | R + W |
+| [curt-codex](https://github.com/JordanNewell/curt-codex) | Codex CLI rollouts ⇄ .curt | R + W |
+| [langchain-curt](https://pypi.org/project/langchain-curt/) | LangChain chat loader for .curt | R |
 | [curt-wildchat](https://github.com/JordanNewell/curt-wildchat) | WildChat-1M records → .curt | W |
 | curt-openwebui (local, unpublished) | Open WebUI exporter | W |
 
@@ -73,6 +77,10 @@ original audit ranked highest.
 - [`curt-openwith`](/docs/ecosystem/curt-openwith) — offline desktop viewer
 - [`curt-openwebui`](/docs/ecosystem/curt-openwebui) — Open WebUI exporter
 - [`curt-busabase`](/docs/ecosystem/curt-busabase) — Busabase review trails
+- [`curt-openclaw`](/docs/ecosystem/curt-openclaw) — OpenClaw gateway sessions
+- [`curt-hermes`](/docs/ecosystem/curt-hermes) — Hermes agent state.db
+- [`curt-codex`](/docs/ecosystem/curt-codex) — Codex CLI session rollouts
+- [`langchain-curt`](/docs/ecosystem/langchain-curt) — LangChain chat loader
 
 To view a `.curt` file without installing anything:
 [dotcurt.org/viewer](https://dotcurt.org/viewer/) — the in-browser
