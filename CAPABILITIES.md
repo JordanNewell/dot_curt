@@ -27,11 +27,12 @@ Two version axes (per SPEC.md "Versioning"):
 
 ## In / out
 
-**In (12):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
+**In (16):** `curtis` (Obsidian plugin) · `curt-openwith` (offline viewer) ·
 `curtis-ai-chat-porter` · `curtis-web` · `curtis-cloud`
 (`@curtisai/shared`) · `curtis-ai-tech` (inline Porter app) · `tractum`
 (Python SDK) · `curt-vcon` · `curt-convert` · `curt-wildchat` ·
-`curt-openwebui` (local, unpublished) · `curt-busabase` (npm 2026-11-05).
+`curt-openwebui` (local, unpublished) · `curt-openclaw` · `curt-hermes` ·
+`curt-codex` · `langchain-curt` (PyPI) · `curt-busabase` (npm 2026-11-05).
 
 **Out (8, no `.curt` code):** curtis-compliance, curtis-console, curtis-os,
 curtis-ai-chat-zed, curtis-ai-symphony, curtis-ai-crm, curtis-ai-browser,
@@ -54,6 +55,10 @@ curtis-ai-theme.
 | **curt-wildchat** (`curt-wildchat@1.0.2`, npm 2026-11-01) | WildChat-1M records → .curt (bulk converter + demos) | W only | **npm `curt-format`** | `curt-wildchat@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`; duplicate `conversation_hash` rows collide — see CONFORMANCE-1K finding 1) | ❌ | ⚠️ vectors not run; L3 1K-corpus artifact (1000 records → 995 files, 100% independent re-parse, 1.126× envelope overhead) + 17 tests, 2026-11-01 |
 | **curt-openwebui** (`curt-openwebui-export@1.0.0` + Python pipeline, unpublished) | Open WebUI exporter (TS CLI + draft pipelines filter) | W only | **npm `curt-format`** (TS) / hand-rolled (Python) | both stamped | ✅ TS (via ref) / n/a Py | ✅ TS (self-check) / ⚠️ Py (conv dict only) | ⚠️ writer extras | ✅ both (spec algorithm) | ❌ | ⚠️ vectors not run; TS 15 tests + Py 8 tests + parseCurt cross-check 2026-11-01; pipeline not live-smoked |
 | **curt-busabase** (`curt-busabase@1.0.1`, npm 2026-11-05) | Busabase record review trails → .curt (offline, read-only input) | W only | **npm `curt-format`** | `curt-busabase@v` | n/a | ✅ (self-check via ref) | ⚠️ writer extras | ✅ (`curtFilename`) | ❌ | ⚠️ vectors not run; 8 tests + live-space smoke (2 CRs + 1 comment → 1 conversation, 0 round-trip failures) 2026-11-05 |
+| **curt-openclaw** (`curt-openclaw@1.0.0`, npm 2026-11-01) | OpenClaw gateway session transcripts (file-based store) → .curt | W | **npm `curt-format`** | `curt-openclaw@v` | n/a | ✅ (self-check via ref, per readme) | ⚠️ writer extras | ✅ | ❌ | ⚠️ vectors not run; entries added at registration 2026-11-02 without full re-audit |
+| **curt-hermes** (`curt-hermes@1.0.0`, npm 2026-11-01) | Hermes agent state.db (SQLite) → .curt; .curt → Claude Code session JSONL for Hermes import | R/W | **npm `curt-format`** | `curt-hermes@v` | ✅ (via ref, read path) | ✅ (via ref) | ✅ (read path) | ✅ | ❌ | ⚠️ vectors not run; entries added at registration 2026-11-02 without full re-audit |
+| **curt-codex** (`curt-codex@1.0.0`, npm 2026-11-01) | OpenAI Codex CLI session rollouts → .curt; .curt → Codex rollout JSONL (input for hermes/OpenClaw import) | R/W | **npm `curt-format`** | `curt-codex@v` | ✅ (via ref, read path) | ✅ (via ref) | ✅ (read path) | ✅ | ❌ | ⚠️ vectors not run; entries added at registration 2026-11-02 without full re-audit |
+| **langchain-curt** (`langchain-curt@0.1.0`, PyPI 2026-11-01) | LangChain chat loader — read .curt conversations as LangChain messages | R | native (own loader, spec rules per readme) | `langchain-curt@v` | ✅ (per readme) | ✅ (per readme) | ✅ (per readme) | n/a (emits messages) | ❌ | ⚠️ vectors not run; entries added at registration 2026-11-02 without full re-audit |
 
 ## Findings (2026-10-14)
 

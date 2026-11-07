@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Registry-surface alignment: `CAPABILITIES.md` and the docs ecosystem
+  index now match `capabilities.json` (16 consumers). The four 2026-11-02
+  registrations (`curt-openclaw`, `curt-hermes`, `curt-codex`,
+  `langchain-curt`) were in the tracker but missing from both human
+  surfaces — they gained In-list entries, capability-matrix rows, docs
+  index table rows, and tool-suite links. No data changes; all four
+  remain ⚠️ vectors-not-run from their at-registration basis.
 - Ecosystem tracker grew 15 → 16 consumers: `curt-busabase` (Busabase
   record review trails — agent change requests, human reviews, comments —
   → .curt) added to `capabilities.json` / `CAPABILITIES.md` and the docs
