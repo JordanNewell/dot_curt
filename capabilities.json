@@ -637,7 +637,7 @@
 			"specVersion": 1,
 			"specRevisionImplemented": "1.2.0 (serialization/naming/validation delegated to the reference dependency)",
 			"conformanceLevel": null,
-			"conformanceNotes": "Vector-run 2026-11-07 (first writer to execute the vectors, not just self-check): L1 CORE 13/13 accept/reject exact through the shipped curt-format@1.2.0 parseCurt (the write-gate call); L2 NAMED 7/7 exact via shipped curtFilename; L3 not claimed (file writer, no zips). Artifact: fixture space + a real live-Busabase pull -> 3 outputs, 100% independent re-parse, 3/3 byte-stable conversation round-trips. Reproducible: npm run conformance -- <dot_curt-checkout>; results committed as conformance-artifact.json (curt-busabase PR #5).",
+			"conformanceNotes": "Vector-run 2026-11-07 (first writer to execute the vectors, not just self-check): L1 CORE 13/13 accept/reject exact through the shipped curt-format@1.2.0 parseCurt (the write-gate call); L2 NAMED 7/7 exact via shipped curtFilename; L3 not claimed (file writer, no zips). Artifact: fixture space + a real live-Busabase pull -> 3 outputs, 100% independent re-parse, 3/3 byte-stable conversation round-trips. Reproducible: npm run conformance -- path-to-dot_curt-checkout; results committed as conformance-artifact.json (curt-busabase PR #5).",
 			"extensions": {
 				"emits": [],
 				"accepts": []

@@ -11,7 +11,7 @@ description: "Live status of every .curt consumer, rendered from the machine-rea
 
 Rendered from [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blob/main/capabilities.json) — the single source of truth, regenerated on every site build. Last audit 2026-10-17; tracker format version 1; spec revision curt-format@1.2.0. Reference conformance: L1+L2+L3+L4.
 
-## Consumers (15)
+## Consumers (16)
 
 | Consumer | Pkg | R/W | Dependency | Conformance | Evidence date |
 |---|---|---|---|---|---|
@@ -30,6 +30,7 @@ Rendered from [`capabilities.json`](https://github.com/JordanNewell/dot_curt/blo
 | curt-hermes | curt-hermes@1.0.0 | R + W | — | not audited | 2026-11-01 |
 | curt-codex | curt-codex@1.0.0 | R + W | — | not audited | 2026-11-01 |
 | langchain-curt | langchain-curt@0.1.0 (PyPI) | R + W | — | not audited | 2026-11-01 |
+| curt-busabase | curt-busabase@1.0.1 (npm 2026-11-05) | W | npm | not audited | 2026-11-07 |
 
 Entries without an explicit `evidenceDate` predate that field; their evidence date is the tracker's `lastAudited` date.
 
@@ -50,6 +51,7 @@ Entries without an explicit `evidenceDate` predate that field; their evidence da
 - **curt-hermes** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
 - **curt-codex** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
 - **langchain-curt** — Every converted output is round-trip validated with reference parseCurt before write (npm readme claim); no vector-suite run recorded.
+- **curt-busabase** — Vector-run 2026-11-07 (first writer to execute the vectors, not just self-check): L1 CORE 13/13 accept/reject exact through the shipped curt-format@1.2.0 parseCurt (the write-gate call); L2 NAMED 7/7 exact via shipped curtFilename; L3 not claimed (file writer, no zips). Artifact: fixture space + a real live-Busabase pull -> 3 outputs, 100% independent re-parse, 3/3 byte-stable conversation round-trips. Reproducible: npm run conformance -- path-to-dot_curt-checkout; results committed as conformance-artifact.json (curt-busabase PR #5).
 
 ## Out of ecosystem (8)
 
