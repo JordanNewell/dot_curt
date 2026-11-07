@@ -637,7 +637,7 @@
 			"specVersion": 1,
 			"specRevisionImplemented": "1.2.0 (serialization/naming/validation delegated to the reference dependency)",
 			"conformanceLevel": null,
-			"conformanceNotes": "Not run against conformance/ vectors. As a writer, L1 parse rules apply only via its self-check (parseCurt on every body before it is written). Validated 2026-11-05: 8 tests green; live-space smoke on a self-hosted Busabase instance (2 change requests + 1 comment \u2192 1 conversation, 0 round-trip failures); CI green node 20/22 \u00d7 ubuntu/windows.",
+			"conformanceNotes": "Vector-run 2026-11-07 (first writer to execute the vectors, not just self-check): L1 CORE 13/13 accept/reject exact through the shipped curt-format@1.2.0 parseCurt (the write-gate call); L2 NAMED 7/7 exact via shipped curtFilename; L3 not claimed (file writer, no zips). Artifact: fixture space + a real live-Busabase pull -> 3 outputs, 100% independent re-parse, 3/3 byte-stable conversation round-trips. Reproducible: npm run conformance -- <dot_curt-checkout>; results committed as conformance-artifact.json (curt-busabase PR #5).",
 			"extensions": {
 				"emits": [],
 				"accepts": []
@@ -657,10 +657,11 @@
 			],
 			"evidence": [
 				"src/busabase.ts (tolerant readers, attribution-based role mapping, mergeSummary.recordIds linkage, headCommit payload titles)",
-				"test/convert.test.ts \u2014 8 tests, all pass 2026-11-05",
-				"2026-11-05 live-space smoke: 1 record trail \u2192 1 .curt, chronological roles, 0 round-trip failures"
+				"test/convert.test.ts \u2014 8 tests, all pass",
+				"2026-11-05 live-space smoke: 1 record trail -> 1 .curt, 0 round-trip failures",
+				"2026-11-07 vector run: scripts/conformance-run.mjs \u2014 L1 13/13, L2 7/7, artifact 3/3 re-parse + byte-stable; conformance-artifact.json committed (curt-busabase@0456dbf..PR5)"
 			],
-			"evidenceDate": "2026-11-05"
+			"evidenceDate": "2026-11-07"
 		}
 	],
 	"outOfEcosystem": [
